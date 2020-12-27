@@ -1,0 +1,169 @@
+# Light Groups
+- platform: group
+  name: Kitchen Lights
+  entities:
+    - light.kitchen_bench
+    - light.kitchen_walkway_1
+    - light.kitchen_walkway_2
+    - light.kitchen_island_1
+    - light.kitchen_island_2
+    - light.kitchen_island_3
+- platform: group
+  name: Library Lights
+  entities:
+    - light.library_1
+    - light.library_2
+    - light.library_3
+    - light.library_4
+- platform: group
+  name: Dining Lights
+  entities:
+    - light.dining_1
+    - light.dining_2
+- platform: group
+  name: Butler's Pantry Lights
+  entities:
+    - light.butlers_1
+    - light.butlers_2
+    - light.butlers_bench
+- platform: group
+  name: Entry Lights
+  entities:
+    - light.entry_1
+    - light.entry_2
+    - light.entry_3
+    - light.entry_4
+- platform: group
+  name: Stairs Up Lights
+  entities:
+    - light.stairs_up_1
+    - light.stairs_up_2
+    - light.stairs_up_3
+- platform: group
+  name: Stairs Down Lights
+  entities:
+    - light.stairs_down_1
+- platform: group
+  name: Guest Bathroom Lights
+  entities:
+    - light.guest_bath_1
+    - light.guest_bath_2
+- platform: group
+  name: Guest Bedroom
+  entities:
+    - light.guest_1
+    - light.guest_2
+    - light.guest_3
+    - light.guest_4
+- platform: group
+  name: Living Room Lights
+  entities:
+    - light.living_1
+    - light.living_2
+    - light.living_3
+    - light.living_4
+    - light.living_5
+    - light.living_6
+    - light.living_7
+- platform: group
+  name: Fireplace Lights
+  entities:
+    - light.fireplace_left_bottom
+    - light.fireplace_left_middle
+    - light.fireplace_left_top
+    - light.fireplace_right_bottom
+    - light.fireplace_right_middle
+    - light.fireplace_right_top
+- platform: group
+  name: Deck Lights
+  entities:
+    - light.deck_1
+    - light.deck_2
+    - light.deck_3
+    - light.deck_4
+- platform: group
+  name: Front Yard Lights
+  entities:
+    - light.front_1
+    - light.front_2
+- platform: group
+  name: Vault Lights
+  entities:
+    - light.vault_1
+    - light.vault_2
+    - light.vault_3
+    - light.vault_4
+- platform: group
+  name: Master Bedroom Lights
+  entities:
+    - light.master_1
+    - light.master_2
+    - light.master_3
+    - light.master_4
+- platform: group
+  name: Ensuite Lights
+  entities:
+    - light.master_bath_1
+    - light.master_bath_2
+    - light.master_bath_3
+- platform: group
+  name: Master Robe Lights
+  entities:
+    - light.master_robe_1
+    - light.master_robe_2
+    - light.master_robe_3
+    - light.master_robe_4
+- platform: group
+  name: Office Lights
+  entities:
+    - light.office_1
+    - light.office_2
+    - light.office_3
+    - light.office_desk
+- platform: group
+  name: Balcony Lights
+  entities:
+    - light.balcony_1
+    - light.balcony_2
+- platform: group
+  name: Sidney's Lights
+  entities:
+    - light.sidney_1
+    - light.sidney_2
+    - light.sidney_lamp
+- platform: group
+  name: Mabel's Lights
+  entities:
+    - light.mabel_1
+    - light.mabel_2
+    - light.mabel_lamp
+- platform: group
+  name: Rumpus Lights
+  entities:
+    - light.rumpus_1
+    - light.rumpus_2
+    - light.rumpus_3
+    - light.rumpus_4
+    - light.rumpus_5
+    - light.rumpus_6
+    - light.rumpus_7
+    - light.rumpus_8
+    - light.rumpus_9
+- platform: group
+  name: Kid's Bathroom
+  entities:
+    - light.kids_bath_1
+    - light.kids_bath_2
+#Festoon Lights
+- platform: flux_led
+  automatic_add: true
+  devices:
+    192.168.2.195:
+      name: Festoon 1
+    192.168.2.198:
+      name: Festoon 2
+- platform: group
+  name: Festoon Lights
+  entities:
+    - light.festoon_1
+    - light.festoon_2

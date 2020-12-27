@@ -1,0 +1,6 @@
+default: warning
+logs:
+  homeassistant.components.broadlink: debug
+  # homeassistant.core: debug
+  # custom_components.example: debug
+  # custom_components.aiokef: debug

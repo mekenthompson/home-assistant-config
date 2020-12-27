@@ -1,0 +1,6 @@
+- platform: smartir
+  name: Living Room Fan
+  unique_id: living_fan
+  device_code: 1140
+  controller_data: remote.broadlink_rm4_pro_remote
+  power_sensor: binary_sensor.fan_power

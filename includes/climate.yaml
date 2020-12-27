@@ -1,0 +1,19 @@
+- platform: climate_group
+  name: "Kid's Rooms"
+  temperature_unit: C # default to celsius, 'C' or 'F'
+  entities:
+    - climate.sidney
+    - climate.mabel
+- platform: climate_group
+  name: "All Heating"
+  temperature_unit: C # default to celsius, 'C' or 'F'
+  entities:
+    - climate.living
+    - climate.mabel
+    - climate.master
+    - climate.master_bath
+    - climate.office
+    - climate.rumpus
+    - climate.rumpus_bath
+    - climate.sidney
+    - climate.walk_in_robe

@@ -1,0 +1,3 @@
+# Ignore auto discovery of specific devices
+ignore:
+  - samsung
