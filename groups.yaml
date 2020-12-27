@@ -1,0 +1,5 @@
+back_yard_sprinklers:
+  name: Sprinklers
+  entities:
+    - switch.back_yard_front
+    - switch.back_yard_rear

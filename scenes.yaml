@@ -1,0 +1,355 @@
+- id: '1606821577340'
+  name: Lisa
+  entities:
+    switch.fireplace:
+      friendly_name: Fireplace
+      assumed_state: true
+      state: 'on'
+    media_player.living_room:
+      source_list:
+      - Acoustic Covers
+      - Business Time
+      - Covers Unplugged
+      - Double J
+      - Feel Good Dinner
+      - Old School Hip-Hop House Party
+      - Party In Your Living Room
+      volume_level: 0.56
+      is_volume_muted: false
+      media_content_id: x-sonos-spotify:spotify%3atrack%3a6WUeQiXtr5KQB4RT4fbr63?sid=12&flags=8224&sn=2
+      media_content_type: music
+      media_duration: 0
+      media_position: 0
+      media_position_updated_at: '2020-12-02T02:32:32.389499+00:00'
+      media_title: x-sonos-spotify:spotify:track:6WUeQiXtr5KQB4RT4fbr63?sid=12&flags=8224&sn=2
+      shuffle: true
+      repeat: 'off'
+      sonos_group:
+      - media_player.living_room
+      queue_position: 0
+      friendly_name: Living Room
+      supported_features: 457279
+      state: playing
+    light.fireplace_left_bottom:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 191
+      hs_color:
+      - 344.998
+      - 85.713
+      rgb_color:
+      - 255
+      - 36
+      - 91
+      xy_color:
+      - 0.628
+      - 0.276
+      friendly_name: Fireplace Left Bottom
+      supported_features: 55
+      state: 'on'
+    light.fireplace_left_middle:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 191
+      hs_color:
+      - 344.998
+      - 85.713
+      rgb_color:
+      - 255
+      - 36
+      - 91
+      xy_color:
+      - 0.628
+      - 0.276
+      friendly_name: Fireplace Left Middle
+      supported_features: 55
+      state: 'on'
+    light.fireplace_left_top:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 191
+      hs_color:
+      - 344.537
+      - 85.713
+      rgb_color:
+      - 255
+      - 36
+      - 92
+      xy_color:
+      - 0.627
+      - 0.275
+      friendly_name: Fireplace Left Top
+      supported_features: 55
+      state: 'on'
+    light.fireplace_right_bottom:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 191
+      hs_color:
+      - 344.537
+      - 85.713
+      rgb_color:
+      - 255
+      - 36
+      - 92
+      xy_color:
+      - 0.627
+      - 0.275
+      friendly_name: Fireplace Right Bottom
+      supported_features: 55
+      state: 'on'
+    light.fireplace_right_middle:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 191
+      hs_color:
+      - 344.998
+      - 85.713
+      rgb_color:
+      - 255
+      - 36
+      - 91
+      xy_color:
+      - 0.628
+      - 0.276
+      friendly_name: Fireplace Right Middle
+      supported_features: 55
+      state: 'on'
+    light.fireplace_right_top:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 191
+      hs_color:
+      - 344.537
+      - 85.713
+      rgb_color:
+      - 255
+      - 36
+      - 92
+      xy_color:
+      - 0.627
+      - 0.275
+      friendly_name: Fireplace Right Top
+      supported_features: 55
+      state: 'on'
+- id: '1608772893146'
+  name: Ensuite Night Mode
+  entities:
+    light.ensuite_lights:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_pulse
+      - effect_colorloop
+      - effect_stop
+      brightness: 26
+      hs_color:
+      - 360
+      - 100
+      rgb_color:
+      - 255
+      - 0
+      - 0
+      xy_color:
+      - 0.701
+      - 0.299
+      entity_id:
+      - light.master_bath_1
+      - light.master_bath_2
+      - light.master_bath_3
+      friendly_name: Ensuite Lights
+      icon: mdi:lightbulb-group
+      supported_features: 55
+      state: 'on'
+- id: '1608772942399'
+  name: Ensuite Day Mode
+  entities:
+    light.ensuite_lights:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_pulse
+      - effect_colorloop
+      - effect_stop
+      brightness: 230
+      color_temp: 350
+      entity_id:
+      - light.master_bath_1
+      - light.master_bath_2
+      - light.master_bath_3
+      friendly_name: Ensuite Lights
+      icon: mdi:lightbulb-group
+      supported_features: 55
+      state: 'on'
+- id: '1609012825626'
+  name: Sonos Volume 10
+  entities:
+    media_player.sonos_move:
+      source_list:
+      - Acoustic Covers
+      - Business Time
+      - Covers Unplugged
+      - Double J
+      - Feel Good Dinner
+      - Old School Hip-Hop House Party
+      - Party In Your Living Room
+      volume_level: 0.15
+      is_volume_muted: false
+      media_content_id: x-sonos-spotify:spotify%3atrack%3a4ZVZBc5xvMyV3WzWktn8i7?sid=12&flags=8224&sn=7
+      media_content_type: music
+      media_duration: 0
+      media_position: 1
+      media_position_updated_at: '2020-12-26T20:00:28.513971+00:00'
+      media_title: x-sonos-spotify:spotify:track:4ZVZBc5xvMyV3WzWktn8i7?sid=12&flags=8224&sn=7
+      shuffle: false
+      repeat: 'off'
+      sonos_group:
+      - media_player.sonos_move
+      queue_position: 0
+      friendly_name: Sonos Move
+      supported_features: 457279
+      state: paused
+    media_player.tv_room:
+      source_list:
+      - Acoustic Covers
+      - Business Time
+      - Covers Unplugged
+      - Double J
+      - Feel Good Dinner
+      - Old School Hip-Hop House Party
+      - Party In Your Living Room
+      volume_level: 0.08
+      is_volume_muted: false
+      media_content_type: music
+      media_title: TV
+      source: TV
+      shuffle: false
+      repeat: 'off'
+      sonos_group:
+      - media_player.tv_room
+      night_sound: true
+      speech_enhance: false
+      friendly_name: TV Room
+      supported_features: 457279
+      state: playing
+    media_player.rumpus_room:
+      source_list:
+      - Acoustic Covers
+      - Business Time
+      - Covers Unplugged
+      - Double J
+      - Feel Good Dinner
+      - Old School Hip-Hop House Party
+      - Party In Your Living Room
+      volume_level: 0.1
+      is_volume_muted: false
+      media_content_id: x-sonos-spotify:spotify%3atrack%3a489nZybL79w209ELXWJyVK?sid=12&flags=8224&sn=7
+      media_content_type: music
+      media_duration: 0
+      media_position: 0
+      media_position_updated_at: '2020-12-26T20:00:30.369584+00:00'
+      media_title: x-sonos-spotify:spotify:track:489nZybL79w209ELXWJyVK?sid=12&flags=8224&sn=7
+      shuffle: false
+      repeat: 'off'
+      sonos_group:
+      - media_player.rumpus_room
+      night_sound: true
+      speech_enhance: true
+      queue_position: 0
+      friendly_name: Rumpus Room
+      supported_features: 457279
+      state: paused
+    media_player.deck:
+      source_list:
+      - Acoustic Covers
+      - Business Time
+      - Covers Unplugged
+      - Double J
+      - Feel Good Dinner
+      - Old School Hip-Hop House Party
+      - Party In Your Living Room
+      volume_level: 0.1
+      is_volume_muted: false
+      media_content_id: x-sonos-spotify:spotify%3atrack%3a7DtdhIJlSSOaAFNk4JdXCb?sid=12&flags=8224&sn=7
+      media_content_type: music
+      media_duration: 0
+      media_position: 0
+      media_position_updated_at: '2020-12-26T20:00:29.677991+00:00'
+      media_title: x-sonos-spotify:spotify:track:7DtdhIJlSSOaAFNk4JdXCb?sid=12&flags=8224&sn=7
+      shuffle: false
+      repeat: 'off'
+      sonos_group:
+      - media_player.deck
+      night_sound: false
+      speech_enhance: false
+      queue_position: 0
+      friendly_name: Deck
+      supported_features: 457279
+      state: paused
+    media_player.living_room:
+      source_list:
+      - Acoustic Covers
+      - Business Time
+      - Covers Unplugged
+      - Double J
+      - Feel Good Dinner
+      - Old School Hip-Hop House Party
+      - Party In Your Living Room
+      volume_level: 0.1
+      is_volume_muted: false
+      media_content_id: aac://http://live-radio01.mediahubaustralia.com/DJDW/aac/
+      media_content_type: music
+      media_title: Double J
+      media_channel: Double J
+      source: Double J
+      shuffle: false
+      repeat: 'off'
+      sonos_group:
+      - media_player.living_room
+      friendly_name: Living Room
+      entity_picture: /api/media_player_proxy/media_player.living_room?token=72d37506143c8889d751b5303c625f8ee27aa43ac926044c1d7c1d58dff73998&cache=5266f440859b2aee
+      supported_features: 457279
+      state: paused
+    media_player.office:
+      source_list:
+      - Acoustic Covers
+      - Business Time
+      - Covers Unplugged
+      - Double J
+      - Feel Good Dinner
+      - Old School Hip-Hop House Party
+      - Party In Your Living Room
+      volume_level: 0.1
+      is_volume_muted: false
+      media_content_type: music
+      shuffle: false
+      repeat: 'off'
+      sonos_group:
+      - media_player.office
+      friendly_name: Office
+      supported_features: 457279
+      state: idle

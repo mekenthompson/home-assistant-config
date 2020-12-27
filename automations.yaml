@@ -1,0 +1,336 @@
+- id: '1606560288972'
+  alias: Front Door Motion Lights
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: e85694130faab36c1ae8d19c05b9cbac
+    entity_id: binary_sensor.front_door_motion
+    domain: binary_sensor
+  - type: motion
+    platform: device
+    device_id: f437af012f121c78c152e7db919f1654
+    entity_id: binary_sensor.front_yard_motion
+    domain: binary_sensor
+  - type: opened
+    platform: device
+    device_id: 59019d7110e11f488f93e9e9e2d67bdc
+    entity_id: binary_sensor.front_gate_contact
+    domain: binary_sensor
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - type: turn_on
+    device_id: edb58d979bbd1040978c467d1a2a783e
+    entity_id: light.front_1
+    domain: light
+    brightness_pct: 80
+  - type: turn_on
+    device_id: 4acb78c6dac5d23206df278ad86c008e
+    entity_id: light.front_2
+    domain: light
+    brightness_pct: 80
+  - condition: state
+    entity_id: sun.sun
+    state: above_horizon
+  - type: turn_off
+    device_id: edb58d979bbd1040978c467d1a2a783e
+    entity_id: light.front_1
+    domain: light
+  - type: turn_off
+    device_id: 4acb78c6dac5d23206df278ad86c008e
+    entity_id: light.front_2
+    domain: light
+  mode: restart
+- id: '1606646360023'
+  alias: Butlers Pantry Lights
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: dc0e10b59f39f0804f17071108bb3080
+    entity_id: binary_sensor.pantry_motion_sensor_motion
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 053412c98b86fa47f7917b2c830ad14e
+    entity_id: light.butlers_1
+    domain: light
+    brightness_pct: 80
+  - type: turn_on
+    device_id: 7803bf3f7bf2766034d74b508aacac92
+    entity_id: light.butlers_2
+    domain: light
+    brightness_pct: 80
+  - type: turn_on
+    device_id: 5a9efe51905b31704f9709732f5e8c0f
+    entity_id: light.butlers_bench
+    domain: light
+    brightness_pct: 80
+  - delay: 00:03:00
+  - type: turn_off
+    device_id: 053412c98b86fa47f7917b2c830ad14e
+    entity_id: light.butlers_1
+    domain: light
+  - type: turn_off
+    device_id: 7803bf3f7bf2766034d74b508aacac92
+    entity_id: light.butlers_2
+    domain: light
+  - type: turn_off
+    device_id: 5a9efe51905b31704f9709732f5e8c0f
+    entity_id: light.butlers_bench
+    domain: light
+  mode: restart
+- id: '1606647092536'
+  alias: Master Robe Lights
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 85c1e345b42f59f0a6c3d69e2cc2988e
+    entity_id: binary_sensor.master_robe_motion_sensor_motion
+    domain: binary_sensor
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  - condition: and
+    conditions:
+    - condition: device
+      type: is_off
+      device_id: 97ad6ea75f2949ad9d9bce58baf769ca
+      entity_id: light.master_robe_1
+      domain: light
+    - condition: device
+      type: is_off
+      device_id: 71c0ed398604c7afb57f854852382c39
+      entity_id: light.master_robe_2
+      domain: light
+    - condition: device
+      type: is_off
+      device_id: 219811759b15744424db6eaa2d7d34d6
+      entity_id: light.master_robe_3
+      domain: light
+    - condition: device
+      type: is_off
+      device_id: a0c630b2494fede825e5a6f5d5671c7a
+      entity_id: light.master_robe_4
+      domain: light
+  action:
+  - type: turn_on
+    device_id: 97ad6ea75f2949ad9d9bce58baf769ca
+    entity_id: light.master_robe_1
+    domain: light
+    brightness_pct: 60
+  - type: turn_on
+    device_id: 71c0ed398604c7afb57f854852382c39
+    entity_id: light.master_robe_2
+    domain: light
+    brightness_pct: 60
+  - type: turn_on
+    device_id: 219811759b15744424db6eaa2d7d34d6
+    entity_id: light.master_robe_3
+    domain: light
+    brightness_pct: 60
+  - type: turn_on
+    device_id: a0c630b2494fede825e5a6f5d5671c7a
+    entity_id: light.master_robe_4
+    domain: light
+    brightness_pct: 60
+  - delay: 00:03:00
+  - type: turn_off
+    device_id: 97ad6ea75f2949ad9d9bce58baf769ca
+    entity_id: light.master_robe_1
+    domain: light
+  - type: turn_off
+    device_id: 71c0ed398604c7afb57f854852382c39
+    entity_id: light.master_robe_2
+    domain: light
+  - type: turn_off
+    device_id: 219811759b15744424db6eaa2d7d34d6
+    entity_id: light.master_robe_3
+    domain: light
+  - type: turn_off
+    device_id: a0c630b2494fede825e5a6f5d5671c7a
+    entity_id: light.master_robe_4
+    domain: light
+  mode: restart
+- id: '1606818882600'
+  alias: Lock Doors at Night
+  description: ''
+  trigger:
+  - platform: time
+    at: '21:00:00'
+  - platform: time
+    at: 00:00:00
+  condition:
+  - type: is_not_open
+    condition: device
+    device_id: 38d2423f99617b6902543a7c29606298
+    entity_id: binary_sensor.front_door_sensor_contact
+    domain: binary_sensor
+  action:
+  - device_id: b502a513626ef0c34853d3772505f6d0
+    domain: lock
+    entity_id: lock.front_door
+    type: lock
+  - device_id: fa1a40b843cdd263e4710b6f35052983
+    domain: lock
+    entity_id: lock.garage_entry
+    type: lock
+  mode: single
+- id: '1607769525253'
+  alias: Ensuite Night Light
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 7b55ba1713a77c879b7573fb3202bdc8
+    entity_id: binary_sensor.ensuite_motion
+    domain: binary_sensor
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - type: turn_on
+    device_id: 55c6c7fc781c0c3f5c2a6770368f2aee
+    entity_id: light.master_bath_1
+    domain: light
+    brightness_pct: 1
+  - type: turn_on
+    device_id: 12258761ba0ac7e261843bf587bc8473
+    entity_id: light.master_bath_2
+    domain: light
+    brightness_pct: 1
+  - type: turn_on
+    device_id: 09a312f23b518345243e61a9ee6c1774
+    entity_id: light.master_bath_3
+    domain: light
+    brightness_pct: 1
+  - delay: 00:01:30
+  - type: turn_off
+    device_id: 55c6c7fc781c0c3f5c2a6770368f2aee
+    entity_id: light.master_bath_1
+    domain: light
+  - type: turn_off
+    device_id: 12258761ba0ac7e261843bf587bc8473
+    entity_id: light.master_bath_2
+    domain: light
+  - type: turn_off
+    device_id: 09a312f23b518345243e61a9ee6c1774
+    entity_id: light.master_bath_3
+    domain: light
+  mode: restart
+- id: '1608018403580'
+  alias: Turn on the stair lights when the sun is set
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunset
+  condition: []
+  action:
+  - domain: light
+    entity_id: light.stairs_down_1
+    device_id: 21181ceb8b946eddc56054c8cb8eb018
+    type: turn_on
+    brightness_pct: 10
+  mode: single
+- id: '1608018493807'
+  alias: Turn off the stair lights when the sun rises
+  description: ''
+  trigger:
+  - platform: sun
+    event: sunrise
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 21181ceb8b946eddc56054c8cb8eb018
+    entity_id: light.stairs_down_1
+    domain: light
+  mode: single
+- id: '1608762855139'
+  alias: Garage Light On
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 9497bdc8665ec941d5c2466ba95a5859
+    entity_id: binary_sensor.garage_entry_sensor_contact
+    domain: binary_sensor
+  - platform: device
+    device_id: 62674f458a7e3de2a4deae64da868000
+    domain: cover
+    entity_id: cover.garage_door
+    type: opened
+  - type: motion
+    platform: device
+    device_id: 6d776ddfe05255b3f3da34f0af19d57a
+    entity_id: binary_sensor.garage_motion
+    domain: binary_sensor
+  - type: opened
+    platform: device
+    device_id: 90a2b883d00ace4c07ec35f5fc3ab14d
+    entity_id: binary_sensor.garage_door_sensor_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - type: turn_on
+    device_id: 460e83eed69589c8ac30e39531974ca2
+    entity_id: light.light
+    domain: light
+  - delay: 00:10:00
+  - type: turn_off
+    device_id: 460e83eed69589c8ac30e39531974ca2
+    entity_id: light.light
+    domain: light
+  mode: restart
+- id: '1608772537185'
+  alias: Close Garage after 1HR
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 62674f458a7e3de2a4deae64da868000
+    domain: cover
+    entity_id: cover.garage_door
+    type: opening
+  condition: []
+  action:
+  - delay: 01:00:00
+  - device_id: 62674f458a7e3de2a4deae64da868000
+    domain: cover
+    entity_id: cover.garage_door
+    type: close
+  mode: single
+- id: '1608774341516'
+  alias: Heater Tampering
+  description: ''
+  trigger:
+  - type: value
+    platform: device
+    device_id: ad756006a9a050e75bf1138df6245fac
+    entity_id: sensor.living_temperature
+    domain: sensor
+    above: 22
+  condition: []
+  action:
+  - service: notify.mobile_app_pixel_5
+    data:
+      message: Heater tampering
+  - service: notify.notify
+    data:
+      message: Heater tampering
+  mode: single
+- id: '1609012948827'
+  alias: Turn Sound Down Overnight
+  description: ''
+  trigger:
+  - platform: time
+    at: 00:07:30
+  condition: []
+  action:
+  - scene: scene.sonos_volume_10
+  mode: single

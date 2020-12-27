@@ -1,0 +1,80 @@
+# Configure a default setup of Home Assistant (frontend, api, etc)
+default_config:
+frontend:
+  themes: !include_dir_merge_named themes
+
+# System Includes
+recorder: !include includes/recorder.yaml
+influxdb: !include includes/influxdb.yaml
+logger: !include includes/logger.yaml
+
+#smartir
+smartir:
+
+#Android TVs
+media_player:
+  - platform: androidtv
+    name: Living Room Shield
+    host: 192.168.2.86
+
+# Text to speech
+tts:
+  - platform: google_translate
+
+# Includes
+group: !include groups.yaml
+automation: !include automations.yaml
+script: !include scripts.yaml
+scene: !include scenes.yaml
+
+light: !include includes/lights.yaml
+input_number: !include includes/input_numbers.yaml
+
+# switch: !include includes/switches.yaml
+switch:
+  - platform: template
+    switches:
+      back_yard_front:
+        friendly_name: Sprinkler Front
+        value_template: "{{ is_state('binary_sensor.back_yard_front_station_running', 'on') }}"
+        turn_on:
+          service: opensprinkler.run
+          data_template:
+            entity_id: binary_sensor.back_yard_front_station_running
+            # Run seconds uses the input_number below.
+            run_seconds: "{{ ((states('input_number.back_yard_front_station_minutes') | float) * 60) | int }}"
+        turn_off:
+          service: opensprinkler.stop
+          data:
+            entity_id: binary_sensor.back_yard_front_station_running
+      back_yard_rear:
+        friendly_name: Back Yard Rear
+        value_template: "{{ is_state('binary_sensor.back_yard_rear_station_running', 'on') }}"
+        turn_on:
+          service: opensprinkler.run
+          data_template:
+            entity_id: binary_sensor.back_yard_rear_station_running
+            # Run seconds uses the input_number below.
+            run_seconds: "{{ ((states('input_number.back_yard_rear_station_minutes') | float) * 60) | int }}"
+        turn_off:
+          service: opensprinkler.stop
+          data:
+            entity_id: binary_sensor.back_yard_rear_station_running
+  - platform: broadlink
+    host: 192.168.2.156
+    mac: 24:df:a7:f9:1c:cd
+    switches:
+      - name: Fireplace
+        command_on: scCGAgCfBgAlDwsdDBAYHRkQCx0ZEAsQCxIlHhgeGBALHQsQGR4KEBgXJR4LEAsQChEKEQsQGB4KEBkQChMlHgsQCxAYHgsQChEYHgoRFxUlEAseGB4YEAsQCx4KERgQCxUlEAsQCxALHQsQCxALEBgeCxAYEyUdCxEYEAsRCRELHRkdGBEKqyYRCh4LEBgeGBEKHhgRChALEiUeGB4YEAseCxAYHQwQGBQlHgsQCxALEAsQCxAYHgsQGBALEiYdCxALEBgeCxALEBgeCxAYEyUQCx0ZHRkQCxALHgoRGBAKEyUQCxALEQoeChALEAsQGR4KEBkSJR4KERgQCxALEQoeGB4YEAquJhALHgsQGB0ZEAsdGRALEAsRJh4YHRkQCx4KERgdCxAYEiYeCw8LEQoQCxALEBkdCxEXEQoTJR4KEQoQGR0MEAoQGR0LEBgWJRAKHxceGRAKEQoeCxAYEQoTJRALEAsQCx4KEAsQCxAZHQsQGBImHgoRFxELEAsQCx0YHxgQCqsmEAseCxAYHhgQCx4YEAsQCxYlHhgeGBEKHgsQGB4LEBgSJR4LEAsQCxALEAsQGB4LEBgQCxUkHgsQCxAYHgsQCxAYHQsRGBQmEAseGB0ZEAsQCx0LEBgQCxMlEQoQCxALHgoQCxALEBkdCxAYEyUeChAZEAsQCxALHhgdGRAKrCYQCh4LEBgeGBALHhgQCxALFCYdGR0ZEAseChEYHQsQGBImHgoRChALEAsQCxAZHQsQGBEKEiYeChALEBkeChEKERgdCxAYEiYRCh4YHhgQCxALHgsQGBALEiURCw8LEQseChALEAsQGB0LEBkUJh4KEBgRCxAKEQoeGB4YEQoABdw=
+        command_off: scCaAgCfBgAoDQ0bDg0bGxsODRwaDg0ODRAnHBocGg8MHQsPGR4LDxoRJR4LEAsQCxALEAsQGB4LEBgQCxImHQsQCxEYHQsQCxALEAsQGRAKFSYQCx0YHhkQCxALHQsRFxALEiYQCxALHQsQCxALEQsPCxALEAsQGREmHgsPGRALEAsQCx4YHhgQC6smEAseCw8ZHRkQCx0ZEAsQCxQmHRkdGRALHQsQGR0LEBgSJh4KEQoQCxALEAsQGR0LEBgQCxMlHgsQCxAYHgsQCxALEAsQGBALEiURCh4YHhgRChELHQsQGBALEiYQCxALHQsQCxEKEAsQCxALEAsQGBUlHgsQGBEKEAwQCh4YHhgRCqwlEAseCxAYHhgQCx4YEAsQCxImHRocGBELHQsQGB4LEBgSJR4LEAsQCxALEAsQGR0LEBgQCxUlHgsQCxAYHgsQCxALEAsQGBALEiYQCx4YHhgQCxALHQsQGRALEiUQCxALHgsQCxALEAsQCxALDwsRGBIlHgsQGBALEAsQCx4YHhgQC7AlEAseCxAYHhkPEBkYEAsQCxImHRkdGBELHQsQGR0LEBgUJR4LEAsQCxALEAsQGB4LEBgQCxUlHgsQCxAYHgsQCxALEAsQGBALEiURCh4ZHRkQChEKHgsQGBALEyUQCxALHgsPCxALEAsQCxAMDwsQGBImHgsQGBALEAsQCx4YHhgQC64lEQoeCxAZHRkQCh4YEAsQCxMlHRkdGRALHQsQGR0LEBgSJh4KEAsQDA8LEAsQGR0LEBkQChImHgsQChAZHgsQCxALDwwPGRALEiURCh4ZHRgRChEKHgsQGBALFSURChEKHgsQCxALEAsQCxALEAsQGBIlHgsQGBEKEAsRCh4YHhgQCwAF3AAAAAAAAAAAAAAAAA==
+
+cover: !include includes/covers.yaml
+fan: !include includes/fans.yaml
+climate: !include includes/climate.yaml
+
+#remote: !include includes/remotes.yaml
+remote:
+  - platform: broadlink
+    host: 192.168.2.156
+    mac: 24:df:a7:f9:1c:cd
+    name: Broadlink RM4 Pro
