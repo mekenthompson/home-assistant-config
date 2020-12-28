@@ -23,6 +23,10 @@
   entities:
     - light.dining_1
     - light.dining_2
+    - light.dining_3
+    - light.dining_4
+    - light.dining_5
+    - light.dining_6
 - platform: group
   name: Butler's Pantry Lights
   entities:
@@ -37,12 +41,12 @@
     - light.entry_3
     - light.entry_4
 - platform: group
-  name: Guest Bathroom Lights
+  name: Guest Bath Lights
   entities:
     - light.guest_bath_1
     - light.guest_bath_2
 - platform: group
-  name: Guest Bedroom
+  name: Guest Bedroom Lights
   entities:
     - light.guest_1
     - light.guest_2
@@ -79,13 +83,6 @@
   entities:
     - light.front_1
     - light.front_2
-- platform: group
-  name: Vault Lights
-  entities:
-    - light.vault_1
-    - light.vault_2
-    - light.vault_3
-    - light.vault_4
 #Festoon Lights
 - platform: flux_led
   automatic_add: true
@@ -191,6 +188,10 @@
     - light.library_4
     - light.dining_1
     - light.dining_2
+    - light.dining_3
+    - light.dining_4
+    - light.dining_5
+    - light.dining_6
     - light.butlers_1
     - light.butlers_2
     - light.butlers_bench
@@ -217,18 +218,6 @@
     - light.fireplace_right_bottom
     - light.fireplace_right_middle
     - light.fireplace_right_top
-    - light.deck_1
-    - light.deck_2
-    - light.deck_3
-    - light.deck_4
-    - light.front_1
-    - light.front_2
-    - light.vault_1
-    - light.vault_2
-    - light.vault_3
-    - light.vault_4
-    - light.festoon_1
-    - light.festoon_2
 - platform: group
   name: Lower Ground Lights
   entities:
@@ -271,11 +260,11 @@
     - light.office_2
     - light.office_3
     - light.office_desk
-    - light.balcony_1
-    - light.balcony_2
 - platform: group
   name: Outdoor Lights
   entities:
+    - light.front_1
+    - light.front_2
     - light.deck_1
     - light.deck_2
     - light.deck_3
