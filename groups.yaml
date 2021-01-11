@@ -3,3 +3,25 @@ back_yard_sprinklers:
   entities:
     - switch.back_yard_front
     - switch.back_yard_rear
+entry_motion_detection:
+  name: Front Yard Motion
+  entities:
+    - binary_sensor.front_gate_contact
+    - binary_sensor.front_yard_motion
+    - binary_sensor.front_door_motionS
+    - binary_sensor.front_door_sensor_contact
+master_ensuite_group:
+  name: Ensuite Lights
+  entities:
+    - light.ensuite_lights
+garage_motion_detection:
+  name: Garage Motion
+  entities:
+    - binary_sensor.garage_entry_sensor_acceleration
+    - binary_sensor.garage_motion
+    - binary_sensor.garage_entry_sensor_contact
+kids_tv_control:
+  name: Kids TV
+  entities:
+    - switch.kids_power
+    - switch.christmas_lights

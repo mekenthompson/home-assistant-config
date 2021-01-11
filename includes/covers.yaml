@@ -1,6 +1,6 @@
 - platform: template
   covers:
-    master:
+    master_curtains:
       friendly_name: "Curtains"
       open_cover:
         service: remote.send_command

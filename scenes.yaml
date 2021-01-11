@@ -166,17 +166,17 @@
       - effect_pulse
       - effect_colorloop
       - effect_stop
-      brightness: 26
+      brightness: 13
       hs_color:
-      - 360
-      - 100
+      - 29.999
+      - 85.713
       rgb_color:
       - 255
-      - 0
-      - 0
+      - 145
+      - 36
       xy_color:
-      - 0.701
-      - 0.299
+      - 0.581
+      - 0.388
       entity_id:
       - light.master_bath_1
       - light.master_bath_2
@@ -353,3 +353,252 @@
       friendly_name: Office
       supported_features: 457279
       state: idle
+- id: '1609381314682'
+  name: Butlers Pantry On
+  entities:
+    light.butlers_1:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 230
+      color_temp: 310
+      friendly_name: Butlers 1
+      supported_features: 55
+      state: 'on'
+    light.butlers_2:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 230
+      color_temp: 310
+      friendly_name: Butlers 2
+      supported_features: 55
+      state: 'on'
+    light.butlers_bench:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 255
+      color_temp: 310
+      friendly_name: Butlers Bench
+      supported_features: 55
+      state: 'on'
+- id: '1609381591973'
+  name: Front Yard Lights
+  entities:
+    light.front_1:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 217
+      color_temp: 320
+      friendly_name: Front 1
+      supported_features: 55
+      state: 'on'
+    light.front_2:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 217
+      color_temp: 320
+      friendly_name: Front 2
+      supported_features: 55
+      state: 'on'
+- id: '1609477964303'
+  name: Butlers Pantry Off
+  entities:
+    light.butlers_1:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      friendly_name: Butlers 1
+      supported_features: 55
+      state: 'off'
+    light.butlers_2:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      friendly_name: Butlers 2
+      supported_features: 55
+      state: 'off'
+    light.butlers_bench:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      friendly_name: Butlers Bench
+      supported_features: 55
+      state: 'off'
+- id: '1609478125476'
+  name: Ensuite Off
+  entities:
+    light.master_bath_1:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      friendly_name: Master Bath 1
+      supported_features: 55
+      state: 'off'
+    light.master_bath_2:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      friendly_name: Master Bath 2
+      supported_features: 55
+      state: 'off'
+    light.master_bath_3:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      friendly_name: Master Bath 3
+      supported_features: 55
+      state: 'off'
+- id: '1609478163733'
+  name: Front Yard Off
+  entities:
+    light.front_1:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      friendly_name: Front 1
+      supported_features: 55
+      state: 'off'
+    light.front_2:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      friendly_name: Front 2
+      supported_features: 55
+      state: 'off'
+- id: '1609478274547'
+  name: Master Robe On
+  entities:
+    light.master_robe_1:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 204
+      color_temp: 330
+      friendly_name: Master Robe 1
+      supported_features: 55
+      state: 'on'
+    light.master_robe_2:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 204
+      color_temp: 330
+      friendly_name: Master Robe 2
+      supported_features: 55
+      state: 'on'
+    light.master_robe_3:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 204
+      color_temp: 330
+      friendly_name: Master Robe 3
+      supported_features: 55
+      state: 'on'
+    light.master_robe_4:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      brightness: 204
+      color_temp: 330
+      friendly_name: Master Robe 4
+      supported_features: 55
+      state: 'on'
+- id: '1609478317754'
+  name: Master Robe Off
+  entities:
+    light.master_robe_1:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      friendly_name: Master Robe 1
+      supported_features: 55
+      state: 'off'
+    light.master_robe_2:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      friendly_name: Master Robe 2
+      supported_features: 55
+      state: 'off'
+    light.master_robe_3:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      friendly_name: Master Robe 3
+      supported_features: 55
+      state: 'off'
+    light.master_robe_4:
+      min_mireds: 111
+      max_mireds: 400
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_stop
+      friendly_name: Master Robe 4
+      supported_features: 55
+      state: 'off'

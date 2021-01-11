@@ -1,51 +1,20 @@
 - id: '1606560288972'
-  alias: Front Door Motion Lights
+  alias: Front Door Motion
   description: ''
   trigger:
-  - type: motion
-    platform: device
-    device_id: e85694130faab36c1ae8d19c05b9cbac
-    entity_id: binary_sensor.front_door_motion
-    domain: binary_sensor
-  - type: motion
-    platform: device
-    device_id: f437af012f121c78c152e7db919f1654
-    entity_id: binary_sensor.front_yard_motion
-    domain: binary_sensor
-  - type: opened
-    platform: device
-    device_id: 59019d7110e11f488f93e9e9e2d67bdc
-    entity_id: binary_sensor.front_gate_contact
-    domain: binary_sensor
+  - platform: state
+    entity_id: group.entry_motion_detection
+    from: 'off'
+    to: 'on'
   condition:
   - condition: state
     entity_id: sun.sun
     state: below_horizon
   action:
-  - type: turn_on
-    device_id: edb58d979bbd1040978c467d1a2a783e
-    entity_id: light.front_1
-    domain: light
-    brightness_pct: 80
-  - type: turn_on
-    device_id: 4acb78c6dac5d23206df278ad86c008e
-    entity_id: light.front_2
-    domain: light
-    brightness_pct: 80
-  - condition: state
-    entity_id: sun.sun
-    state: above_horizon
-  - type: turn_off
-    device_id: edb58d979bbd1040978c467d1a2a783e
-    entity_id: light.front_1
-    domain: light
-  - type: turn_off
-    device_id: 4acb78c6dac5d23206df278ad86c008e
-    entity_id: light.front_2
-    domain: light
-  mode: restart
+  - scene: scene.front_yard_lights
+  mode: single
 - id: '1606646360023'
-  alias: Butlers Pantry Lights
+  alias: Butlers Motion
   description: ''
   trigger:
   - type: motion
@@ -55,37 +24,10 @@
     domain: binary_sensor
   condition: []
   action:
-  - type: turn_on
-    device_id: 053412c98b86fa47f7917b2c830ad14e
-    entity_id: light.butlers_1
-    domain: light
-    brightness_pct: 80
-  - type: turn_on
-    device_id: 7803bf3f7bf2766034d74b508aacac92
-    entity_id: light.butlers_2
-    domain: light
-    brightness_pct: 80
-  - type: turn_on
-    device_id: 5a9efe51905b31704f9709732f5e8c0f
-    entity_id: light.butlers_bench
-    domain: light
-    brightness_pct: 80
-  - delay: 00:03:00
-  - type: turn_off
-    device_id: 053412c98b86fa47f7917b2c830ad14e
-    entity_id: light.butlers_1
-    domain: light
-  - type: turn_off
-    device_id: 7803bf3f7bf2766034d74b508aacac92
-    entity_id: light.butlers_2
-    domain: light
-  - type: turn_off
-    device_id: 5a9efe51905b31704f9709732f5e8c0f
-    entity_id: light.butlers_bench
-    domain: light
+  - scene: scene.butler_s_pantry
   mode: restart
 - id: '1606647092536'
-  alias: Master Robe Lights
+  alias: Master Robe Motion
   description: ''
   trigger:
   - type: motion
@@ -97,67 +39,9 @@
   - condition: state
     entity_id: sun.sun
     state: below_horizon
-  - condition: and
-    conditions:
-    - condition: device
-      type: is_off
-      device_id: 97ad6ea75f2949ad9d9bce58baf769ca
-      entity_id: light.master_robe_1
-      domain: light
-    - condition: device
-      type: is_off
-      device_id: 71c0ed398604c7afb57f854852382c39
-      entity_id: light.master_robe_2
-      domain: light
-    - condition: device
-      type: is_off
-      device_id: 219811759b15744424db6eaa2d7d34d6
-      entity_id: light.master_robe_3
-      domain: light
-    - condition: device
-      type: is_off
-      device_id: a0c630b2494fede825e5a6f5d5671c7a
-      entity_id: light.master_robe_4
-      domain: light
   action:
-  - type: turn_on
-    device_id: 97ad6ea75f2949ad9d9bce58baf769ca
-    entity_id: light.master_robe_1
-    domain: light
-    brightness_pct: 60
-  - type: turn_on
-    device_id: 71c0ed398604c7afb57f854852382c39
-    entity_id: light.master_robe_2
-    domain: light
-    brightness_pct: 60
-  - type: turn_on
-    device_id: 219811759b15744424db6eaa2d7d34d6
-    entity_id: light.master_robe_3
-    domain: light
-    brightness_pct: 60
-  - type: turn_on
-    device_id: a0c630b2494fede825e5a6f5d5671c7a
-    entity_id: light.master_robe_4
-    domain: light
-    brightness_pct: 60
-  - delay: 00:03:00
-  - type: turn_off
-    device_id: 97ad6ea75f2949ad9d9bce58baf769ca
-    entity_id: light.master_robe_1
-    domain: light
-  - type: turn_off
-    device_id: 71c0ed398604c7afb57f854852382c39
-    entity_id: light.master_robe_2
-    domain: light
-  - type: turn_off
-    device_id: 219811759b15744424db6eaa2d7d34d6
-    entity_id: light.master_robe_3
-    domain: light
-  - type: turn_off
-    device_id: a0c630b2494fede825e5a6f5d5671c7a
-    entity_id: light.master_robe_4
-    domain: light
-  mode: restart
+  - scene: scene.master_robe_on
+  mode: single
 - id: '1606818882600'
   alias: Lock Doors at Night
   description: ''
@@ -183,7 +67,7 @@
     type: lock
   mode: single
 - id: '1607769525253'
-  alias: Ensuite Night Light
+  alias: Ensuite Motion
   description: ''
   trigger:
   - type: motion
@@ -195,36 +79,12 @@
   - condition: state
     entity_id: sun.sun
     state: below_horizon
+  - condition: state
+    entity_id: light.ensuite_lights
+    state: 'off'
   action:
-  - type: turn_on
-    device_id: 55c6c7fc781c0c3f5c2a6770368f2aee
-    entity_id: light.master_bath_1
-    domain: light
-    brightness_pct: 1
-  - type: turn_on
-    device_id: 12258761ba0ac7e261843bf587bc8473
-    entity_id: light.master_bath_2
-    domain: light
-    brightness_pct: 1
-  - type: turn_on
-    device_id: 09a312f23b518345243e61a9ee6c1774
-    entity_id: light.master_bath_3
-    domain: light
-    brightness_pct: 1
-  - delay: 00:01:30
-  - type: turn_off
-    device_id: 55c6c7fc781c0c3f5c2a6770368f2aee
-    entity_id: light.master_bath_1
-    domain: light
-  - type: turn_off
-    device_id: 12258761ba0ac7e261843bf587bc8473
-    entity_id: light.master_bath_2
-    domain: light
-  - type: turn_off
-    device_id: 09a312f23b518345243e61a9ee6c1774
-    entity_id: light.master_bath_3
-    domain: light
-  mode: restart
+  - scene: scene.ensuite_night_mode
+  mode: single
 - id: '1608018403580'
   alias: Turn on the stair lights when the sun is set
   description: ''
@@ -253,54 +113,33 @@
     domain: light
   mode: single
 - id: '1608762855139'
-  alias: Garage Light On
+  alias: Garage Motion
   description: ''
   trigger:
-  - type: opened
-    platform: device
-    device_id: 9497bdc8665ec941d5c2466ba95a5859
-    entity_id: binary_sensor.garage_entry_sensor_contact
-    domain: binary_sensor
-  - platform: device
-    device_id: 62674f458a7e3de2a4deae64da868000
-    domain: cover
-    entity_id: cover.garage_door
-    type: opened
-  - type: motion
-    platform: device
-    device_id: 6d776ddfe05255b3f3da34f0af19d57a
-    entity_id: binary_sensor.garage_motion
-    domain: binary_sensor
-  - type: opened
-    platform: device
-    device_id: 90a2b883d00ace4c07ec35f5fc3ab14d
-    entity_id: binary_sensor.garage_door_sensor_contact
-    domain: binary_sensor
+  - platform: state
+    entity_id: group.garage_motion_detection
+    from: 'off'
+    to: 'on'
   condition: []
   action:
   - type: turn_on
     device_id: 460e83eed69589c8ac30e39531974ca2
     entity_id: light.light
     domain: light
-  - delay: 00:10:00
-  - type: turn_off
-    device_id: 460e83eed69589c8ac30e39531974ca2
-    entity_id: light.light
-    domain: light
+    brightness_pct: 100
   mode: restart
 - id: '1608772537185'
   alias: Close Garage after 1HR
   description: ''
   trigger:
-  - platform: device
-    device_id: 62674f458a7e3de2a4deae64da868000
-    domain: cover
-    entity_id: cover.garage_door
-    type: opening
+  - platform: state
+    entity_id: group.garage_motion_detection
+    from: 'on'
+    to: 'off'
+    for: 01:00:00
   condition: []
   action:
-  - delay: 01:00:00
-  - device_id: 62674f458a7e3de2a4deae64da868000
+  - device_id: 8c8da50538a89c6ba8065484d32caf0e
     domain: cover
     entity_id: cover.garage_door
     type: close
@@ -333,4 +172,235 @@
   condition: []
   action:
   - scene: scene.sonos_volume_10
+  mode: single
+- id: '1609473133030'
+  alias: Front Door No Motion
+  description: ''
+  trigger:
+  - entity_id: group.entry_motion_detection
+    platform: state
+    from: 'on'
+    to: 'off'
+    for: 00:05:00
+  condition: []
+  action:
+  - scene: scene.front_yard_off
+  mode: single
+- id: '1609477935315'
+  alias: Butlers No Motion
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: dc0e10b59f39f0804f17071108bb3080
+    entity_id: binary_sensor.pantry_motion_sensor_motion
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - scene: scene.butlers_pantry_off
+  mode: single
+- id: '1609478441059'
+  alias: Master Robe No Motion
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 85c1e345b42f59f0a6c3d69e2cc2988e
+    entity_id: binary_sensor.master_robe_motion_sensor_motion
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - scene: scene.master_robe_off
+  mode: single
+- id: '1609478593120'
+  alias: Ensuite No Motion
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 7b55ba1713a77c879b7573fb3202bdc8
+    entity_id: binary_sensor.ensuite_motion
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - scene: scene.ensuite_no_motion
+  mode: single
+- id: '1609479215257'
+  alias: blueprint test
+  description: ''
+  use_blueprint:
+    path: homeassistant/motion_light.yaml
+    input:
+      no_motion_wait: '120'
+      motion_entity: binary_sensor.ensuite_motion
+      light_target:
+        area_id: 82329dcf31079f47056a2539a1361d89
+- id: '1609481861419'
+  alias: Garage No Motion
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.garage_motion_detection
+    from: 'on'
+    to: 'off'
+    for: 00:10:00
+  condition: []
+  action:
+  - type: turn_off
+    device_id: 460e83eed69589c8ac30e39531974ca2
+    entity_id: light.light
+    domain: light
+  mode: single
+- id: '1609808177078'
+  alias: Kid's Bathroom Fan On
+  description: If bathroom lights turn on, turn on fan
+  trigger:
+  - platform: state
+    entity_id: light.kid_s_bathroom
+    to: 'on'
+  condition: []
+  action:
+  - type: turn_on
+    device_id: bdf6795fdf2ca50d1614d8f291ce42b1
+    entity_id: switch.projector
+    domain: switch
+  mode: single
+- id: '1609808226087'
+  alias: Kid's Bathroom Fan Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: light.kid_s_bathroom
+    to: 'off'
+  condition: []
+  action:
+  - type: turn_off
+    device_id: bdf6795fdf2ca50d1614d8f291ce42b1
+    entity_id: switch.projector
+    domain: switch
+  mode: single
+- id: '1609816809823'
+  alias: Guest Bathroom Motion Lights On
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 66e144a7855774931a5890dc5ff97fe2
+    entity_id: binary_sensor.guest_bathroom_motion_sensor_motion
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: light.turn_on
+    data: {}
+    entity_id: light.guest_bath_lights
+  mode: single
+- id: '1609817172392'
+  alias: Guest Bathroom No Motion Lights Off
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 66e144a7855774931a5890dc5ff97fe2
+    entity_id: binary_sensor.guest_bathroom_motion_sensor_motion
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    entity_id: light.guest_bath_lights
+  mode: single
+- id: '1609817366568'
+  alias: Kids Bathroom Motion Lights On
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 051cb788a7ae46b9987ea7f452c5295a
+    entity_id: binary_sensor.kids_bathroom_motion_sensor_motion
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: light.turn_on
+    data: {}
+    entity_id: light.kid_s_bathroom
+  mode: single
+- id: '1609817421503'
+  alias: Kids Bathoom No Motion Lights Off
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 051cb788a7ae46b9987ea7f452c5295a
+    entity_id: binary_sensor.kids_bathroom_motion_sensor_motion
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    entity_id: light.kid_s_bathroom
+  mode: single
+- id: '1609954309558'
+  alias: Kids TV On Holidays
+  description: ''
+  trigger:
+  - platform: time
+    at: 06:30:00
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.christmas_lights
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.kids_power
+  mode: single
+- id: '1609954308322'
+  alias: Kids TV On Holidays
+  description: Turn on at 6.20am
+  trigger:
+  - platform: time
+    at: 06:30:00
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.christmas_lights
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.kids_power
+  mode: single
+- id: '1609972159052'
+  alias: Turn off Kids TV at 9am
+  description: ''
+  trigger:
+  - platform: time
+    at: 09:00:00
+  condition: []
+  action:
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.christmas_lights
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.kids_power
   mode: single
