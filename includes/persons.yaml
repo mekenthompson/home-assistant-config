@@ -1,0 +1,14 @@
+- name: Ken
+  id: ken
+  user_id: fbd663fe975741a7a1b89b7f4a73cf2b
+  #  picture: !secret profile_photo_ken
+  device_trackers:
+    - device_tracker.pixel_5 # from Android app
+    - device_tracker.ken_pixel_ping
+- name: Lisa
+  id: lisa
+  user_id: 610868cdbc85416a86637266ab9d3a26
+  #  picture: !secret profile_photo_lisa
+  device_trackers:
+    - device_tracker.lisa_s_pixel_5 # from Android app
+    - device_tracker.lisa_pixel_ping

@@ -1,0 +1,5 @@
+- platform: workday
+  country: AU
+  province: VIC
+  workdays: [mon, tue, wed, thu, fri]
+  excludes: [sat, sun, holiday]

@@ -1,0 +1,15 @@
+---
+#-
+#              _   _  __
+#  _ __   ___ | |_(_)/ _|_   _
+# | '_ \ / _ \| __| | |_| | | |
+# | | | | (_) | |_| |  _| |_| |
+# |_| |_|\___/ \__|_|_|  \__, |
+#                        |___/
+#
+#- from github.com/basnijholt/home-assistant-config
+- platform: group
+  name: all_phones
+  services:
+    - service: mobile_app_ken_s_pixel_5
+    - service: mobile_app_lisa_s_pixel_5
