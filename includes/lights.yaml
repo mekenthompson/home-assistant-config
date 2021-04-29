@@ -1,3 +1,8 @@
+# Switch as Light entity
+- platform: switch
+  name: Festoon Lights
+  entity_id: switch.festoon_switch
+
 # Light Groups
 
 # Ground Floor Groups
@@ -45,6 +50,7 @@
   entities:
     - light.guest_bath_1
     - light.guest_bath_2
+    - light.guest_bath_cabinet
 - platform: group
   name: Guest Bedroom Lights
   entities:
@@ -68,9 +74,11 @@
     - light.fireplace_left_bottom
     - light.fireplace_left_middle
     - light.fireplace_left_top
+    - light.fireplace_left_top_up
     - light.fireplace_right_bottom
     - light.fireplace_right_middle
     - light.fireplace_right_top
+    - light.fireplace_right_top_up
 - platform: group
   name: Deck Lights
   entities:
@@ -92,7 +100,7 @@
     192.168.2.198:
       name: Festoon 2
 - platform: group
-  name: Festoon Lights
+  name: Festoon Control
   entities:
     - light.festoon_1
     - light.festoon_2
@@ -103,17 +111,27 @@
   entities:
     - light.stairs_down_1
 - platform: group
-  name: Sidney's Lights
+  name: Sidney's Room
   entities:
     - light.sidney_1
     - light.sidney_2
     - light.sidney_lamp
 - platform: group
-  name: Mabel's Lights
+  name: Sidney's Lights
+  entities:
+    - light.sidney_1
+    - light.sidney_2
+- platform: group
+  name: Mabel's Room
   entities:
     - light.mabel_1
     - light.mabel_2
     - light.mabel_lamp
+- platform: group
+  name: Mabel's Lights
+  entities:
+    - light.mabel_1
+    - light.mabel_2
 - platform: group
   name: Rumpus Lights
   entities:
@@ -131,7 +149,7 @@
   entities:
     - light.kids_bath_1
     - light.kids_bath_2
-
+    - light.kids_bath_cabinet
 # First Floor Groups
 - platform: group
   name: Stairs Up Lights
@@ -152,6 +170,7 @@
     - light.master_bath_1
     - light.master_bath_2
     - light.master_bath_3
+    - light.master_bath_cabinet
 - platform: group
   name: Master Robe Lights
   entities:
@@ -201,6 +220,7 @@
     - light.entry_4
     - light.guest_bath_1
     - light.guest_bath_2
+    - light.guest_bath_cabinet
     - light.guest_1
     - light.guest_2
     - light.guest_3
@@ -215,9 +235,11 @@
     - light.fireplace_left_bottom
     - light.fireplace_left_middle
     - light.fireplace_left_top
+    - light.fireplace_left_top_up
     - light.fireplace_right_bottom
     - light.fireplace_right_middle
     - light.fireplace_right_top
+    - light.fireplace_right_top_up
 - platform: group
   name: Lower Ground Lights
   entities:
@@ -269,7 +291,6 @@
     - light.deck_2
     - light.deck_3
     - light.deck_4
-    - light.festoon_1
-    - light.festoon_2
+    - light.festoon_lights
     - light.balcony_1
     - light.balcony_2

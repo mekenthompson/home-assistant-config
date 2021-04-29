@@ -1,3 +1,6 @@
 switch.fireplace:
   icon: mdi:fire
   assumed_state: false
+switch.festoon_switch:
+  icon: mdi:lightbulb-group
+  assumed_state: false

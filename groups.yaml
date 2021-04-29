@@ -1,3 +1,8 @@
+persons:
+  name: People
+  entities:
+    - person.ken
+    - person.lisa
 back_yard_sprinklers:
   name: Sprinklers
   entities:
@@ -6,22 +11,39 @@ back_yard_sprinklers:
 entry_motion_detection:
   name: Front Yard Motion
   entities:
-    - binary_sensor.front_gate_contact
+    - binary_sensor.multi_front_gate_contact
     - binary_sensor.front_yard_motion
-    - binary_sensor.front_door_motionS
-    - binary_sensor.front_door_sensor_contact
-master_ensuite_group:
-  name: Ensuite Lights
+    - binary_sensor.front_door_motion
+    - binary_sensor.multi_front_door_contact
+kitchen_motion_detection:
+  name: Kitchen Motion
   entities:
-    - light.ensuite_lights
+    - binary_sensor.motion_kitchen_1_motion
+    - binary_sensor.motion_kitchen_2_motion
+    - binary_sensor.motion_kitchen_bench_motion
+ensuite_shower_motion_detection:
+  name: Ensuite Shower Motion
+  entities:
+    - binary_sensor.motion_ensuite_shower_1_motion
+    - binary_sensor.motion_ensuite_shower_2_motion
 garage_motion_detection:
   name: Garage Motion
   entities:
-    - binary_sensor.garage_entry_sensor_acceleration
+    - binary_sensor.multi_garage_entry_accelerometer
     - binary_sensor.garage_motion
-    - binary_sensor.garage_entry_sensor_contact
+    - binary_sensor.multi_garage_entry_contact
+    - binary_sensor.motion_garage_motion
 kids_tv_control:
   name: Kids TV
   entities:
-    - switch.kids_power
-    - switch.christmas_lights
+    - switch.power_kids_shield_on_off
+    - switch.power_kids_tv_on_off
+adaptive_lighting_reset:
+  name: Reset Adaptive Lighting
+  entities:
+    - switch.adaptive_lighting_bathroom_default
+    - switch.adaptive_lighting_default
+    - switch.adaptive_lighting_kids
+    - switch.adaptive_lighting_kids_bath_cabinet
+    - switch.adaptive_lighting_master
+    - switch.adaptive_lighting_bathroom_cabinets

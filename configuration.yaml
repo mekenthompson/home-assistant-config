@@ -17,6 +17,7 @@ tts:
   - platform: google_translate
 
 # Includes
+device_tracker: !include includes/device_trackers.yaml
 group: !include groups.yaml
 automation: !include automations.yaml
 script: !include scripts.yaml
@@ -29,3 +30,7 @@ fan: !include includes/fans.yaml
 climate: !include includes/climate.yaml
 smartir:
 media_player: !include includes/media_player.yaml
+notify: !include includes/notify.yaml
+binary_sensor: !include includes/binary_sensors.yaml
+lifx: !include includes/lifx.yaml
+# person: !include includes/persons.yaml # Double up of people, add devices in config

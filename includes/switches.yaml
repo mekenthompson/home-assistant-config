@@ -26,6 +26,16 @@
         service: opensprinkler.stop
         data:
           entity_id: binary_sensor.back_yard_rear_station_running
+#    festoon_switch:
+#      friendly_name: Festoon Switch
+#      turn_on:
+#        service: system_log.write
+#        data:
+#          message: "Festoon Switch On"
+#      turn_off:
+#        service: system_log.write
+#        data:
+#          message: "Festoon Switch Off"
 - platform: broadlink
   host: 192.168.2.156
   mac: 24:df:a7:f9:1c:cd

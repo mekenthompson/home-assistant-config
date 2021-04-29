@@ -19,3 +19,10 @@
     - climate.walk_in_robe
     - climate.guest_room
     - climate.guest_bath
+- platform: climate_group
+  name: "All Cooling"
+  temperature_unit: C # default to celsius, 'C' or 'F'
+  entities:
+    - climate.living_cooling
+    - climate.master_cooling
+    - climate.office_cooling

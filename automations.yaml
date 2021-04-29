@@ -1,49 +1,35 @@
-- id: '1606560288972'
-  alias: Front Door Motion
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: group.entry_motion_detection
-    from: 'off'
-    to: 'on'
-  condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
-  action:
-  - scene: scene.front_yard_lights
-  mode: single
 - id: '1606646360023'
-  alias: Butlers Motion
+  alias: Motion On - Butlers
   description: ''
   trigger:
   - type: motion
     platform: device
-    device_id: dc0e10b59f39f0804f17071108bb3080
-    entity_id: binary_sensor.pantry_motion_sensor_motion
+    device_id: d87603fdd3b2f16ee9df09f4d06cf9e3
+    entity_id: binary_sensor.motion_butlers_motion
     domain: binary_sensor
   condition: []
   action:
-  - scene: scene.butler_s_pantry
-  mode: restart
+  - service: light.turn_on
+    data: {}
+    entity_id: light.butler_s_pantry_lights
+  mode: single
 - id: '1606647092536'
-  alias: Master Robe Motion
+  alias: Motion On - Master Robe
   description: ''
   trigger:
   - type: motion
     platform: device
-    device_id: 85c1e345b42f59f0a6c3d69e2cc2988e
-    entity_id: binary_sensor.master_robe_motion_sensor_motion
+    device_id: ded143add4f480e6eb22c0a00026204c
+    entity_id: binary_sensor.motion_master_robe_motion
     domain: binary_sensor
-  condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
+  condition: []
   action:
-  - scene: scene.master_robe_on
+  - service: light.turn_on
+    data: {}
+    entity_id: light.master_robe_lights
   mode: single
 - id: '1606818882600'
-  alias: Lock Doors at Night
+  alias: Security - Doors - Lock at Night
   description: ''
   trigger:
   - platform: time
@@ -53,67 +39,62 @@
   condition:
   - type: is_not_open
     condition: device
-    device_id: 38d2423f99617b6902543a7c29606298
-    entity_id: binary_sensor.front_door_sensor_contact
+    device_id: 4029b30ca4abae5ed36f7af668f46d50
+    entity_id: binary_sensor.multi_front_door_contact
     domain: binary_sensor
   action:
-  - device_id: b502a513626ef0c34853d3772505f6d0
-    domain: lock
-    entity_id: lock.front_door
-    type: lock
-  - device_id: fa1a40b843cdd263e4710b6f35052983
-    domain: lock
-    entity_id: lock.garage_entry
-    type: lock
+  - service: script.lock_up
+    data: {}
   mode: single
 - id: '1607769525253'
-  alias: Ensuite Motion
+  alias: Motion On - Ensuite
   description: ''
   trigger:
   - type: motion
     platform: device
-    device_id: 7b55ba1713a77c879b7573fb3202bdc8
-    entity_id: binary_sensor.ensuite_motion
+    device_id: 6dd915d5d86e3e51176e33eb5ec8c095
+    entity_id: binary_sensor.motion_ensuite_motion
     domain: binary_sensor
   condition:
-  - condition: state
+  - condition: numeric_state
     entity_id: sun.sun
-    state: below_horizon
-  - condition: state
-    entity_id: light.ensuite_lights
-    state: 'off'
+    below: '20'
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
   action:
-  - scene: scene.ensuite_night_mode
+  - service: light.turn_on
+    data: {}
+    entity_id: light.ensuite_lights
   mode: single
 - id: '1608018403580'
-  alias: Turn on the stair lights when the sun is set
+  alias: Light On - Stairs Down - Sunset
   description: ''
   trigger:
-  - platform: sun
-    event: sunset
+  - platform: numeric_state
+    entity_id: sun.sun
+    below: '10'
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
   condition: []
   action:
-  - domain: light
-    entity_id: light.stairs_down_1
-    device_id: 21181ceb8b946eddc56054c8cb8eb018
-    type: turn_on
-    brightness_pct: 10
+  - service: light.turn_on
+    data: {}
+    entity_id: light.stairs_down_lights
   mode: single
 - id: '1608018493807'
-  alias: Turn off the stair lights when the sun rises
+  alias: Light Off - Stairs Down - Sunrise
   description: ''
   trigger:
-  - platform: sun
-    event: sunrise
+  - platform: numeric_state
+    entity_id: sun.sun
+    above: '11'
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
   condition: []
   action:
-  - type: turn_off
-    device_id: 21181ceb8b946eddc56054c8cb8eb018
-    entity_id: light.stairs_down_1
-    domain: light
+  - service: light.turn_off
+    data: {}
+    entity_id: light.stairs_down_lights
   mode: single
 - id: '1608762855139'
-  alias: Garage Motion
+  alias: Motion On - Garage
   description: ''
   trigger:
   - platform: state
@@ -122,14 +103,12 @@
     to: 'on'
   condition: []
   action:
-  - type: turn_on
-    device_id: 460e83eed69589c8ac30e39531974ca2
-    entity_id: light.light
-    domain: light
-    brightness_pct: 100
+  - service: light.turn_on
+    data: {}
+    entity_id: light.garage_on_off
   mode: restart
 - id: '1608772537185'
-  alias: Close Garage after 1HR
+  alias: Security - Garage - Motion Off 1HR
   description: ''
   trigger:
   - platform: state
@@ -156,7 +135,7 @@
     above: 22
   condition: []
   action:
-  - service: notify.mobile_app_pixel_5
+  - service: notify.mobile_app_ken_s_pixel_5
     data:
       message: Heater tampering
   - service: notify.notify
@@ -164,7 +143,7 @@
       message: Heater tampering
   mode: single
 - id: '1609012948827'
-  alias: Turn Sound Down Overnight
+  alias: AV - Sonos - Turn Volume Down Overnight
   description: ''
   trigger:
   - platform: time
@@ -174,26 +153,30 @@
   - scene: scene.sonos_volume_10
   mode: single
 - id: '1609473133030'
-  alias: Front Door No Motion
+  alias: Motion Off - Front Door
   description: ''
   trigger:
   - entity_id: group.entry_motion_detection
     platform: state
-    from: 'on'
     to: 'off'
     for: 00:05:00
   condition: []
   action:
-  - scene: scene.front_yard_off
+  - service: light.turn_off
+    data: {}
+    entity_id: light.front_yard_lights
+  - service: light.turn_off
+    data: {}
+    entity_id: light.entry_lights
   mode: single
 - id: '1609477935315'
-  alias: Butlers No Motion
+  alias: Motion Off - Butlers
   description: ''
   trigger:
   - type: no_motion
     platform: device
-    device_id: dc0e10b59f39f0804f17071108bb3080
-    entity_id: binary_sensor.pantry_motion_sensor_motion
+    device_id: d87603fdd3b2f16ee9df09f4d06cf9e3
+    entity_id: binary_sensor.motion_butlers_motion
     domain: binary_sensor
     for:
       hours: 0
@@ -201,16 +184,18 @@
       seconds: 0
   condition: []
   action:
-  - scene: scene.butlers_pantry_off
+  - service: light.turn_off
+    data: {}
+    entity_id: light.butler_s_pantry_lights
   mode: single
 - id: '1609478441059'
-  alias: Master Robe No Motion
+  alias: Motion Off - Master Robe
   description: ''
   trigger:
   - type: no_motion
     platform: device
-    device_id: 85c1e345b42f59f0a6c3d69e2cc2988e
-    entity_id: binary_sensor.master_robe_motion_sensor_motion
+    device_id: ded143add4f480e6eb22c0a00026204c
+    entity_id: binary_sensor.motion_master_robe_motion
     domain: binary_sensor
     for:
       hours: 0
@@ -218,25 +203,25 @@
       seconds: 0
   condition: []
   action:
-  - scene: scene.master_robe_off
+  - service: light.turn_off
+    data: {}
+    entity_id: light.master_robe_lights
   mode: single
 - id: '1609478593120'
-  alias: Ensuite No Motion
+  alias: Motion Off - Ensuite
   description: ''
   trigger:
-  - type: no_motion
-    platform: device
-    device_id: 7b55ba1713a77c879b7573fb3202bdc8
-    entity_id: binary_sensor.ensuite_motion
-    domain: binary_sensor
-    for:
-      hours: 0
-      minutes: 5
-      seconds: 0
+  - platform: state
+    entity_id: binary_sensor.motion_ensuite_motion
+    to: 'off'
+    for: 00:05:00
   condition: []
   action:
-  - scene: scene.ensuite_no_motion
-  mode: single
+  - service: light.turn_off
+    data: {}
+    entity_id: light.ensuite_lights
+  mode: parallel
+  max: 10
 - id: '1609479215257'
   alias: blueprint test
   description: ''
@@ -248,23 +233,21 @@
       light_target:
         area_id: 82329dcf31079f47056a2539a1361d89
 - id: '1609481861419'
-  alias: Garage No Motion
+  alias: Motion Off - Garage
   description: ''
   trigger:
   - platform: state
     entity_id: group.garage_motion_detection
-    from: 'on'
     to: 'off'
-    for: 00:10:00
+    for: 00:05:00
   condition: []
   action:
-  - type: turn_off
-    device_id: 460e83eed69589c8ac30e39531974ca2
-    entity_id: light.light
-    domain: light
+  - service: light.turn_off
+    data: {}
+    entity_id: light.garage_on_off
   mode: single
 - id: '1609808177078'
-  alias: Kid's Bathroom Fan On
+  alias: 'Device On - Kids Bathroom Fan '
   description: If bathroom lights turn on, turn on fan
   trigger:
   - platform: state
@@ -272,33 +255,31 @@
     to: 'on'
   condition: []
   action:
-  - type: turn_on
-    device_id: bdf6795fdf2ca50d1614d8f291ce42b1
-    entity_id: switch.projector
-    domain: switch
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.power_kids_bathroom_fan_on_off
   mode: single
 - id: '1609808226087'
-  alias: Kid's Bathroom Fan Off
-  description: ''
+  alias: Device Off - Kids Bathroom Fan
+  description: Turn off when lights off
   trigger:
   - platform: state
     entity_id: light.kid_s_bathroom
     to: 'off'
   condition: []
   action:
-  - type: turn_off
-    device_id: bdf6795fdf2ca50d1614d8f291ce42b1
-    entity_id: switch.projector
-    domain: switch
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.power_kids_bathroom_fan_on_off
   mode: single
 - id: '1609816809823'
-  alias: Guest Bathroom Motion Lights On
+  alias: Motion On - Guest Bathroom
   description: ''
   trigger:
   - type: motion
     platform: device
-    device_id: 66e144a7855774931a5890dc5ff97fe2
-    entity_id: binary_sensor.guest_bathroom_motion_sensor_motion
+    device_id: 670099da575af35f2994650ec7eba502
+    entity_id: binary_sensor.motion_guest_bathroom_motion
     domain: binary_sensor
   condition: []
   action:
@@ -307,13 +288,13 @@
     entity_id: light.guest_bath_lights
   mode: single
 - id: '1609817172392'
-  alias: Guest Bathroom No Motion Lights Off
+  alias: Motion Off - Guest Bathroom
   description: ''
   trigger:
   - type: no_motion
     platform: device
-    device_id: 66e144a7855774931a5890dc5ff97fe2
-    entity_id: binary_sensor.guest_bathroom_motion_sensor_motion
+    device_id: 670099da575af35f2994650ec7eba502
+    entity_id: binary_sensor.motion_guest_bathroom_motion
     domain: binary_sensor
     for:
       hours: 0
@@ -326,13 +307,13 @@
     entity_id: light.guest_bath_lights
   mode: single
 - id: '1609817366568'
-  alias: Kids Bathroom Motion Lights On
+  alias: Motion On - Kids Bathroom
   description: ''
   trigger:
   - type: motion
     platform: device
-    device_id: 051cb788a7ae46b9987ea7f452c5295a
-    entity_id: binary_sensor.kids_bathroom_motion_sensor_motion
+    device_id: eacc5ebf72153ebd31c2674053ffbc54
+    entity_id: binary_sensor.motion_kids_bathroom_motion
     domain: binary_sensor
   condition: []
   action:
@@ -341,13 +322,13 @@
     entity_id: light.kid_s_bathroom
   mode: single
 - id: '1609817421503'
-  alias: Kids Bathoom No Motion Lights Off
+  alias: Motion Off - Kids Bathroom
   description: ''
   trigger:
   - type: no_motion
     platform: device
-    device_id: 051cb788a7ae46b9987ea7f452c5295a
-    entity_id: binary_sensor.kids_bathroom_motion_sensor_motion
+    device_id: eacc5ebf72153ebd31c2674053ffbc54
+    entity_id: binary_sensor.motion_kids_bathroom_motion
     domain: binary_sensor
     for:
       hours: 0
@@ -360,37 +341,25 @@
     entity_id: light.kid_s_bathroom
   mode: single
 - id: '1609954309558'
-  alias: Kids TV On Holidays
+  alias: AV - Kids TV On - Weekday & Holiday Mornings
   description: ''
   trigger:
   - platform: time
-    at: 06:30:00
-  condition: []
+    at: 06:45:00
+  condition:
+  - condition: state
+    entity_id: binary_sensor.workday_sensor
+    state: 'off'
   action:
   - service: switch.turn_on
     data: {}
-    entity_id: switch.christmas_lights
+    entity_id: switch.power_kids_shield_on_off
   - service: switch.turn_on
     data: {}
-    entity_id: switch.kids_power
-  mode: single
-- id: '1609954308322'
-  alias: Kids TV On Holidays
-  description: Turn on at 6.20am
-  trigger:
-  - platform: time
-    at: 06:30:00
-  condition: []
-  action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.christmas_lights
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.kids_power
+    entity_id: switch.power_kids_tv_on_off
   mode: single
 - id: '1609972159052'
-  alias: Turn off Kids TV at 9am
+  alias: AV - Kids TV - Turn off at 9am
   description: ''
   trigger:
   - platform: time
@@ -399,8 +368,567 @@
   action:
   - service: switch.turn_off
     data: {}
-    entity_id: switch.christmas_lights
+    entity_id: switch.power_kids_shield_on_off
   - service: switch.turn_off
     data: {}
-    entity_id: switch.kids_power
+    entity_id: switch.power_kids_tv_on_off
+  mode: single
+- id: '1610450162748'
+  alias: Adaptive Lighting - Sleep Mode - Kids
+  description: ''
+  trigger:
+  - platform: time
+    at: '21:00:00'
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.adaptive_lighting_sleep_mode_kids
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.adaptive_lighting_sleep_mode_kids_bath_cabinet
+  mode: parallel
+  max: 10
+- id: '1610451345279'
+  alias: Adaptive Lighting - Sleep Mode - Turn Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sun.sun
+    to: above_horizon
+  condition: []
+  action:
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.adaptive_lighting_sleep_mode_default
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.adaptive_lighting_sleep_mode_kids
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.adaptive_lighting_sleep_mode_master
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.adaptive_lighting_sleep_mode_bathroom_cabinets
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.adaptive_lighting_sleep_mode_kids_bath_cabinet
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.adaptive_lighting_sleep_mode_bathroom_default
+  mode: single
+- id: '1610451576424'
+  alias: Adaptive Lighting - Sleep Mode - Master
+  description: ''
+  trigger:
+  - platform: time
+    at: '23:00'
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.adaptive_lighting_sleep_mode_master
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.adaptive_lighting_sleep_mode_bathroom_cabinets
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.adaptive_lighting_sleep_mode_bathroom_default
+  mode: single
+- id: '1610504137463'
+  alias: Motion On - Kitchen
+  description: Turn on Kitchen lights when motion detected
+  trigger:
+  - platform: state
+    entity_id: group.kitchen_motion_detection
+    to: 'on'
+  condition:
+  - condition: numeric_state
+    entity_id: sun.sun
+    below: '20'
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+  action:
+  - service: light.turn_on
+    data: {}
+    entity_id: light.kitchen_lights
+  mode: single
+- id: '1610505689358'
+  alias: Motion Off - Kitchen
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.kitchen_motion_detection
+    to: 'off'
+    for: 00:05:00
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    entity_id: light.kitchen_lights
+  mode: single
+- alias: 'Adaptive lighting: reset manual_control after 1 hour'
+  mode: parallel
+  max: 200
+  trigger:
+  - platform: event
+    event_type: adaptive_lighting.manual_control
+  variables:
+    light: '{{ trigger.event.data.entity_id }}'
+    switch: '{{ trigger.event.data.switch }}'
+  action:
+  - delay: 01:00:00
+  - condition: template
+    value_template: '{{ light in state_attr(''switch'', ''manual_control'') }}'
+  - service: adaptive_lighting.set_manual_control
+    data:
+      entity_id: '{{ switch }}'
+      lights: '{{ light }}'
+      manual_control: false
+  - service: notify.mobile_app_ken_s_pixel_5
+    data:
+      title: 'Adaptive Ligthing: manual_control reset'
+      message: '{{ light }} is reset to not ''manually controlled'''
+  id: 1628583362d44d99a58e5aa0028e3492
+- alias: 'Adaptive lighting: notify manual_control'
+  mode: parallel
+  max: 20
+  trigger:
+  - platform: event
+    event_type: adaptive_lighting.manual_control
+  variables:
+    light: '{{ trigger.event.data.entity_id }}'
+  action:
+  - service: system_log.write
+    data:
+      message: '{{ light }} is manually controlled'
+      level: error
+      logger: yolo.yolo
+  - service: notify.mobile_app_ken_s_pixel_5
+    data:
+      title: 'Adaptive Ligthing: manual_control'
+      message: '{{ light }} is now ''manually controlled'', context={{ trigger.event.context
+        }}'
+  id: cd45d6984ac941fa8787df34cd9c3f03
+- id: '1610696825433'
+  alias: Event - Notification Action - Lock Up
+  description: ''
+  trigger:
+  - platform: event
+    event_data:
+      action: lock_up
+    event_type: mobile_app_notification_action
+  condition: []
+  action:
+  - service: script.lock_up
+    data: {}
+  mode: single
+- id: '1610702236937'
+  alias: Location - Leaving - Notification Prompt
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.persons
+    from: home
+  condition: []
+  action:
+  - service: notify.all_phones
+    data:
+      message: Leaving Home?
+      data:
+        actions:
+        - action: lock_up
+          title: Lock Up
+        - action: lock_up_and_turn_off
+          title: Lock Up & Turn Off All
+  mode: parallel
+  max: 10
+- id: '1610751721964'
+  alias: Event - Notification Action - Lock Up & Turn Off Everything
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: lock_up_and_turn_off
+  condition: []
+  action:
+  - service: script.leaving
+    data: {}
+  mode: parallel
+  max: 10
+- id: '1610757054758'
+  alias: Security - Auto Lock - No One Home
+  description: Lock up if no one home for 15 minutes
+  trigger:
+  - platform: state
+    entity_id: group.persons
+    from: home
+    for: 00:15:00
+  condition: []
+  action:
+  - service: script.leaving
+    data: {}
+  - service: notify.all_phones
+    data:
+      message: The house is auto-locked and devices off. Have a great day!
+  mode: parallel
+  max: 10
+- id: '1610760794370'
+  alias: Door Open - Deck - Lights On
+  description: After Sunset
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 95d205459e05df134282d2b6530fb0a4
+    entity_id: binary_sensor.multi_living_slider_left_contact
+    domain: binary_sensor
+  - type: opened
+    platform: device
+    device_id: fa8e6573d1331d071b8e25ae8ae69f4f
+    entity_id: binary_sensor.multi_living_slider_right_contact
+    domain: binary_sensor
+  condition:
+  - condition: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+    below: '1.5'
+  action:
+  - service: light.turn_on
+    data: {}
+    entity_id: light.deck_lights
+  mode: single
+- id: '1610793109456'
+  alias: Location - Returning Home - Lisa
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: device_tracker.lisa_s_pixel_5
+    to: home
+  condition: []
+  action:
+  - service: notify.mobile_app_lisa_s_pixel_5
+    data:
+      message: Welcome Home Lisa!
+      data:
+        actions:
+        - action: unlock
+          title: Unlock
+        - action: unlock_and_open_garage
+          title: Open Garage & Unlock
+  mode: parallel
+  max: 10
+- id: '1610793175228'
+  alias: 'Location - Returning Home - Ken '
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: device_tracker.pixel_5
+    to: home
+  condition: []
+  action:
+  - service: notify.mobile_app_ken_s_pixel_5
+    data:
+      message: Welcome Home Ken!
+      data:
+        actions:
+        - action: unlock
+          title: Unlock
+        - action: unlock_and_open_garage
+          title: Open Garage & Unlock
+  mode: parallel
+  max: 10
+- id: '1610793816462'
+  alias: Event - Notification Action - Unlock
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: unlock
+  condition: []
+  action:
+  - service: script.unlock
+    data: {}
+  mode: parallel
+  max: 10
+- id: '1610793973427'
+  alias: Event - Notification Action - Unlock & Open Garage
+  description: ''
+  trigger:
+  - platform: event
+    event_type: mobile_app_notification_action
+    event_data:
+      action: unlock_and_open_garage
+  condition: []
+  action:
+  - service: script.unlock_and_open_garage
+    data: {}
+  mode: parallel
+  max: 10
+- id: '1610870277979'
+  alias: State - TV Playing after Sunset - Fireplace Lights
+  description: When TV playing after sunset, turn on fireplace lights, turn off living
+    lights
+  trigger:
+  - platform: state
+    entity_id: media_player.living_room_shield
+    to: playing
+  condition:
+  - condition: numeric_state
+    entity_id: sun.sun
+    below: '10'
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+  action:
+  - service: light.turn_on
+    data: {}
+    entity_id: light.fireplace_lights
+  - service: light.turn_off
+    data: {}
+    entity_id: light.living_room_lights
+  mode: parallel
+  max: 10
+- id: '1610870696550'
+  alias: State - TV Stops after Sunset - Turn Off Fireplace Lights
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: media_player.living_room_shield
+    from: playing
+    for: 00:15:00
+  condition:
+  - condition: state
+    entity_id: sun.sun
+    state: below_horizon
+  action:
+  - service: light.turn_off
+    data: {}
+    entity_id: light.fireplace_lights
+  mode: single
+- id: '1610879387952'
+  alias: State - Sunset - Fireplace Lights on if TV Playing
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sun.sun
+    below: '10'
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+  condition:
+  - condition: state
+    entity_id: media_player.living_room_shield
+    state: playing
+  action:
+  - service: light.turn_on
+    data: {}
+    entity_id: light.fireplace_lights
+  mode: single
+- id: '1611442798172'
+  alias: Motion On - Kitchen Bench (Daytime)
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.kitchen_motion_detection
+    to: 'on'
+  condition:
+  - condition: numeric_state
+    entity_id: sun.sun
+    above: '20'
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+  action:
+  - service: light.turn_on
+    data: {}
+    entity_id: light.kitchen_bench
+  mode: single
+- id: '1611567907115'
+  alias: Motion On - Front Door
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.entry_motion_detection
+    to: 'on'
+    from: 'off'
+  condition:
+  - condition: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+    below: '-1'
+  action:
+  - service: light.turn_on
+    data: {}
+    entity_id: light.entry_lights
+  - service: light.turn_on
+    data: {}
+    entity_id: light.front_yard_lights
+  mode: parallel
+  max: 10
+- id: '1611995216535'
+  alias: Door Open - Server Room - Lights On
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 8f15a3baa8ccfb3333cf3015f8bf779e
+    entity_id: binary_sensor.contact_server_room_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: light.turn_on
+    data: {}
+    entity_id: light.server_room
+  mode: parallel
+  max: 10
+- id: '1611995269412'
+  alias: Door Close - Server Room - Light Off
+  description: ''
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: 8f15a3baa8ccfb3333cf3015f8bf779e
+    entity_id: binary_sensor.contact_server_room_contact
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    entity_id: light.server_room
+  mode: parallel
+  max: 10
+- id: '1613205099776'
+  alias: Motion On - Dining
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_dining_motion
+    to: 'on'
+  condition:
+  - condition: numeric_state
+    entity_id: sun.sun
+    below: '20'
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+  action:
+  - service: light.turn_on
+    data: {}
+    entity_id: light.dining_lights
+  mode: parallel
+  max: 10
+- id: '1613205160858'
+  alias: Motion Off - Dining Lights
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_dining_motion
+    to: 'off'
+    for: 00:30:00
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    entity_id: light.dining_lights
+  mode: parallel
+  max: 10
+- id: '1613890720084'
+  alias: Motion On - Patio Table
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_patio_table_motion
+    to: 'on'
+  condition:
+  - condition: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+    below: '15'
+  action:
+  - service: light.turn_on
+    data: {}
+    entity_id: light.festoon_lights
+  mode: parallel
+  max: 10
+- id: '1613891986552'
+  alias: Motion Off - Patio Table
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_patio_table_motion
+    to: 'off'
+    for: 00:30:00
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    entity_id: light.festoon_lights
+  mode: parallel
+  max: 10
+- id: '1613892109918'
+  alias: Motion On - Deck Table
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_deck_table_motion
+    to: 'on'
+  condition:
+  - condition: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+    below: '10'
+  action:
+  - service: light.turn_on
+    data: {}
+    entity_id: light.deck_lights
+  mode: parallel
+  max: 10
+- id: '1613892152277'
+  alias: Motion Off - Deck Table
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_deck_table_motion
+    to: 'off'
+    for: 00:30:00
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    entity_id: light.deck_lights
+  mode: parallel
+  max: 10
+- id: '1614594947963'
+  alias: Time - Fireplace Off at Midnight
+  description: ''
+  trigger:
+  - platform: time
+    at: 00:00:00
+  condition: []
+  action:
+  - service: switch.turn_off
+    data: {}
+    entity_id: switch.fireplace
+  mode: single
+- id: '1618289458766'
+  alias: Motion On - Ensuite Shower - Turn On Fan
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.ensuite_shower_motion_detection
+    to: 'on'
+    for: 00:01:00
+  condition: []
+  action:
+  - service: switch.turn_on
+    target:
+      entity_id: switch.ensuite_fan
+  mode: parallel
+  max: 10
+- id: '1618289522295'
+  alias: Motion Off - Ensuite Shower - Turn Off Fan
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.ensuite_shower_motion_detection
+    to: 'off'
+    for: 00:05:00
+  condition: []
+  action:
+  - service: switch.turn_off
+    target:
+      entity_id: switch.ensuite_fan
   mode: single

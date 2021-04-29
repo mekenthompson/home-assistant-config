@@ -1,0 +1,54 @@
+turn_off_everything:
+  alias: Turn off everything
+  mode: parallel
+  sequence:
+    #    - service: script.turn_off_everything_non_automatic
+    - service: light.turn_off
+      entity_id: all
+    - service: switch.turn_off
+      entity_id:
+        - switch.fireplace
+        - switch.kids_power
+    - service: fan.turn_off
+      entity_id: fan.living_room_fan
+    - service: media_player.media_stop
+      entity_id: all
+    - service: media_player.turn_off
+      entity_id: all
+
+lock_up:
+  alias: Lock Up
+  mode: parallel
+  sequence:
+    - service: lock.lock
+      entity_id:
+        - lock.front_door
+        - lock.garage_entry
+    - service: cover.close_cover
+      entity_id: cover.garage_door
+
+leaving:
+  alias: Leaving Home
+  sequence:
+    - service: script.lock_up
+    - service: script.turn_off_everything
+
+unlock:
+  alias: Unlock
+  mode: parallel
+  sequence:
+    - service: lock.unlock
+      entity_id:
+        - lock.front_door
+        - lock.garage_entry
+
+unlock_and_open_garage:
+  alias: Open Garage & Unlock
+  mode: parallel
+  sequence:
+    - service: lock.unlock
+      entity_id:
+        - lock.front_door
+        - lock.garage_entry
+    - service: cover.open_cover
+      entity_id: cover.garage_door
