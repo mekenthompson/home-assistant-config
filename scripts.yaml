@@ -2,7 +2,6 @@ turn_off_everything:
   alias: Turn off everything
   mode: parallel
   sequence:
-    #    - service: script.turn_off_everything_non_automatic
     - service: light.turn_off
       entity_id: all
     - service: switch.turn_off
@@ -15,7 +14,6 @@ turn_off_everything:
       entity_id: all
     - service: media_player.turn_off
       entity_id: all
-
 lock_up:
   alias: Lock Up
   mode: parallel
@@ -26,13 +24,11 @@ lock_up:
         - lock.garage_entry
     - service: cover.close_cover
       entity_id: cover.garage_door
-
 leaving:
   alias: Leaving Home
   sequence:
     - service: script.lock_up
     - service: script.turn_off_everything
-
 unlock:
   alias: Unlock
   mode: parallel
@@ -41,7 +37,6 @@ unlock:
       entity_id:
         - lock.front_door
         - lock.garage_entry
-
 unlock_and_open_garage:
   alias: Open Garage & Unlock
   mode: parallel
@@ -52,3 +47,64 @@ unlock_and_open_garage:
         - lock.garage_entry
     - service: cover.open_cover
       entity_id: cover.garage_door
+reset_adaptive_lighting:
+  alias: Reset Adaptive Lighting
+  sequence:
+    - service: switch.turn_off
+      target:
+        entity_id:
+          - switch.adaptive_lighting_default
+          - switch.adaptive_lighting_bathroom_cabinets
+          - switch.adaptive_lighting_bathroom_default
+          - switch.adaptive_lighting_kids
+          - switch.adaptive_lighting_kids_bath_cabinet
+          - switch.adaptive_lighting_master
+          - switch.adaptive_lighting_stairs_down
+    - delay:
+        hours: 0
+        minutes: 0
+        seconds: 1
+        milliseconds: 0
+    - service: switch.turn_on
+      target:
+        entity_id:
+          - switch.adaptive_lighting_default
+          - switch.adaptive_lighting_bathroom_cabinets
+          - switch.adaptive_lighting_bathroom_default
+          - switch.adaptive_lighting_kids
+          - switch.adaptive_lighting_kids_bath_cabinet
+          - switch.adaptive_lighting_master
+          - switch.adaptive_lighting_stairs_down
+  mode: single
+kids_night_mode:
+  sequence:
+    - service: switch.turn_on
+      target:
+        entity_id: switch.adaptive_lighting_sleep_mode_kids
+    - service: switch.turn_on
+      target:
+        entity_id: switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
+  mode: single
+  alias: Kids Night Mode
+sonos_butlers_join_living:
+  sequence:
+    - service: sonos.join
+      data:
+        master: media_player.sonos_move
+        entity_id: media_player.living_room
+    - service: media_player.volume_set
+      data:
+        volume_level: 0.5
+      target:
+        device_id:
+          - d535426e447fb31afd2e147be4cfd19b
+          - 4c2ef064526b65e8087e7a24c8039b30
+  mode: single
+  alias: Sonos - Butlers join Living
+sonos_butlers_leave_living:
+  sequence:
+    - service: sonos.unjoin
+      target:
+        device_id: 4c2ef064526b65e8087e7a24c8039b30
+  mode: single
+  alias: Sonos - Butlers leave Living

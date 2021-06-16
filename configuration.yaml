@@ -24,6 +24,7 @@ script: !include scripts.yaml
 scene: !include scenes.yaml
 light: !include includes/lights.yaml
 input_number: !include includes/input_numbers.yaml
+input_boolean: !include includes/input_boolean.yaml
 switch: !include includes/switches.yaml
 cover: !include includes/covers.yaml
 fan: !include includes/fans.yaml

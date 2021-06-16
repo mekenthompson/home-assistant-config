@@ -21,6 +21,12 @@ kitchen_motion_detection:
     - binary_sensor.motion_kitchen_1_motion
     - binary_sensor.motion_kitchen_2_motion
     - binary_sensor.motion_kitchen_bench_motion
+ensuite_motion_detection:
+  name: Ensuite Motion Detection
+  entities:
+    - binary_sensor.motion_ensuite_motion
+    - binary_sensor.motion_ensuite_shower_1_motion
+    - binary_sensor.motion_ensuite_shower_2_motion
 ensuite_shower_motion_detection:
   name: Ensuite Shower Motion
   entities:

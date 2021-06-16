@@ -1,3 +1,6 @@
 - platform: androidtv
   name: Living Room Shield
   host: 192.168.2.86
+- platform: androidtv
+  name: Kids Shield
+  host: 192.168.3.207

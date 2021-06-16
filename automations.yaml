@@ -55,11 +55,7 @@
     device_id: 6dd915d5d86e3e51176e33eb5ec8c095
     entity_id: binary_sensor.motion_ensuite_motion
     domain: binary_sensor
-  condition:
-  - condition: numeric_state
-    entity_id: sun.sun
-    below: '20'
-    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+  condition: []
   action:
   - service: light.turn_on
     data: {}
@@ -212,9 +208,9 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.motion_ensuite_motion
+    entity_id: group.ensuite_motion_detection
     to: 'off'
-    for: 00:05:00
+    for: 00:02:00
   condition: []
   action:
   - service: light.turn_off
@@ -378,15 +374,21 @@
   description: ''
   trigger:
   - platform: time
-    at: '21:00:00'
+    at: '20:30:00'
   condition: []
   action:
   - service: switch.turn_on
     data: {}
-    entity_id: switch.adaptive_lighting_sleep_mode_kids
+    target:
+      entity_id: switch.adaptive_lighting_sleep_mode_kids
   - service: switch.turn_on
     data: {}
-    entity_id: switch.adaptive_lighting_sleep_mode_kids_bath_cabinet
+    target:
+      entity_id: switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
+  - service: switch.turn_on
+    data: {}
+    target:
+      entity_id: switch.adaptive_lighting_sleep_mode_kids_bedside_lamps
   mode: parallel
   max: 10
 - id: '1610451345279'
@@ -403,7 +405,8 @@
     entity_id: switch.adaptive_lighting_sleep_mode_default
   - service: switch.turn_off
     data: {}
-    entity_id: switch.adaptive_lighting_sleep_mode_kids
+    target:
+      entity_id: switch.adaptive_lighting_sleep_mode_kids
   - service: switch.turn_off
     data: {}
     entity_id: switch.adaptive_lighting_sleep_mode_master
@@ -412,7 +415,8 @@
     entity_id: switch.adaptive_lighting_sleep_mode_bathroom_cabinets
   - service: switch.turn_off
     data: {}
-    entity_id: switch.adaptive_lighting_sleep_mode_kids_bath_cabinet
+    target:
+      entity_id: switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
   - service: switch.turn_off
     data: {}
     entity_id: switch.adaptive_lighting_sleep_mode_bathroom_default
@@ -688,17 +692,14 @@
   mode: parallel
   max: 10
 - id: '1610870696550'
-  alias: State - TV Stops after Sunset - Turn Off Fireplace Lights
+  alias: State - TV Stops - Turn Off Fireplace Lights
   description: ''
   trigger:
   - platform: state
     entity_id: media_player.living_room_shield
     from: playing
     for: 00:15:00
-  condition:
-  - condition: state
-    entity_id: sun.sun
-    state: below_horizon
+  condition: []
   action:
   - service: light.turn_off
     data: {}
@@ -932,3 +933,151 @@
     target:
       entity_id: switch.ensuite_fan
   mode: single
+- id: '1620124425409'
+  alias: Simrig - Cool when over 21.8
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_simrig_motion
+    to: 'on'
+    for: 00:01:00
+  condition:
+  - condition: and
+    conditions:
+    - type: is_temperature
+      condition: device
+      device_id: 5c49a7ea833556d5108a89404487a77b
+      entity_id: sensor.motion_simrig_temperature
+      domain: sensor
+      above: 218
+  action:
+  - service: climate.set_temperature
+    target:
+      entity_id: climate.office_cooling
+    data:
+      temperature: 19
+      hvac_mode: cool
+  - service: climate.turn_off
+    target:
+      entity_id: climate.office
+  mode: single
+- id: '1620124643737'
+  alias: Simrig - Cooling off when under 21
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_simrig_motion
+    to: 'off'
+    for: 00:10:00
+  - type: temperature
+    platform: device
+    device_id: 5c49a7ea833556d5108a89404487a77b
+    entity_id: sensor.motion_simrig_temperature
+    domain: sensor
+    below: 20.9
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: climate.turn_off
+    target:
+      entity_id: climate.office_cooling
+  - service: climate.set_hvac_mode
+    target:
+      entity_id: climate.office
+    data:
+      hvac_mode: auto
+  mode: single
+- id: '1620197934923'
+  alias: Simrig - Lights on if dark
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 5c49a7ea833556d5108a89404487a77b
+    entity_id: binary_sensor.motion_simrig_motion
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  condition:
+  - condition: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+    below: '5'
+  action:
+  - service: light.turn_on
+    target:
+      entity_id: light.office_lights
+    data:
+      kelvin: 2000
+      brightness_pct: 35
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: light.turn_on
+    target:
+      entity_id: light.office_lights
+    data:
+      kelvin: 2000
+      brightness_pct: 35
+  mode: single
+- id: '1622168108149'
+  alias: Curtains Open in Morning
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 22c46f3939305dd9f5ff01e4f0964741
+    entity_id: binary_sensor.mutli_master_contact
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 4
+      seconds: 0
+      milliseconds: 0
+  condition:
+  - condition: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+    above: '0'
+  action:
+  - service: cover.open_cover
+    target:
+      entity_id: cover.master_curtains
+  mode: single
+- id: '1622262782957'
+  alias: Curtains Close after Sunset
+  description: Master Door Closed for 1 minute
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: 22c46f3939305dd9f5ff01e4f0964741
+    entity_id: binary_sensor.mutli_master_contact
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  condition:
+  - condition: numeric_state
+    entity_id: sun.sun
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+    below: '0'
+  - condition: state
+    entity_id: cover.master_curtains
+    state: open
+  action:
+  - service: cover.close_cover
+    target:
+      entity_id: cover.master_curtains
+  mode: parallel
+  max: 10
