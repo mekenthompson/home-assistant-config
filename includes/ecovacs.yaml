@@ -1,0 +1,4 @@
+username: !secret ecovacs_user
+password: !secret ecovacs_pw
+country: au
+continent: ww

@@ -1,0 +1,7 @@
+# Example configuration.yaml entry
+client_id: 7761349738-a41ddovavtq10usfkcupldqpifiqoaii.apps.googleusercontent.com
+client_secret: Jgc_2igeqXYsfd8lV2JF85yb
+# "Project ID" in the Device Access Console
+project_id: d57f5471-99d7-4110-a7e6-b605d2c37193
+# Provide the full path exactly as shown under "Subscription name" in Google Cloud Console
+subscriber_id: projects/home-assistant-324300/subscriptions/homeassistantnest

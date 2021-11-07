@@ -2,109 +2,634 @@ turn_off_everything:
   alias: Turn off everything
   mode: parallel
   sequence:
-    - service: light.turn_off
-      entity_id: all
-    - service: switch.turn_off
+  - service: light.turn_off
+    data: {}
+    target:
       entity_id:
-        - switch.fireplace
-        - switch.kids_power
-    - service: fan.turn_off
-      entity_id: fan.living_room_fan
-    - service: media_player.media_stop
-      entity_id: all
-    - service: media_player.turn_off
-      entity_id: all
+      - light.ground_floor_lights
+      - light.lower_ground_lights
+      - light.first_floor_lights
+      - light.deck_lights
+  - service: switch.turn_off
+    entity_id:
+    - switch.fireplace
+    - switch.kids_power
+  - service: fan.turn_off
+    entity_id: fan.living_room_fan
+  - service: media_player.media_stop
+    entity_id: all
+  - service: media_player.turn_off
+    entity_id: all
+  max: 10
 lock_up:
   alias: Lock Up
   mode: parallel
   sequence:
-    - service: lock.lock
-      entity_id:
-        - lock.front_door
-        - lock.garage_entry
-    - service: cover.close_cover
-      entity_id: cover.garage_door
+  - service: lock.lock
+    entity_id:
+    - lock.lock_front_door_lock
+    - lock.lock_garage_entry_door_lock
+  - service: cover.close_cover
+    entity_id: cover.garage_door
+  max: 10
 leaving:
   alias: Leaving Home
   sequence:
-    - service: script.lock_up
-    - service: script.turn_off_everything
+  - service: script.lock_up
+  - service: script.turn_off_everything
+  - service: script.start_roomba
+  mode: single
 unlock:
   alias: Unlock
   mode: parallel
   sequence:
-    - service: lock.unlock
-      entity_id:
-        - lock.front_door
-        - lock.garage_entry
+  - service: lock.unlock
+    entity_id:
+    - lock.lock_front_door_lock
+    - lock.lock_garage_entry_door_lock
+  max: 10
 unlock_and_open_garage:
   alias: Open Garage & Unlock
   mode: parallel
   sequence:
-    - service: lock.unlock
-      entity_id:
-        - lock.front_door
-        - lock.garage_entry
-    - service: cover.open_cover
-      entity_id: cover.garage_door
+  - service: lock.unlock
+    entity_id:
+    - lock.lock_front_door_lock
+    - lock.lock_garage_entry_door_lock
+  - service: cover.open_cover
+    entity_id: cover.garage_door
+  max: 10
 reset_adaptive_lighting:
   alias: Reset Adaptive Lighting
   sequence:
-    - service: switch.turn_off
-      target:
-        entity_id:
-          - switch.adaptive_lighting_default
-          - switch.adaptive_lighting_bathroom_cabinets
-          - switch.adaptive_lighting_bathroom_default
-          - switch.adaptive_lighting_kids
-          - switch.adaptive_lighting_kids_bath_cabinet
-          - switch.adaptive_lighting_master
-          - switch.adaptive_lighting_stairs_down
-    - delay:
-        hours: 0
-        minutes: 0
-        seconds: 1
-        milliseconds: 0
-    - service: switch.turn_on
-      target:
-        entity_id:
-          - switch.adaptive_lighting_default
-          - switch.adaptive_lighting_bathroom_cabinets
-          - switch.adaptive_lighting_bathroom_default
-          - switch.adaptive_lighting_kids
-          - switch.adaptive_lighting_kids_bath_cabinet
-          - switch.adaptive_lighting_master
-          - switch.adaptive_lighting_stairs_down
+  - service: switch.turn_off
+    target:
+      entity_id:
+      - switch.adaptive_lighting_default
+      - switch.adaptive_lighting_bathroom_cabinets
+      - switch.adaptive_lighting_bathroom_default
+      - switch.adaptive_lighting_kids
+      - switch.adaptive_lighting_master
+      - switch.adaptive_lighting_stairs_down
+      - switch.adaptive_lighting_kids_bathroom_cabinet
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: switch.turn_on
+    target:
+      entity_id:
+      - switch.adaptive_lighting_default
+      - switch.adaptive_lighting_bathroom_cabinets
+      - switch.adaptive_lighting_bathroom_default
+      - switch.adaptive_lighting_kids
+      - switch.adaptive_lighting_master
+      - switch.adaptive_lighting_stairs_down
+      - switch.adaptive_lighting_kids_bathroom_cabinet
   mode: single
 kids_night_mode:
   sequence:
-    - service: switch.turn_on
-      target:
-        entity_id: switch.adaptive_lighting_sleep_mode_kids
-    - service: switch.turn_on
-      target:
-        entity_id: switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
-  mode: single
+  - service: switch.turn_off
+    target:
+      entity_id:
+      - switch.adaptive_lighting_sleep_mode_kids
+      - switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
+      - switch.adaptive_lighting_sleep_mode_kids_bedside_lamps
+  - service: switch.turn_on
+    target:
+      entity_id:
+      - switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
+      - switch.adaptive_lighting_sleep_mode_kids
+      - switch.adaptive_lighting_sleep_mode_kids_bedside_lamps
+  mode: parallel
   alias: Kids Night Mode
+  max: 10
 sonos_butlers_join_living:
   sequence:
-    - service: sonos.join
-      data:
-        master: media_player.sonos_move
-        entity_id: media_player.living_room
-    - service: media_player.volume_set
-      data:
-        volume_level: 0.5
-      target:
-        device_id:
-          - d535426e447fb31afd2e147be4cfd19b
-          - 4c2ef064526b65e8087e7a24c8039b30
+  - service: sonos.join
+    data:
+      master: media_player.sonos_move
+      entity_id: media_player.living_room
+  - service: media_player.volume_set
+    data:
+      volume_level: 0.5
+    target:
+      device_id:
+      - d535426e447fb31afd2e147be4cfd19b
+      - 4c2ef064526b65e8087e7a24c8039b30
   mode: single
   alias: Sonos - Butlers join Living
 sonos_butlers_leave_living:
   sequence:
-    - service: sonos.unjoin
-      target:
-        device_id: 4c2ef064526b65e8087e7a24c8039b30
+  - service: sonos.unjoin
+    target:
+      device_id: 4c2ef064526b65e8087e7a24c8039b30
   mode: single
   alias: Sonos - Butlers leave Living
+start_roomba:
+  alias: Start Vacuums
+  sequence:
+  - device_id: 3a0dfbf698624b031558783731e98aca
+    domain: vacuum
+    entity_id: vacuum.roomba
+    type: clean
+  - device_id: f257a4bc4553fcde46a0d927c83ff4fa
+    domain: vacuum
+    entity_id: vacuum.deebot
+    type: clean
+  mode: single
+wled_random_lights:
+  alias: WLED Random Lights
+  sequence:
+  - service: light.turn_on
+    target:
+      device_id: 698c7f0e7d4baec5fbc809d1062361cb
+  - service: wled.effect
+    target:
+      device_id: 698c7f0e7d4baec5fbc809d1062361cb
+    data:
+      effect: '{{ state_attr(''light.wled'', ''effect_list'') | random }}'
+      palette: '{{ range(0,53) | random }}'
+  mode: single
+'1631852443741':
+  alias: New Script
+  sequence:
+  - service: lifx.effect_colorloop
+    target:
+      area_id: 5607f2c9f3b1bd949489a9cf795ba533
+    data:
+      period: 0.1
+      change: 143
+      spread: 354
+  - service: lifx.effect_pulse
+    data:
+      mode: strobe
+      brightness: 218
+      rgb_color: 255,23,90
+      period: 50.6
+    target:
+      area_id: cf1c5d5f922c4438f00bf876b2d88ef8
+      device_id: 21b6d3f877cfe25c930ea325f02b7550
+  mode: single
+stop_vacuums:
+  alias: Stop Vacuums
+  sequence:
+  - device_id: 3a0dfbf698624b031558783731e98aca
+    domain: vacuum
+    entity_id: vacuum.roomba
+    type: dock
+  - device_id: f257a4bc4553fcde46a0d927c83ff4fa
+    domain: vacuum
+    entity_id: vacuum.deebot
+    type: dock
+  mode: single
+master_robe_start_projector_on_usb:
+  sequence:
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: power
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 55
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: menu
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: ok
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: right
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: right
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: ok
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: down
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: down
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: ok
+  mode: single
+  alias: Robe Projector - Start Projector on USB
+robe_projector_power_off:
+  alias: Robe Projector - Power Off
+  sequence:
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: power
+      delay_secs: 2
+      num_repeats: 2
+  mode: single
+projector_on_usb:
+  sequence:
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: menu
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: ok
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: right
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: right
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: ok
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: down
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: down
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: ok
+  mode: single
+  alias: Projector on USB
+office_projector_start_projector_on_usb:
+  alias: Office Projector - Start Projector on USB
+  sequence:
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: power
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 55
+      milliseconds: 0
+  - service: remote.send_command
+    data:
+      device: office_projector
+      command: source
+    target:
+      device_id: c39475d06c8c8752fc30dff3197bcc2d
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: right
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: right
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: right
+  - service: remote.send_command
+    data:
+      device: office_projector
+      command: ok
+    target:
+      device_id: c39475d06c8c8752fc30dff3197bcc2d
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: down
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: down
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: down
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: ok
+  mode: single
+office_projector_power_off:
+  alias: Office Projector - Power Off
+  sequence:
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: power
+      delay_secs: 2
+      num_repeats: 2
+  mode: single
+office_projector_on_usb:
+  alias: Office Projector on USB
+  sequence:
+  - service: remote.send_command
+    data:
+      device: office_projector
+      command: source
+    target:
+      device_id: c39475d06c8c8752fc30dff3197bcc2d
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: right
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: right
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: right
+  - service: remote.send_command
+    data:
+      device: office_projector
+      command: ok
+    target:
+      device_id: c39475d06c8c8752fc30dff3197bcc2d
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: down
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: down
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: down
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: ok
+  mode: single
+add_code:
+  alias: Add Lock Code
+  variables:
+    codeslot: '{{ states(''input_text.codeslot'') | int }}'
+    usercode: '{{ states(''input_text.usercode'') | int }}'
+  sequence:
+  - service: zha.set_lock_user_code
+    data:
+      code_slot: '{{ codeslot+1 }}'
+      user_code: '{{ usercode }}'
+    target:
+      device_id:
+      - 8bd17cad9ca8bd6278b7751a97b86d7c
+      - 113f5c23e2f3861a6a75f67cc102a40a
+  - service: notify.my_mobile
+    data:
+      title: YALE LOCKS - USER CODE UPDATED
+      message: 'Slot #{{ codeslot }} was updated with user code {{ usercode }}'
+  mode: single
+clear_code:
+  alias: Clear Lock Code
+  variables:
+    codeslot: '{{ states(''input_text.codeslot'') | int }}'
+    usercode: '{{ states(''input_text.usercode'') | int }}'
+  sequence:
+  - service: zha.clear_lock_user_code
+    data:
+      code_slot: '{{ codeslot+1 }}'
+    target:
+      device_id:
+      - 8bd17cad9ca8bd6278b7751a97b86d7c
+      - 113f5c23e2f3861a6a75f67cc102a40a
+  - service: notify.all_phones
+    data:
+      title: YALE LOCKS - USER CODE DELETED
+      message: 'User code was deleted from slot #{{ codeslot }}'
+  mode: single
+single_use_code:
+  alias: Add Single Use Code
+  sequence:
+  - service: zha.set_lock_user_code
+    target:
+      device_id:
+      - 8bd17cad9ca8bd6278b7751a97b86d7c
+      - 113f5c23e2f3861a6a75f67cc102a40a
+    data:
+      code_slot: '100'
+      user_code: '{{ states(''input_text.singleusecode'') | int }}'
+  - service: notify.all_phones
+    data:
+      message: Single Use Code Has Been Activated
+      title: Single Use Code
+      data:
+        ttl: 0
+        priority: high
+  mode: single
+  icon: mdi:key-plus

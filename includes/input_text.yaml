@@ -1,0 +1,9 @@
+codeslot:
+  name: Code Slot
+  initial: 0
+usercode:
+  name: User Code
+  initial: 0
+singleusecode:
+  name: Single Use Code
+  initial: 0000

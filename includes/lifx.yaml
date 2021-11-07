@@ -1,13 +1,13 @@
 light:
-  - broadcast: 192.168.2.142 #LIFX-Balcony-1
-  - broadcast: 192.168.2.129 #LIFX-Balcony-2
+  - broadcast: 192.168.3.156 #LIFX-Balcony-1
+  - broadcast: 192.168.3.247 #LIFX-Balcony-2
   - broadcast: 192.168.2.46 #LIFX-Butlers-1
   - broadcast: 192.168.2.50 #LIFX-Butlers-2
   - broadcast: 192.168.2.51 #LIFX-Butlers-Bench
   - broadcast: 192.168.2.37 #LIFX-Deck-1
   - broadcast: 192.168.2.102 #LIFX-Deck-2
-  - broadcast: 192.168.2.82 #LIFX-Deck-3
-  - broadcast: 192.168.2.63 #LIFX-Deck-4
+  - broadcast: 192.168.3.246 #LIFX-Deck-3
+  - broadcast: 192.168.3.243 #LIFX-Deck-4
   - broadcast: 192.168.2.55 #LIFX-Dining-1
   - broadcast: 192.168.2.38 #LIFX-Dining-2
   - broadcast: 192.168.2.104 #LIFX-Dining-3
@@ -26,8 +26,8 @@ light:
   - broadcast: 192.168.2.43 #LIFX-Fireplace-Right-Middle
   - broadcast: 192.168.2.132 #LIFX-Fireplace-Right-Top
   - broadcast: 192.168.3.135 #LIFX-Fireplace-Right-Top-Up
-  - broadcast: 192.168.2.128 #LIFX-Front-1
-  - broadcast: 192.168.2.127 #LIFX-Front-2
+  - broadcast: 192.168.3.244 #LIFX-Front-1
+  - broadcast: 192.168.3.241 #LIFX-Front-2
   - broadcast: 192.168.2.150 #LIFX-Guest 4
   - broadcast: 192.168.2.152 #LIFX-Guest-1
   - broadcast: 192.168.2.158 #LIFX-Guest-2
@@ -39,9 +39,9 @@ light:
   - broadcast: 192.168.2.154 #LIFX-Kids-Bath-2
   - broadcast: 192.168.3.144 #LIFX-Kids-Bath-Cabinet
   - broadcast: 192.168.2.157 #LIFX-Kitchen-Bench
-  - broadcast: 192.168.2.191 #LIFX-Kitchen-Island-1
-  - broadcast: 192.168.2.190 #LIFX-Kitchen-Island-2
-  - broadcast: 192.168.2.192 #LIFX-Kitchen-Island-3
+  - broadcast: 192.168.3.238 #LIFX-Kitchen-Island-1
+  - broadcast: 192.168.3.242 #LIFX-Kitchen-Island-2
+  - broadcast: 192.168.3.245 #LIFX-Kitchen-Island-3
   - broadcast: 192.168.2.105 #LIFX-Kitchen-Walkway-1
   - broadcast: 192.168.2.107 #LIFX-Kitchen-Walkway-2
   - broadcast: 192.168.2.140 #LIFX-Library-1
@@ -57,7 +57,7 @@ light:
   - broadcast: 192.168.2.65 #LIFX-Living-7
   - broadcast: 192.168.2.68 #LIFX-Mabel-1
   - broadcast: 192.168.2.59 #LIFX-Mabel-2
-  - broadcast: 192.168.3.193 #LIFX-Mabel-Lamp
+  - broadcast: 192.168.3.240 #LIFX-Mabel-Lamp
   - broadcast: 192.168.2.116 #LIFX-Master-1
   - broadcast: 192.168.2.122 #LIFX-Master-2
   - broadcast: 192.168.2.118 #LIFX-Master-3
@@ -83,10 +83,10 @@ light:
   - broadcast: 192.168.2.134 #LIFX-Rumpus-7
   - broadcast: 192.168.2.40 #LIFX-Rumpus-8
   - broadcast: 192.168.2.52 #LIFX-Rumpus-9
-  - broadcast: 192.168.3.159 #LIFX-Server-Room
+  - broadcast: 192.168.3.237 #LIFX-Server-Room
   - broadcast: 192.168.2.111 #LIFX-Sidney-1
   - broadcast: 192.168.2.53 #LIFX-Sidney-2
-  - broadcast: 192.168.2.146 #LIFX-Sidney-Lamp
+  - broadcast: 192.168.3.236 #LIFX-Sidney-Lamp
   - broadcast: 192.168.2.41 #LIFX-Stairs-Down-1
   - broadcast: 192.168.2.114 #LIFX-Stairs-Up-1
   - broadcast: 192.168.2.117 #LIFX-Stairs-Up-2

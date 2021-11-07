@@ -15,6 +15,7 @@ entry_motion_detection:
     - binary_sensor.front_yard_motion
     - binary_sensor.front_door_motion
     - binary_sensor.multi_front_door_contact
+    - binary_sensor.multi_driveway_gate_contact
 kitchen_motion_detection:
   name: Kitchen Motion
   entities:
@@ -35,8 +36,6 @@ ensuite_shower_motion_detection:
 garage_motion_detection:
   name: Garage Motion
   entities:
-    - binary_sensor.multi_garage_entry_accelerometer
-    - binary_sensor.garage_motion
     - binary_sensor.multi_garage_entry_contact
     - binary_sensor.motion_garage_motion
 kids_tv_control:
@@ -53,3 +52,33 @@ adaptive_lighting_reset:
     - switch.adaptive_lighting_kids_bath_cabinet
     - switch.adaptive_lighting_master
     - switch.adaptive_lighting_bathroom_cabinets
+    - switch.adaptive_lighting_adapt_color_kids_bedside_lamps
+patio_motion:
+  name: Patio Table Motion and Door Shut
+  entities:
+    - binary_sensor.multi_patio_contact
+    - binary_sensor.motion_patio_table_motion
+office_motion:
+  name: Office Motion
+  entities:
+    - binary_sensor.motion_office_motion
+    - binary_sensor.motion_simrig_motion
+office_windows:
+  name: Office Window & Door
+  entities:
+    - binary_sensor.multi_office_balcony_door_contact
+    - binary_sensor.multi_office_window_contact
+office_temperature:
+  name: Office Temperature (Average)
+  entities:
+    - sensor.office_temperature
+    - sensor.motion_office_temperature
+    - sensor.motion_simrig_temperature
+ground_doors:
+  name: Ground Floor Doors
+  entities:
+    - binary_sensor.multi_front_door_contact
+    - binary_sensor.multi_living_slider_left_contact
+    - binary_sensor.multi_living_slider_right_contact
+    - binary_sensor.multi_garage_entry_contact
+    - binary_sensor.multi_patio_contact

@@ -10,7 +10,7 @@ homeassistant:
 recorder: !include includes/recorder.yaml
 influxdb: !include includes/influxdb.yaml
 logger: !include includes/logger.yaml
-remote: !include includes/remotes.yaml
+# remote: !include includes/remotes.yaml
 
 # Text to speech
 tts:
@@ -25,6 +25,7 @@ scene: !include scenes.yaml
 light: !include includes/lights.yaml
 input_number: !include includes/input_numbers.yaml
 input_boolean: !include includes/input_boolean.yaml
+input_text: !include includes/input_text.yaml
 switch: !include includes/switches.yaml
 cover: !include includes/covers.yaml
 fan: !include includes/fans.yaml
@@ -34,4 +35,11 @@ media_player: !include includes/media_player.yaml
 notify: !include includes/notify.yaml
 binary_sensor: !include includes/binary_sensors.yaml
 lifx: !include includes/lifx.yaml
+nest: !include includes/nest.yaml
+# ecovacs: !include includes/ecovacs.yaml
 # person: !include includes/persons.yaml # Double up of people, add devices in config
+
+# Reset LinkTap Rest Command
+rest_command:
+  reset_linktap_gw:
+    url: "http://192.168.3.208/index.shtml?flag=0"

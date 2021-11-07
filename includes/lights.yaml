@@ -261,6 +261,7 @@
     - light.rumpus_9
     - light.kids_bath_1
     - light.kids_bath_2
+    - light.kids_bath_cabinet
 - platform: group
   name: First Floor Lights
   entities:
@@ -274,6 +275,7 @@
     - light.master_bath_1
     - light.master_bath_2
     - light.master_bath_3
+    - light.master_bath_cabinet
     - light.master_robe_1
     - light.master_robe_2
     - light.master_robe_3

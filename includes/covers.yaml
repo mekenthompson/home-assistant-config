@@ -3,20 +3,33 @@
     master_curtains:
       friendly_name: "Curtains"
       open_cover:
-        service: remote.send_command
-        data:
-          entity_id: remote.broadlink_rm4_pro_remote
-          command: b64:scAaAwCfBgAKCwwLCwwLCwwLCwsMCwwLCwwLCwwLCwwLCwwLCwwLDAsLCwwLDAsLDAsLDAsMCwwLDAsLDAsLDAsMDAsLDAsMC58LDAoOCg0LDAsYFw0KDgkOCA8KEAYoBw8HFgQrBEoMDAsPBBYEnwYoFBoKDgoPByQGBQQEBB0FBAQNCRgEBQQQCRkKDQUEBQwLBAgaCwwKDQwMFhgXDQoNCwwLDQoNCxgXDAsNCmgLDAsMCwwLDAsLDAsMCwsMC58LDAsMCw0LDAsYFwwLDQsMCw0LDAsMCw0LDAsNCxcYDAsXDAwMCwwLDAwMCxcYDAsYFwwLFxgXGAwLDAwMCwwLGBcMCwwMFwwLGAwLDAwXGAsMDAsMCxgXFw0LDAsNCwwLDAwXFw0LDAtoCwwLDAsLDAsMCwsMCwwLDAueDAsMDAsMDAwLFxgMCwwLDQsMCwwMDAsMCwwMDAsXGAwLGAwLDAsNCwwLDAsYFwwMFxcMCxgXGBcMCwwMDAsMCxgXDAsMDBcMCxgMCwwLGBcMCwwLDQsXGBcMCwwMDAsMDAwLFxgMCwwLaAsMCwsMCwwLDAsMCwsMCwsMngsMDAwLDAsMDBcYCwwMCwwMDAsMCwwMDAsMDAwLFxgMCxcNCwwLDAsMDAwLFxgMCxcYDAsYFxcYDAsMCwwMDAsXGAwLDAsXDQsXDAsNCxcXDAwMCwwLGBcXDAwMCwwLDQsMCxgXDAsMDGcMCwsMCwsMCwwLDAsMCwwLC54MCwwMCwwMCwwXGAsMDAsMDAwLDAsMDAwLDAwMCxcYDAsXDQsMCwwLDQsMCxcYDAsXGAwLFxgXGAwLDAsMDAwLFxcNCwwLFw0LFwwMDAsXGAwLDAsMDBcXGAwLDAsMDAwLDAwXFwwMDAtnDAsMCwwLCwwLCwwLDAsMCwufCwwLDAwMCwwLGBcMCwwMDAsMDAsMDAsMDAwLDAwXFwwMFwwLDQsMCwwLDAwXFwwMFxcMDBcXGBcMCw0LDAsMDBcXDAwMCxcMDBcMCwwMFxcMDAwLDAsYFxcMDAwLDAwLDAwLGBcMCwwMAAXcAAAAAAAAAAAAAAAA
-      #            host: 192.168.2.156
-      #            packet:
-      #              - ""
+        - service: remote.send_command
+          data:
+            entity_id: remote.broadlink_rm4_pro_remote
+            command: b64:scAaAwCfBgAKCwwLCwwLCwwLCwsMCwwLCwwLCwwLCwwLCwwLCwwLDAsLCwwLDAsLDAsLDAsMCwwLDAsLDAsLDAsMDAsLDAsMC58LDAoOCg0LDAsYFw0KDgkOCA8KEAYoBw8HFgQrBEoMDAsPBBYEnwYoFBoKDgoPByQGBQQEBB0FBAQNCRgEBQQQCRkKDQUEBQwLBAgaCwwKDQwMFhgXDQoNCwwLDQoNCxgXDAsNCmgLDAsMCwwLDAsLDAsMCwsMC58LDAsMCw0LDAsYFwwLDQsMCw0LDAsMCw0LDAsNCxcYDAsXDAwMCwwLDAwMCxcYDAsYFwwLFxgXGAwLDAwMCwwLGBcMCwwMFwwLGAwLDAwXGAsMDAsMCxgXFw0LDAsNCwwLDAwXFw0LDAtoCwwLDAsLDAsMCwsMCwwLDAueDAsMDAsMDAwLFxgMCwwLDQsMCwwMDAsMCwwMDAsXGAwLGAwLDAsNCwwLDAsYFwwMFxcMCxgXGBcMCwwMDAsMCxgXDAsMDBcMCxgMCwwLGBcMCwwLDQsXGBcMCwwMDAsMDAwLFxgMCwwLaAsMCwsMCwwLDAsMCwsMCwsMngsMDAwLDAsMDBcYCwwMCwwMDAsMCwwMDAsMDAwLFxgMCxcNCwwLDAsMDAwLFxgMCxcYDAsYFxcYDAsMCwwMDAsXGAwLDAsXDQsXDAsNCxcXDAwMCwwLGBcXDAwMCwwLDQsMCxgXDAsMDGcMCwsMCwsMCwwLDAsMCwwLC54MCwwMCwwMCwwXGAsMDAsMDAwLDAsMDAwLDAwMCxcYDAsXDQsMCwwLDQsMCxcYDAsXGAwLFxgXGAwLDAsMDAwLFxcNCwwLFw0LFwwMDAsXGAwLDAsMDBcXGAwLDAsMDAwLDAwXFwwMDAtnDAsMCwwLCwwLCwwLDAsMCwufCwwLDAwMCwwLGBcMCwwMDAsMDAsMDAsMDAwLDAwXFwwMFwwLDQsMCwwLDAwXFwwMFxcMDBcXGBcMCw0LDAsMDBcXDAwMCxcMDBcMCwwMFxcMDAwLDAsYFxcMDAwLDAwLDAwLGBcMCwwMAAXcAAAAAAAAAAAAAAAA
+      #        - condition: state
+      #          entity_id: sensor.cover_master
+      #          state: "open"
       close_cover:
-        service: remote.send_command
-        data:
-          entity_id: remote.broadlink_rm4_pro_remote
-          command: b64:scD2AQCfBgALCgwLDAsMCgwLDAsLCwwLDAsLCwwLCwwLCwwLCwwLCwwLCwwLDAsLCwwLCwwLCwwLDAsMCwwLDAsLDAsMCwsMC54MFwwLGAsMDAwLDBcMDAwLDAsYCwwXGBcXDAwXFxgXFxgMCxcYFxcNCxcMDBcXGBcMCxgXDAsYDAsMCw0LDQoNChgXGBcXDQsXFw0LFwwMFwwLGAwLDAsNCxcMDAtcCwwLCwwLDAsMCwwLCwwLCwyeDBYNCxcMDAsMDAsYDAsMCwwLGAwMFxcXGAwLGBcXGBcXDAwXFxgXDAsYDAsXGBcXDQsXFw0LFwwLDQsMCwwMDAsXGBcXGAwLGBcNChgMCxgMCxcMCwwMDAsXDAwLXAsMCwwLCwwLDAsLDAsMCwsMngsXDAsYDAsMDAwLFwwLDQsPCRcLDBcXGBcMCxgXFxgXFwwMFxcYFwwLGAwLFxgXFwwLGBcMDBcMCwwLDAwMCwwLGBcXGBcMCxgXDAsYDAsXDAwXDAsMDAwLFwwLDFsMCwwLDAsLDAsMCwsMCwwLC54MFwwLFwwMDAsMCxgMCwwLDAsYDAsYFxcYDAsXGBcXGBcMCxgXFxgMCxwIEhAXGBcMCxgXDAsYDAsMDAwLDAsMDBcXGBcYDAsXGAwLFwwMFwwLGAwLDAsNCxcMCwwABdw=
+        - service: remote.send_command
+          data:
+            entity_id: remote.broadlink_rm4_pro_remote
+            command: b64:scD2AQCfBgALCgwLDAsMCgwLDAsLCwwLDAsLCwwLCwwLCwwLCwwLCwwLCwwLDAsLCwwLCwwLCwwLDAsMCwwLDAsLDAsMCwsMC54MFwwLGAsMDAwLDBcMDAwLDAsYCwwXGBcXDAwXFxgXFxgMCxcYFxcNCxcMDBcXGBcMCxgXDAsYDAsMCw0LDQoNChgXGBcXDQsXFw0LFwwMFwwLGAwLDAsNCxcMDAtcCwwLCwwLDAsMCwwLCwwLCwyeDBYNCxcMDAsMDAsYDAsMCwwLGAwMFxcXGAwLGBcXGBcXDAwXFxgXDAsYDAsXGBcXDQsXFw0LFwwLDQsMCwwMDAsXGBcXGAwLGBcNChgMCxgMCxcMCwwMDAsXDAwLXAsMCwwLCwwLDAsLDAsMCwsMngsXDAsYDAsMDAwLFwwLDQsPCRcLDBcXGBcMCxgXFxgXFwwMFxcYFwwLGAwLFxgXFwwLGBcMDBcMCwwLDAwMCwwLGBcXGBcMCxgXDAsYDAsXDAwXDAsMDAwLFwwLDFsMCwwLDAsLDAsMCwsMCwwLC54MFwwLFwwMDAsMCxgMCwwLDAsYDAsYFxcYDAsXGBcXGBcMCxgXFxgMCxwIEhAXGBcMCxgXDAsYDAsMDAwLDAsMDBcXGBcYDAsXGAwLFwwMFwwLGAwLDAsNCxcMCwwABdw=
+      #        - condition: state
+      #          entity_id: sensor.cover_master
+      #          state: "closed"
       stop_cover:
-        service: remote.send_command
-        data:
-          entity_id: remote.broadlink_rm4_pro_remote
-          command: b64:scAOAgCfBgAKCg0KDQoMCwwKDAsMCwwKDAsMCwsLDAsMCwsLDAsMCwsLDAwLCwsLDAsMCwwKDAsMCwwLDAsMCwwLCwwLDAsLDJ4MFg0LFwwMFxcMDAwLFw0LFwwMCwwMCwwMFwwLGAwLFwwMDAsMCw0LDAsXGBcXDAwXFwwMFxcNCwwLDAsYFxcMDAwLDAwXDAsMCxgXGBcMCxgMCwwLDAwXDAsYDAsXGAwLDAtnDAsMCwwLDAsLDAsLDAsMCwyeCxcNChgMCxcYDAsMDBcMCxgLDAwLDAwMCxcNCxcMCxgMCwwLDQsMCwwLGBcXGAwLFxgMCxcYDAsMCw0LFxcYDAsMDAsMFwwMDAsXFxgXDAwXDAsMDAwLFw0LFwwLGBcMCwwMZwwLCwsMCwwLDAsMCwwLDAsLnwsWDQoYDAwWGAwMDAsXDAsYDAsMDAwLDAsYDAsXDAwXDAsMDAwLDAsMCxgXGBcMCxgXDAsYFwwLDQsMCxcYFwwMDAsMCxgMCwwLGBcXGAwLFw0LDAsMDBcMCxgMCxcYDAsMDGcMCgwLDAsMCwwLDAsMCwsLDJ4MFg0LGAsMFxgLDAwLFw0LFwwMDAsMCw0LFwwLGAwLGAwLDAsMDAwLDAsYFxcYDAsXGAwLFxgMCw0LDAsXGBcMCwwMDAsXDQsMCxgXFxgMCxcNCwwLDAwXDAsYDAsYFwwMDAsABdwAAAAAAAAAAA==
+        - service: remote.send_command
+          data:
+            entity_id: remote.broadlink_rm4_pro_remote
+            command: b64:scAOAgCfBgAKCg0KDQoMCwwKDAsMCwwKDAsMCwsLDAsMCwsLDAsMCwsLDAwLCwsLDAsMCwwKDAsMCwwLDAsMCwwLCwwLDAsLDJ4MFg0LFwwMFxcMDAwLFw0LFwwMCwwMCwwMFwwLGAwLFwwMDAsMCw0LDAsXGBcXDAwXFwwMFxcNCwwLDAsYFxcMDAwLDAwXDAsMCxgXGBcMCxgMCwwLDAwXDAsYDAsXGAwLDAtnDAsMCwwLDAsLDAsLDAsMCwyeCxcNChgMCxcYDAsMDBcMCxgLDAwLDAwMCxcNCxcMCxgMCwwLDQsMCwwLGBcXGAwLFxgMCxcYDAsMCw0LFxcYDAsMDAsMFwwMDAsXFxgXDAwXDAsMDAwLFw0LFwwLGBcMCwwMZwwLCwsMCwwLDAsMCwwLDAsLnwsWDQoYDAwWGAwMDAsXDAsYDAsMDAwLDAsYDAsXDAwXDAsMDAwLDAsMCxgXGBcMCxgXDAsYFwwLDQsMCxcYFwwMDAsMCxgMCwwLGBcXGAwLFw0LDAsMDBcMCxgMCxcYDAsMDGcMCgwLDAsMCwwLDAsMCwsLDJ4MFg0LGAsMFxgLDAwLFw0LFwwMDAsMCw0LFwwLGAwLGAwLDAsMDAwLDAsYFxcYDAsXGAwLFxgMCw0LDAsXGBcMCwwMDAsXDQsMCxgXFxgMCxcNCwwLDAwXDAsYDAsYFwwMDAsABdwAAAAAAAAAAA==
+      #        - condition: state
+      #          entity_id: sensor.cover_master
+      #          state: "open"
+      #      value_template: "{{is_state('sensor.cover_master', 'open')}}"
+      icon_template: >-
+        {% if is_state('cover.master_curtains', 'open') %}
+          mdi:curtains
+        {% else %}
+          mdi:curtains-closed
+        {% endif %}

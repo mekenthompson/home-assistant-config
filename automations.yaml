@@ -81,7 +81,7 @@
   trigger:
   - platform: numeric_state
     entity_id: sun.sun
-    above: '11'
+    above: '-5'
     value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
   condition: []
   action:
@@ -102,7 +102,8 @@
   - service: light.turn_on
     data: {}
     entity_id: light.garage_on_off
-  mode: restart
+  mode: parallel
+  max: 10
 - id: '1608772537185'
   alias: Security - Garage - Motion Off 1HR
   description: ''
@@ -160,10 +161,10 @@
   action:
   - service: light.turn_off
     data: {}
-    entity_id: light.front_yard_lights
-  - service: light.turn_off
-    data: {}
-    entity_id: light.entry_lights
+    target:
+      entity_id:
+      - light.entry_lights
+      - light.front_yard_lights
   mode: single
 - id: '1609477935315'
   alias: Motion Off - Butlers
@@ -210,7 +211,7 @@
   - platform: state
     entity_id: group.ensuite_motion_detection
     to: 'off'
-    for: 00:02:00
+    for: 00:05:00
   condition: []
   action:
   - service: light.turn_off
@@ -337,7 +338,7 @@
     entity_id: light.kid_s_bathroom
   mode: single
 - id: '1609954309558'
-  alias: AV - Kids TV On - Weekday & Holiday Mornings
+  alias: AV - Kids TV On - Weekend & Public Holiday Mornings
   description: ''
   trigger:
   - platform: time
@@ -355,7 +356,7 @@
     entity_id: switch.power_kids_tv_on_off
   mode: single
 - id: '1609972159052'
-  alias: AV - Kids TV - Turn off at 9am
+  alias: AV - Kids TV off at 9am
   description: ''
   trigger:
   - platform: time
@@ -374,21 +375,12 @@
   description: ''
   trigger:
   - platform: time
-    at: '20:30:00'
+    at: '21:30:00'
+  - platform: time
+    at: '21:00:00'
   condition: []
   action:
-  - service: switch.turn_on
-    data: {}
-    target:
-      entity_id: switch.adaptive_lighting_sleep_mode_kids
-  - service: switch.turn_on
-    data: {}
-    target:
-      entity_id: switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
-  - service: switch.turn_on
-    data: {}
-    target:
-      entity_id: switch.adaptive_lighting_sleep_mode_kids_bedside_lamps
+  - service: script.kids_night_mode
   mode: parallel
   max: 10
 - id: '1610451345279'
@@ -420,6 +412,9 @@
   - service: switch.turn_off
     data: {}
     entity_id: switch.adaptive_lighting_sleep_mode_bathroom_default
+  - service: switch.turn_off
+    target:
+      entity_id: switch.adaptive_lighting_sleep_mode_kids_bedside_lamps
   mode: single
 - id: '1610451576424'
   alias: Adaptive Lighting - Sleep Mode - Master
@@ -562,12 +557,16 @@
   max: 10
 - id: '1610757054758'
   alias: Security - Auto Lock - No One Home
-  description: Lock up if no one home for 15 minutes
+  description: Lock up if no one home for 5 minutes
   trigger:
   - platform: state
     entity_id: group.persons
     from: home
-    for: 00:15:00
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
   condition: []
   action:
   - service: script.leaving
@@ -610,6 +609,7 @@
     to: home
   condition: []
   action:
+  - service: script.stop_vacuums
   - service: notify.mobile_app_lisa_s_pixel_5
     data:
       message: Welcome Home Lisa!
@@ -630,6 +630,7 @@
     to: home
   condition: []
   action:
+  - service: script.stop_vacuums
   - service: notify.mobile_app_ken_s_pixel_5
     data:
       message: Welcome Home Ken!
@@ -755,10 +756,10 @@
   action:
   - service: light.turn_on
     data: {}
-    entity_id: light.entry_lights
-  - service: light.turn_on
-    data: {}
-    entity_id: light.front_yard_lights
+    target:
+      entity_id:
+      - light.entry_lights
+      - light.front_yard_lights
   mode: parallel
   max: 10
 - id: '1611995216535'
@@ -830,9 +831,21 @@
   alias: Motion On - Patio Table
   description: ''
   trigger:
-  - platform: state
+  - type: motion
+    platform: device
+    device_id: 7bf9386e6926cdf9bd4bb82298f5d97e
     entity_id: binary_sensor.motion_patio_table_motion
-    to: 'on'
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 15
+      milliseconds: 0
+  - type: opened
+    platform: device
+    device_id: 4ea28f7fc66dfb5e8513dcbaf75b1018
+    entity_id: binary_sensor.multi_patio_contact
+    domain: binary_sensor
   condition:
   - condition: numeric_state
     entity_id: sun.sun
@@ -841,7 +854,9 @@
   action:
   - service: light.turn_on
     data: {}
-    entity_id: light.festoon_lights
+    target:
+      entity_id:
+      - light.festoon_lights
   mode: parallel
   max: 10
 - id: '1613891986552'
@@ -849,14 +864,20 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.motion_patio_table_motion
     to: 'off'
-    for: 00:30:00
-  condition: []
+    for: 00:15:00
+    entity_id: group.patio_motion
+  condition:
+  - condition: time
+    after: '23:30:00'
+    before: '17:00:00'
   action:
   - service: light.turn_off
     data: {}
-    entity_id: light.festoon_lights
+    target:
+      entity_id:
+      - light.festoon_lights
+      - light.front_yard_lights
   mode: parallel
   max: 10
 - id: '1613892109918'
@@ -934,32 +955,43 @@
       entity_id: switch.ensuite_fan
   mode: single
 - id: '1620124425409'
-  alias: Simrig - Cool when over 21.8
+  alias: Simrig - Cool when over 23
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.motion_simrig_motion
+    entity_id: group.office_motion
     to: 'on'
     for: 00:01:00
+  - platform: event
+    event_type: smartthings.button
+    event_data:
+      device_id: 2de0559d-9f0f-47a5-a86b-dcc3a01c1334
+      value: pushed
   condition:
   - condition: and
     conditions:
     - type: is_temperature
       condition: device
-      device_id: 5c49a7ea833556d5108a89404487a77b
-      entity_id: sensor.motion_simrig_temperature
+      device_id: 25ff439d4c7050b2dee20e5034787197
+      entity_id: sensor.office_temperature
       domain: sensor
-      above: 218
+      below: 0
+      above: 23
+    - condition: state
+      entity_id: group.office_windows
+      state: 'off'
   action:
   - service: climate.set_temperature
     target:
       entity_id: climate.office_cooling
     data:
-      temperature: 19
+      temperature: 17
       hvac_mode: cool
-  - service: climate.turn_off
+  - service: climate.set_fan_mode
     target:
-      entity_id: climate.office
+      device_id: 4dd25ec3a326f5a7a3cbdcc89c47b73a
+    data:
+      fan_mode: high
   mode: single
 - id: '1620124643737'
   alias: Simrig - Cooling off when under 21
@@ -974,12 +1006,17 @@
     device_id: 5c49a7ea833556d5108a89404487a77b
     entity_id: sensor.motion_simrig_temperature
     domain: sensor
-    below: 20.9
+    below: 21
     for:
       hours: 0
       minutes: 2
       seconds: 0
       milliseconds: 0
+  - platform: event
+    event_type: smartthings.button
+    event_data:
+      device_id: 2de0559d-9f0f-47a5-a86b-dcc3a01c1334
+      value: double
   condition: []
   action:
   - service: climate.turn_off
@@ -995,16 +1032,10 @@
   alias: Simrig - Lights on if dark
   description: ''
   trigger:
-  - type: motion
-    platform: device
-    device_id: 5c49a7ea833556d5108a89404487a77b
-    entity_id: binary_sensor.motion_simrig_motion
-    domain: binary_sensor
-    for:
-      hours: 0
-      minutes: 1
-      seconds: 0
-      milliseconds: 0
+  - platform: state
+    entity_id: group.office_motion
+    to: 'on'
+    for: 00:00:30
   condition:
   - condition: numeric_state
     entity_id: sun.sun
@@ -1028,7 +1059,8 @@
     data:
       kelvin: 2000
       brightness_pct: 35
-  mode: single
+  mode: parallel
+  max: 10
 - id: '1622168108149'
   alias: Curtains Open in Morning
   description: ''
@@ -1079,5 +1111,825 @@
   - service: cover.close_cover
     target:
       entity_id: cover.master_curtains
+  mode: parallel
+  max: 10
+- id: '1624314909264'
+  alias: Time - 9am - Turn off Downstairs Lights
+  description: ''
+  trigger:
+  - platform: time
+    at: 09:00:00
+  condition: []
+  action:
+  - service: light.turn_off
+    target:
+      entity_id: light.lower_ground_lights
+  mode: single
+- id: '1624805426627'
+  alias: AV - Kids TV On - Holidays
+  description: ''
+  trigger:
+  - platform: time
+    at: 06:30
+  condition: []
+  action:
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.power_kids_shield_on_off
+  - service: switch.turn_on
+    data: {}
+    entity_id: switch.power_kids_tv_on_off
+  mode: single
+- id: '1624871319438'
+  alias: Zigbee Button - Turn on Aircon
+  description: ''
+  trigger:
+  - event_data:
+      device_id: 2de0559d-9f0f-47a5-a86b-dcc3a01c1334
+      value: pushed
+    event_type: smartthings.button
+    platform: event
+  condition: []
+  action:
+  - service: climate.set_temperature
+    target:
+      device_id: 4dd25ec3a326f5a7a3cbdcc89c47b73a
+    data:
+      temperature: 17
+      hvac_mode: cool
+  - service: climate.set_fan_mode
+    target:
+      device_id: 4dd25ec3a326f5a7a3cbdcc89c47b73a
+    data:
+      fan_mode: high
+  mode: single
+- id: '1624878781245'
+  alias: Zigbee Button - Turn off Aircon
+  description: ''
+  trigger:
+  - event_data:
+      device_id: 2de0559d-9f0f-47a5-a86b-dcc3a01c1334
+      value: double
+    event_type: smartthings.button
+    platform: event
+  condition: []
+  action:
+  - service: climate.turn_off
+    target:
+      device_id: 4dd25ec3a326f5a7a3cbdcc89c47b73a
+  mode: single
+- id: '1626167170930'
+  alias: Motion - Sidney - Lights On
+  description: After sunset and before 7.30pm
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 9746c50207c61ab65866a7543d270f91
+    entity_id: binary_sensor.motion_sidney_motion
+    domain: binary_sensor
+  condition:
+  - condition: time
+    before: '19:30:00'
+  - condition: sun
+    after: sunset
+  action:
+  - service: light.turn_on
+    target:
+      entity_id: light.sidney_s_lights
+  mode: parallel
+  max: 10
+- id: '1626167199896'
+  alias: 'Motion - Mabel - Lights On '
+  description: After sunset and before 7.30pm
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 44c7015e9a9b5b7ca78d29a7267c6acb
+    entity_id: binary_sensor.motion_mabel_motion
+    domain: binary_sensor
+  condition:
+  - condition: time
+    before: '19:30:00'
+  - condition: sun
+    after: sunset
+  action:
+  - service: light.turn_on
+    target:
+      entity_id: light.mabel_s_lights
+  mode: parallel
+  max: 10
+- id: '1626167307023'
+  alias: Motion Off - Mabels Lights
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 44c7015e9a9b5b7ca78d29a7267c6acb
+    entity_id: binary_sensor.motion_mabel_motion
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 20
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: light.turn_off
+    target:
+      entity_id: light.mabel_s_lights
+  mode: parallel
+  max: 10
+- id: '1626167344301'
+  alias: Motion Off - Sidneys Lights
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 9746c50207c61ab65866a7543d270f91
+    entity_id: binary_sensor.motion_sidney_motion
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 20
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: light.turn_off
+    target:
+      entity_id:
+      - light.sidney_s_lights
+      - light.sidney_lamp
+  mode: parallel
+  max: 10
+- id: '1626253691777'
+  alias: Motion On - Rumpus Room
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: 741ccf798dee4ff26bc97b445ddadaee
+    entity_id: binary_sensor.motion_rumpus_motion
+    domain: binary_sensor
+  condition:
+  - condition: sun
+    after: sunset
+  - condition: time
+    before: '19:45'
+  action:
+  - service: light.turn_on
+    target:
+      entity_id: light.rumpus_lights
+  mode: parallel
+  max: 10
+- id: '1626253747269'
+  alias: Motion Off - Rumpus Lights
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 741ccf798dee4ff26bc97b445ddadaee
+    entity_id: binary_sensor.motion_rumpus_motion
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 20
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: light.turn_off
+    target:
+      entity_id: light.rumpus_lights
+  mode: parallel
+  max: 10
+- id: '1626492842945'
+  alias: Motion On - Master Bedroom
+  description: ''
+  trigger:
+  - type: motion
+    platform: device
+    device_id: bc6f76f464228201088cf446b63f6890
+    entity_id: binary_sensor.motion_master_motion
+    domain: binary_sensor
+  condition:
+  - condition: numeric_state
+    entity_id: sun.sun
+    below: '10'
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+  - condition: time
+    before: '22:00:00'
+    after: '16:00:00'
+  - type: is_open
+    condition: device
+    device_id: 22c46f3939305dd9f5ff01e4f0964741
+    entity_id: binary_sensor.mutli_master_contact
+    domain: binary_sensor
+  action:
+  - service: light.turn_on
+    target:
+      entity_id: light.master_bedroom_lights
+  mode: parallel
+  max: 10
+- id: '1626492902751'
+  alias: Motion Off - Master Bedroom
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: bc6f76f464228201088cf446b63f6890
+    entity_id: binary_sensor.motion_master_motion
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: light.turn_off
+    target:
+      entity_id: light.master_bedroom_lights
+  mode: parallel
+  max: 10
+- id: '1626531484492'
+  alias: Motion Off - Office
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.office_motion
+    to: 'off'
+    for: 00:10:00
+  condition: []
+  action:
+  - service: light.turn_off
+    target:
+      entity_id: light.office_lights
+  mode: parallel
+  max: 10
+- id: '1627366151662'
+  alias: Garage - Motion Off - Close Garage Door if Garage Open
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.garage_motion_detection
+    to: 'off'
+    for: 00:30:00
+  condition:
+  - condition: device
+    device_id: 8c8da50538a89c6ba8065484d32caf0e
+    domain: cover
+    entity_id: cover.garage_door
+    type: is_open
+  action:
+  - device_id: 8c8da50538a89c6ba8065484d32caf0e
+    domain: cover
+    entity_id: cover.garage_door
+    type: close
+  mode: single
+- id: '1629099970920'
+  alias: Time - WLED - Fence on at 5pm
+  description: ''
+  trigger:
+  - platform: time
+    at: '17:00:00'
+  condition: []
+  action:
+  - service: light.turn_on
+    target:
+      device_id: 698c7f0e7d4baec5fbc809d1062361cb
+  - service: wled.effect
+    target:
+      entity_id: light.wled
+    data:
+      effect: '{{ state_attr(''light.wled'', ''effect_list'') | random }}'
+      palette: '{{ range(0,53) | random }}'
+  mode: single
+- id: '1629100172245'
+  alias: Time - WLED - Turn off at 10pm
+  description: ''
+  trigger:
+  - platform: time
+    at: '23:00:00'
+  condition: []
+  action:
+  - service: light.turn_off
+    target:
+      entity_id:
+      - light.wled_master
+  mode: single
+- id: '1631924298864'
+  alias: Motion Off - Guest Bath - Fan Off
+  description: ''
+  trigger:
+  - type: no_motion
+    platform: device
+    device_id: 670099da575af35f2994650ec7eba502
+    entity_id: binary_sensor.motion_guest_bathroom_motion
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: switch.turn_off
+    target:
+      entity_id: switch.guest_bath_fan
+  mode: single
+- id: '1632172683158'
+  alias: Motion Off - Guest Room
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_guest_room_motion
+    to: 'off'
+    for:
+      hours: 2
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id: light.guest_bedroom_lights
+  mode: single
+- id: '1632172781181'
+  alias: Motion On - Guest Room
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.motion_guest_room_motion
+    to: 'on'
+  condition:
+  - condition: numeric_state
+    entity_id: sun.sun
+    below: '5'
+    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+  action:
+  - service: light.turn_on
+    data: {}
+    target:
+      entity_id: light.guest_bedroom_lights
+  mode: single
+- id: '1632458689530'
+  alias: LinkTap Restart if Unavailable
+  description: ''
+  trigger:
+  - platform: homeassistant
+    event: start
+  - platform: state
+    entity_id: binary_sensor.ff424023004b1200_is_rf_linked
+    to: unavailable
+    for:
+      hours: 0
+      minutes: 3
+      seconds: 0
+      milliseconds: 0
+  condition:
+  - condition: state
+    entity_id: binary_sensor.ff424023004b1200_is_rf_linked
+    state: unavailable
+  action:
+  - service: rest_command.reset_linktap_gw
+  mode: parallel
+  max: 10
+- id: '1632464736757'
+  alias: Doors Open - Ground Floor - Heating Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.ground_doors
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: climate.set_hvac_mode
+    target:
+      device_id:
+      - 93f4b208732c08edfa56165bcbfb4fde
+      - ba9946930611d42c9e3fc2ce2ccd055b
+      - e2acdb5156b0f614d08d8138098aa312
+    data:
+      hvac_mode: 'off'
+  mode: parallel
+  max: 10
+- id: '1632464809207'
+  alias: Doors Closed - Ground Floor - Heating Auto
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: group.ground_doors
+    to: 'off'
+  condition: []
+  action:
+  - service: climate.set_hvac_mode
+    target:
+      device_id: 93f4b208732c08edfa56165bcbfb4fde
+    data:
+      hvac_mode: auto
+  mode: parallel
+  max: 10
+- id: '1632464909829'
+  alias: Doors Open - Lower Ground - Heating Off
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 97aef1f1cff3f36a63307a874fd5c1d2
+    entity_id: binary_sensor.multi_rumpus_slider_contact
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: climate.set_hvac_mode
+    target:
+      device_id:
+      - e3a50cc77f945352f0fa1ea792ecdd1e
+      - ecfe486e5d25b2a6606ec2a96786ee10
+      - 098cb2deb24718134a32e613ed436be6
+    data:
+      hvac_mode: 'off'
+  mode: parallel
+  max: 10
+- id: '1632464963738'
+  alias: Doors Closed - Lower Ground - Heating Auto
+  description: ''
+  trigger:
+  - type: not_opened
+    platform: device
+    device_id: 97aef1f1cff3f36a63307a874fd5c1d2
+    entity_id: binary_sensor.multi_rumpus_slider_contact
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  condition: []
+  action:
+  - service: climate.set_hvac_mode
+    target:
+      device_id:
+      - e3a50cc77f945352f0fa1ea792ecdd1e
+      - ecfe486e5d25b2a6606ec2a96786ee10
+      - 098cb2deb24718134a32e613ed436be6
+    data:
+      hvac_mode: auto
+  mode: parallel
+  max: 10
+- id: '1633866856921'
+  alias: Halloween On 5pm
+  description: ''
+  trigger:
+  - platform: time
+    at: '17:00:00'
+  condition: []
+  action:
+  - service: scene.turn_on
+    target:
+      entity_id: scene.halloween
+  - service: script.master_robe_start_projector_on_usb
+  - service: script.office_projector_start_projector_on_usb
+  mode: single
+- id: '1633866959271'
+  alias: Halloween Off
+  description: ''
+  trigger:
+  - platform: time
+    at: '23:30:00'
+  condition: []
+  action:
+  - service: light.turn_off
+    target:
+      entity_id:
+      - light.festoon_lights
+      - light.balcony_lights
+      - light.front_yard_lights
+      - light.wled_segment_0
+  - service: script.robe_projector_power_off
+  - service: script.office_projector_power_off
+  mode: single
+- id: '1633916134915'
+  alias: Master Robe Button - Toggle
+  description: ''
+  trigger:
+  - platform: event
+    event_data:
+      device_id: 7a5471a45697fa58dffd88bb91a4e6b7
+      command: toggle
+    event_type: zha_event
+  condition: []
+  action:
+  - service: light.toggle
+    target:
+      entity_id: light.master_robe_lights
+  mode: single
+- id: '1633918573426'
+  alias: Master Robe Button - On
+  description: ''
+  trigger:
+  - platform: event
+    event_data:
+      device_id: 7a5471a45697fa58dffd88bb91a4e6b7
+      command: 'on'
+    event_type: zha_event
+  condition: []
+  action:
+  - service: light.turn_on
+    target:
+      entity_id: light.master_robe_lights
+  mode: single
+- id: '1633918613570'
+  alias: Master Robe Button - Off
+  description: ''
+  trigger:
+  - platform: event
+    event_data:
+      device_id: 7a5471a45697fa58dffd88bb91a4e6b7
+      command: 'off'
+    event_type: zha_event
+  condition: []
+  action:
+  - service: light.turn_off
+    target:
+      entity_id: light.master_robe_lights
+  mode: single
+- id: '1635291877855'
+  alias: Update Notification
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.updater
+    from: 'off'
+    to: 'on'
+  condition: []
+  action:
+  - service: notify.mobile_app_ken_s_pixel_5
+    data:
+      message: Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version')
+        }} is available.
+  - service: notify.notify
+    data:
+      message: Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version')
+        }} is available.
+  mode: single
+- id: '1636250835506'
+  alias: Water Alert - Moisture Detected
+  description: ''
+  trigger:
+  - type: moist
+    platform: device
+    device_id: 5469b720983113f9e9bc73f04a69fe6d
+    entity_id: binary_sensor.water_sensor_kitchen_fridge_sensor
+    domain: binary_sensor
+  - type: moist
+    platform: device
+    device_id: 55ab7d304a48d827abcd2baf98fc7e9e
+    entity_id: binary_sensor.water_sensor_butlers_pantry_sink_moisture
+    domain: binary_sensor
+  - type: moist
+    platform: device
+    device_id: dac0ffbbb142718a65fc6e6eb4e86d8c
+    entity_id: binary_sensor.water_sensor_kitchen_sink_moisture
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: notify.all_phones
+    data:
+      title: Moisture Detected
+      message: '{{ trigger.to_state.attributes.friendly_name }}'
+  mode: parallel
+  max: 10
+- id: '1636250932638'
+  alias: Water Alert - Back to Normal
+  description: ''
+  trigger:
+  - type: not_moist
+    platform: device
+    device_id: 5469b720983113f9e9bc73f04a69fe6d
+    entity_id: binary_sensor.water_sensor_kitchen_fridge_sensor
+    domain: binary_sensor
+  - type: not_moist
+    platform: device
+    device_id: 55ab7d304a48d827abcd2baf98fc7e9e
+    entity_id: binary_sensor.water_sensor_butlers_pantry_sink_moisture
+    domain: binary_sensor
+  - type: not_moist
+    platform: device
+    device_id: dac0ffbbb142718a65fc6e6eb4e86d8c
+    entity_id: binary_sensor.water_sensor_kitchen_sink_moisture
+    domain: binary_sensor
+  condition: []
+  action:
+  - service: notify.all_phones
+    data:
+      title: '[RESOLVED] Water Leak'
+      message: '{{ trigger.to_state.attributes.friendly_name }}'
+  mode: parallel
+  max: 10
+- id: '1636264907778'
+  alias: Security - Single Use Lock Code
+  trigger:
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_ieee: 00:0d:6f:00:10:fa:26:1a
+      args:
+        operation: Unlock
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_ieee: 00:0d:6f:00:11:27:aa:c6
+      args:
+        operation: Unlock
+  condition:
+  - condition: template
+    value_template: '{{ trigger.event.data.args.code_slot == 100 }}'
+  action:
+  - service: zha.clear_lock_user_code
+    target:
+      device_id:
+      - 8bd17cad9ca8bd6278b7751a97b86d7c
+      - 113f5c23e2f3861a6a75f67cc102a40a
+    data:
+      code_slot: '100'
+  - service: notify.all_phones
+    data:
+      title: Single Use Code Used
+      message: Single Use Code was used to access house and now deleted
+      data:
+        ttl: 0
+        priority: high
+  mode: single
+- id: '1636279425096'
+  alias: Security - Front Door - Unlock Notifications
+  description: ''
+  trigger:
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_ieee: 00:0d:6f:00:10:fa:26:1a
+      args:
+        operation: Unlock
+  condition: []
+  action:
+  - variables:
+      slot: '{{ trigger.event.data.args.code_slot }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ slot == 2 }}'
+      sequence:
+      - service: notify.all_phones
+        data:
+          title: Front Door Unlocked
+          message: by Ken
+          data:
+            ttl: 0
+            priority: high
+    - conditions:
+      - condition: template
+        value_template: '{{ slot == 3 }}'
+      sequence:
+      - service: notify.all_phones
+        data:
+          message: by Ken
+          title: Front Door Unlocked
+          data:
+            ttl: 0
+            priority: high
+    - conditions:
+      - condition: template
+        value_template: '{{ slot == 4 }}'
+      sequence:
+      - service: notify.all_phones
+        data:
+          message: by Lisa
+          title: Front Door Unlocked
+          data:
+            ttl: 0
+            priority: high
+    - conditions:
+      - condition: template
+        value_template: '{{ slot == 5 }}'
+      sequence:
+      - service: notify.all_phones
+        data:
+          message: by Cleaners
+          title: Front Door Unlocked
+          data:
+            ttl: 0
+            priority: high
+    - conditions:
+      - condition: template
+        value_template: '{{ slot == 6 }}'
+      sequence:
+      - service: notify.all_phones
+        data:
+          message: by Sidney
+          title: Front Door Unlocked
+          data:
+            ttl: 0
+            priority: high
+    default:
+    - service: notify.all_phones
+      data:
+        title: Front Door Unlocked
+        message: by Unknown
+        data:
+          ttl: 0
+          priority: high
+  mode: parallel
+  max: 10
+- id: '1636280489676'
+  alias: Security - Garage Entry - Unlock Notifications
+  description: ''
+  trigger:
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_ieee: 00:0d:6f:00:11:27:aa:c6
+      args:
+        operation: Unlock
+  condition: []
+  action:
+  - variables:
+      slot: '{{ trigger.event.data.args.code_slot }}'
+  - choose:
+    - conditions:
+      - condition: template
+        value_template: '{{ slot == 2 }}'
+      sequence:
+      - service: notify.all_phones
+        data:
+          title: Garage Entry Unlocked
+          message: by Ken
+          data:
+            ttl: 0
+            priority: high
+    - conditions:
+      - condition: template
+        value_template: '{{ slot == 3 }}'
+      sequence:
+      - service: notify.all_phones
+        data:
+          message: by Ken
+          title: Garage Entry Unlocked
+          data:
+            ttl: 0
+            priority: high
+    - conditions:
+      - condition: template
+        value_template: '{{ slot == 4 }}'
+      sequence:
+      - service: notify.all_phones
+        data:
+          message: by Lisa
+          title: Garage Entry Unlocked
+          data:
+            ttl: 0
+            priority: high
+    - conditions:
+      - condition: template
+        value_template: '{{ slot == 5 }}'
+      sequence:
+      - service: notify.all_phones
+        data:
+          message: by Cleaners
+          title: Garage Entry Unlocked
+          data:
+            ttl: 0
+            priority: high
+    - conditions:
+      - condition: template
+        value_template: '{{ slot == 6 }}'
+      sequence:
+      - service: notify.all_phones
+        data:
+          message: by Sidney
+          title: Garage Entry Unlocked
+          data:
+            ttl: 0
+            priority: high
+    default:
+    - service: notify.all_phones
+      data:
+        title: Garage Entry Unlocked
+        message: by Unknown
+        data:
+          ttl: 0
+          priority: high
   mode: parallel
   max: 10
