@@ -14,6 +14,7 @@ turn_off_everything:
     entity_id:
     - switch.fireplace
     - switch.kids_power
+    - switch.linea_mini_main
   - service: fan.turn_off
     entity_id: fan.living_room_fan
   - service: media_player.media_stop
@@ -62,6 +63,7 @@ unlock_and_open_garage:
 reset_adaptive_lighting:
   alias: Reset Adaptive Lighting
   sequence:
+  - service: script.reset_lights_to_neutral
   - service: switch.turn_off
     target:
       entity_id:
@@ -96,11 +98,16 @@ kids_night_mode:
       - switch.adaptive_lighting_sleep_mode_kids
       - switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
       - switch.adaptive_lighting_sleep_mode_kids_bedside_lamps
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
   - service: switch.turn_on
     target:
       entity_id:
-      - switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
       - switch.adaptive_lighting_sleep_mode_kids
+      - switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
       - switch.adaptive_lighting_sleep_mode_kids_bedside_lamps
   mode: parallel
   alias: Kids Night Mode
@@ -633,3 +640,56 @@ single_use_code:
         priority: high
   mode: single
   icon: mdi:key-plus
+open_garage:
+  alias: Open Garage
+  sequence:
+  - device_id: 8c8da50538a89c6ba8065484d32caf0e
+    domain: cover
+    entity_id: cover.garage_door
+    type: open
+  mode: single
+  icon: mdi:garage-open
+close_garage:
+  alias: Close Garage
+  sequence:
+  - device_id: 8c8da50538a89c6ba8065484d32caf0e
+    domain: cover
+    entity_id: cover.garage_door
+    type: close
+  mode: single
+  icon: mdi:garage-lock
+reset_lights_to_neutral:
+  alias: Reset Lights to Neutral (LIFX API)
+  sequence:
+  - event: node_red_trigger_lifx_reset_to_neutral
+    event_data: {}
+  mode: single
+  icon: mdi:lightbulb-auto
+reset_lights_toggle_power:
+  alias: Reset Lights (Toggler LIFX Power)
+  sequence:
+  - event: node_red_trigger_lifx_reset_toggle_power
+    event_data: {}
+  mode: single
+  icon: mdi:power-cycle
+unifi_reset_all:
+  alias: Unifi Reset All
+  sequence:
+  - event: node_red_trigger_unifi_reset_lifx_all
+    event_data: {}
+  mode: single
+  icon: mdi:restart
+unifi_reset_lights:
+  alias: Unifi Reset Lights
+  sequence:
+  - event: node_red_trigger_unifi_reset_lifx_lights
+    event_data: {}
+  mode: single
+  icon: mdi:restart
+unifi_reset_switches:
+  alias: Unifi Reset Switches
+  sequence:
+  - event: node_red_trigger_unifi_reset_lifx_switches
+    event_data: {}
+  mode: single
+  icon: mdi:restart

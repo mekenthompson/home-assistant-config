@@ -2,6 +2,12 @@
   covers:
     master_curtains:
       friendly_name: "Curtains"
+      icon_template: >-
+        {% if is_state('cover.master_curtains', 'open') %}
+          mdi:curtains
+        {% else %}
+          mdi:curtains-closed
+        {% endif %}
       open_cover:
         - service: remote.send_command
           data:
@@ -27,9 +33,3 @@
       #          entity_id: sensor.cover_master
       #          state: "open"
       #      value_template: "{{is_state('sensor.cover_master', 'open')}}"
-      icon_template: >-
-        {% if is_state('cover.master_curtains', 'open') %}
-          mdi:curtains
-        {% else %}
-          mdi:curtains-closed
-        {% endif %}

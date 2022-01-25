@@ -92,19 +92,18 @@
     - light.front_1
     - light.front_2
 #Festoon Lights
-- platform: flux_led
-  automatic_add: true
-  devices:
-    192.168.2.195:
-      name: Festoon 1
-    192.168.2.198:
-      name: Festoon 2
+#- platform: flux_led
+#  automatic_add: true
+#  devices:
+#    192.168.2.195:
+#      name: Festoon 1
+#    192.168.2.198:
+#      name: Festoon 2
 - platform: group
   name: Festoon Control
   entities:
     - light.festoon_1
     - light.festoon_2
-
 # Lower Ground Groups
 - platform: group
   name: Stairs Down Lights

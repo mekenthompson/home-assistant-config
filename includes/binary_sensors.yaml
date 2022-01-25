@@ -3,3 +3,14 @@
   province: VIC
   workdays: [mon, tue, wed, thu, fri]
   excludes: [sat, sun, holiday]
+- platform: ping
+  host: 192.168.3.163
+  name: Linea Mini Uptime
+  count: 3
+  scan_interval: 5
+- platform: template
+  sensors:
+    anyone_home:
+      device_class: occupancy
+      friendly_name: 'Anyone Home'
+      value_template: "{{ states.person | selectattr('state','eq','home') | list | count > 0 }}"

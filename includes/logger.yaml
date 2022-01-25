@@ -2,6 +2,7 @@ default: warning
 logs:
   # homeassistant.components.broadlink: debug
   homeassistant.components.mqtt: debug
+  custom_components.lifx: debug
   # homeassistant.core: debug
   # custom_components.example: debug
   # custom_components.aiokef: debug

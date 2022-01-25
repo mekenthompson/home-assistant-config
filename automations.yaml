@@ -2,11 +2,9 @@
   alias: Motion On - Butlers
   description: ''
   trigger:
-  - type: motion
-    platform: device
-    device_id: d87603fdd3b2f16ee9df09f4d06cf9e3
-    entity_id: binary_sensor.motion_butlers_motion
-    domain: binary_sensor
+  - platform: state
+    entity_id: group.butlers_motion_detection
+    to: 'on'
   condition: []
   action:
   - service: light.turn_on
@@ -170,11 +168,9 @@
   alias: Motion Off - Butlers
   description: ''
   trigger:
-  - type: no_motion
-    platform: device
-    device_id: d87603fdd3b2f16ee9df09f4d06cf9e3
-    entity_id: binary_sensor.motion_butlers_motion
-    domain: binary_sensor
+  - platform: state
+    entity_id: group.butlers_motion_detection
+    to: 'off'
     for:
       hours: 0
       minutes: 5
@@ -342,7 +338,7 @@
   description: ''
   trigger:
   - platform: time
-    at: 06:45:00
+    at: 05:45
   condition:
   - condition: state
     entity_id: binary_sensor.workday_sensor
@@ -351,24 +347,18 @@
   - service: switch.turn_on
     data: {}
     entity_id: switch.power_kids_shield_on_off
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.power_kids_tv_on_off
   mode: single
 - id: '1609972159052'
   alias: AV - Kids TV off at 9am
   description: ''
   trigger:
   - platform: time
-    at: 09:00:00
+    at: 09:00
   condition: []
   action:
   - service: switch.turn_off
     data: {}
     entity_id: switch.power_kids_shield_on_off
-  - service: switch.turn_off
-    data: {}
-    entity_id: switch.power_kids_tv_on_off
   mode: single
 - id: '1610450162748'
   alias: Adaptive Lighting - Sleep Mode - Kids
@@ -377,7 +367,7 @@
   - platform: time
     at: '21:30:00'
   - platform: time
-    at: '21:00:00'
+    at: '21:00'
   condition: []
   action:
   - service: script.kids_night_mode
@@ -401,17 +391,8 @@
       entity_id: switch.adaptive_lighting_sleep_mode_kids
   - service: switch.turn_off
     data: {}
-    entity_id: switch.adaptive_lighting_sleep_mode_master
-  - service: switch.turn_off
-    data: {}
-    entity_id: switch.adaptive_lighting_sleep_mode_bathroom_cabinets
-  - service: switch.turn_off
-    data: {}
     target:
       entity_id: switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
-  - service: switch.turn_off
-    data: {}
-    entity_id: switch.adaptive_lighting_sleep_mode_bathroom_default
   - service: switch.turn_off
     target:
       entity_id: switch.adaptive_lighting_sleep_mode_kids_bedside_lamps
@@ -748,6 +729,14 @@
     entity_id: group.entry_motion_detection
     to: 'on'
     from: 'off'
+  - platform: device
+    device_id: dc922ce042f2f9b48cd076f70f7a8418
+    domain: nest
+    type: camera_person
+  - platform: device
+    device_id: 2d28d062313f77e39c944c9379b234ad
+    domain: nest
+    type: camera_person
   condition:
   - condition: numeric_state
     entity_id: sun.sun
@@ -869,15 +858,15 @@
     entity_id: group.patio_motion
   condition:
   - condition: time
-    after: '23:30:00'
-    before: '17:00:00'
+    after: '23:30'
+    before: '17:00'
   action:
   - service: light.turn_off
     data: {}
     target:
       entity_id:
-      - light.festoon_lights
       - light.front_yard_lights
+      - light.festoon_lights
   mode: parallel
   max: 10
 - id: '1613892109918'
@@ -937,7 +926,8 @@
   action:
   - service: switch.turn_on
     target:
-      entity_id: switch.ensuite_fan
+      entity_id:
+      - switch.master_fan_switch
   mode: parallel
   max: 10
 - id: '1618289522295'
@@ -952,7 +942,8 @@
   action:
   - service: switch.turn_off
     target:
-      entity_id: switch.ensuite_fan
+      entity_id:
+      - switch.master_fan_switch
   mode: single
 - id: '1620124425409'
   alias: Simrig - Cool when over 23
@@ -963,10 +954,10 @@
     to: 'on'
     for: 00:01:00
   - platform: event
-    event_type: smartthings.button
+    event_type: zha_event
     event_data:
-      device_id: 2de0559d-9f0f-47a5-a86b-dcc3a01c1334
-      value: pushed
+      device_id: e9273a89b1505228992b646c2d621c77
+      command: button_single
   condition:
   - condition: and
     conditions:
@@ -1006,12 +997,11 @@
     device_id: 5c49a7ea833556d5108a89404487a77b
     entity_id: sensor.motion_simrig_temperature
     domain: sensor
-    below: 21
+    below: 18
     for:
       hours: 0
-      minutes: 2
+      minutes: 10
       seconds: 0
-      milliseconds: 0
   - platform: event
     event_type: smartthings.button
     event_data:
@@ -1062,7 +1052,7 @@
   mode: parallel
   max: 10
 - id: '1622168108149'
-  alias: Curtains Open in Morning
+  alias: Curtains Open in Morning & Turn Off Sleep Mode
   description: ''
   trigger:
   - type: opened
@@ -1084,6 +1074,12 @@
   - service: cover.open_cover
     target:
       entity_id: cover.master_curtains
+  - service: switch.turn_off
+    target:
+      entity_id:
+      - switch.adaptive_lighting_sleep_mode_master
+      - switch.adaptive_lighting_sleep_mode_bathroom_cabinets
+      - switch.adaptive_lighting_sleep_mode_bathroom_default
   mode: single
 - id: '1622262782957'
   alias: Curtains Close after Sunset
@@ -1136,18 +1132,15 @@
   - service: switch.turn_on
     data: {}
     entity_id: switch.power_kids_shield_on_off
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.power_kids_tv_on_off
   mode: single
 - id: '1624871319438'
   alias: Zigbee Button - Turn on Aircon
   description: ''
   trigger:
   - event_data:
-      device_id: 2de0559d-9f0f-47a5-a86b-dcc3a01c1334
-      value: pushed
-    event_type: smartthings.button
+      device_id: e9273a89b1505228992b646c2d621c77
+      command: button_single
+    event_type: zha_event
     platform: event
   condition: []
   action:
@@ -1168,9 +1161,9 @@
   description: ''
   trigger:
   - event_data:
-      device_id: 2de0559d-9f0f-47a5-a86b-dcc3a01c1334
-      value: double
-    event_type: smartthings.button
+      device_id: e9273a89b1505228992b646c2d621c77
+      command: button_double
+    event_type: zha_event
     platform: event
   condition: []
   action:
@@ -1374,7 +1367,11 @@
   - platform: state
     entity_id: group.garage_motion_detection
     to: 'off'
-    for: 00:30:00
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+      milliseconds: 0
   condition:
   - condition: device
     device_id: 8c8da50538a89c6ba8065484d32caf0e
@@ -1436,7 +1433,8 @@
   action:
   - service: switch.turn_off
     target:
-      entity_id: switch.guest_bath_fan
+      entity_id:
+      - switch.guest_fan_switch
   mode: single
 - id: '1632172683158'
   alias: Motion Off - Guest Room
@@ -1590,16 +1588,17 @@
   mode: parallel
   max: 10
 - id: '1633866856921'
-  alias: Halloween On 5pm
+  alias: Halloween Christmas On 5pm
   description: ''
   trigger:
   - platform: time
-    at: '17:00:00'
+    at: '17:00'
   condition: []
   action:
   - service: scene.turn_on
     target:
-      entity_id: scene.halloween
+      entity_id:
+      - scene.xmas
   - service: script.master_robe_start_projector_on_usb
   - service: script.office_projector_start_projector_on_usb
   mode: single
@@ -1608,16 +1607,16 @@
   description: ''
   trigger:
   - platform: time
-    at: '23:30:00'
+    at: '23:30'
   condition: []
   action:
   - service: light.turn_off
     target:
       entity_id:
-      - light.festoon_lights
       - light.balcony_lights
       - light.front_yard_lights
       - light.wled_segment_0
+      - light.festoon_lights_2
   - service: script.robe_projector_power_off
   - service: script.office_projector_power_off
   mode: single
@@ -1716,21 +1715,30 @@
   alias: Water Alert - Back to Normal
   description: ''
   trigger:
-  - type: not_moist
-    platform: device
-    device_id: 5469b720983113f9e9bc73f04a69fe6d
+  - platform: state
     entity_id: binary_sensor.water_sensor_kitchen_fridge_sensor
-    domain: binary_sensor
-  - type: not_moist
-    platform: device
-    device_id: 55ab7d304a48d827abcd2baf98fc7e9e
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+    from: 'on'
+  - platform: state
     entity_id: binary_sensor.water_sensor_butlers_pantry_sink_moisture
-    domain: binary_sensor
-  - type: not_moist
-    platform: device
-    device_id: dac0ffbbb142718a65fc6e6eb4e86d8c
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  - platform: state
     entity_id: binary_sensor.water_sensor_kitchen_sink_moisture
-    domain: binary_sensor
+    from: 'on'
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
   condition: []
   action:
   - service: notify.all_phones
@@ -1843,6 +1851,14 @@
           data:
             ttl: 0
             priority: high
+    - conditions:
+      - condition: template
+        value_template: '{{ slot == 65536 }}'
+      sequence:
+      - service: notify.all_phones
+        data:
+          title: Front Door Unlocked
+          message: by automation
     default:
     - service: notify.all_phones
       data:
@@ -1923,6 +1939,14 @@
           data:
             ttl: 0
             priority: high
+    - conditions:
+      - condition: template
+        value_template: '{{ slot == 65536 }}'
+      sequence:
+      - service: notify.all_phones
+        data:
+          title: Garage Entry Unlocked
+          message: by automation
     default:
     - service: notify.all_phones
       data:
@@ -1933,3 +1957,191 @@
           priority: high
   mode: parallel
   max: 10
+- id: '1636744990954'
+  alias: Device On - Coffee Machine
+  description: ''
+  trigger:
+  - type: opened
+    platform: device
+    device_id: 22c46f3939305dd9f5ff01e4f0964741
+    entity_id: binary_sensor.mutli_master_contact
+    domain: binary_sensor
+  - platform: state
+    entity_id: group.kitchen_motion_detection
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+      milliseconds: 0
+    to: 'on'
+  - platform: state
+    entity_id: binary_sensor.motion_butlers_motion
+    to: 'on'
+  condition:
+  - condition: time
+    after: 05:00
+    before: '10:00'
+  - condition: state
+    entity_id: binary_sensor.anyone_home
+    state: 'on'
+  action:
+  - type: turn_on
+    device_id: abff0ae07e2cbc168c0ec0b0485c2ca2
+    entity_id: switch.linea_mini_main
+    domain: switch
+  mode: single
+- id: '1636944805816'
+  alias: Coffee Machine at Temp
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: switch.linea_mini_main
+    to: 'on'
+    from: 'off'
+  condition:
+  - condition: time
+    after: 07:00
+  action:
+  - wait_template: '{{ states("water_heater.linea_mini_coffee")|float >= state_attr("water_heater.linea_mini_coffee",
+      "temperature")|float }}'
+    timeout: 00:10:00
+    continue_on_timeout: true
+  - service: notify.mobile_app_ken_s_pixel_5
+    data:
+      title: Espresso Ready
+      message: Boiler has reached 93
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.kitchen_display
+      message: Espresso Ready
+  mode: parallel
+  max: 10
+- id: '1637035577253'
+  alias: Device Off - Coffee Machine - 10am or no movement
+  description: ''
+  trigger:
+  - platform: time
+    at: '10:00'
+  - platform: state
+    entity_id: group.kitchen_motion_detection
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+      milliseconds: 0
+  - platform: state
+    entity_id: switch.linea_mini_main
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
+      milliseconds: 0
+  condition:
+  - condition: time
+    after: '10:00'
+    before: 06:00
+  - type: is_no_motion
+    condition: device
+    device_id: d87603fdd3b2f16ee9df09f4d06cf9e3
+    entity_id: binary_sensor.motion_butlers_motion
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  action:
+  - service: switch.turn_off
+    target:
+      entity_id: switch.linea_mini_main
+  mode: single
+- id: '1637131897294'
+  alias: Connection Notification - Linea Mini
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: binary_sensor.linea_mini_uptime
+    to: 'off'
+  condition: []
+  action:
+  - service: notify.mobile_app_ken_s_pixel_5
+    data:
+      title: Linea Mini Disconnected
+      message: IP Connection Lost
+  mode: single
+- id: '1638592466882'
+  alias: Sump Pump - Activated
+  description: ''
+  trigger:
+  - type: power
+    platform: device
+    device_id: d295347efb874538c9624a9639e3cc42
+    entity_id: sensor.power_sump_pump_electrical_measurement
+    domain: sensor
+    above: 500
+  condition: []
+  action:
+  - service: notify.mobile_app_ken_s_pixel_5
+    data:
+      title: Sump Pump
+      message: Activated
+  mode: single
+- id: '1641247039424'
+  alias: Coffee Machine at Temp (Trigger)
+  description: ''
+  trigger:
+  - platform: template
+    value_template: '{{ states("water_heater.linea_mini_coffee")|float >= state_attr("water_heater.linea_mini_coffee",
+      "temperature")|float }}'
+  condition: []
+  action:
+  - service: notify.mobile_app_ken_s_pixel_5
+    data:
+      title: Espresso Ready
+      message: Boiler has reached 93
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.kitchen_display
+      message: Espresso Ready without trigger
+  mode: parallel
+  max: 10
+- id: '1641722062601'
+  alias: LIFX - Nightly Light & Switch Reset
+  description: ''
+  trigger:
+  - platform: time
+    at: 04:00
+  condition: []
+  action:
+  - service: script.unifi_reset_all
+  - delay:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
+  - service: script.reset_adaptive_lighting
+  mode: single
+- id: '1642461665337'
+  alias: Patio - Festoons Off after 30 Mins
+  description: ''
+  trigger:
+  - platform: device
+    type: turned_on
+    device_id: c7589e7be2e928f97ab6f08db1cc9964
+    entity_id: light.festoon_1
+    domain: light
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
+  condition:
+  - condition: sun
+    before: sunset
+    after: sunrise
+  action:
+  - service: light.turn_off
+    target:
+      entity_id: light.festoon_control
+  mode: single

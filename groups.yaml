@@ -16,6 +16,11 @@ entry_motion_detection:
     - binary_sensor.front_door_motion
     - binary_sensor.multi_front_door_contact
     - binary_sensor.multi_driveway_gate_contact
+butlers_motion_detection:
+  name: Butler's Pantry Motion
+  entities:
+    - binary_sensor.motion_butlers_motion
+    - binary_sensor.motion_butlers_2_motion
 kitchen_motion_detection:
   name: Kitchen Motion
   entities:
