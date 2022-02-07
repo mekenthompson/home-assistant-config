@@ -36,6 +36,7 @@ notify: !include includes/notify.yaml
 binary_sensor: !include includes/binary_sensors.yaml
 lifx: !include includes/lifx.yaml
 nest: !include includes/nest.yaml
+sensor: !include includes/sensors.yaml
 # ecovacs: !include includes/ecovacs.yaml
 # person: !include includes/persons.yaml # Double up of people, add devices in config
 
@@ -43,3 +44,5 @@ nest: !include includes/nest.yaml
 rest_command:
   reset_linktap_gw:
     url: "http://192.168.3.208/index.shtml?flag=0"
+# Requirements for UI Lovelace Minimalist
+browser_mod:

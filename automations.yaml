@@ -511,7 +511,16 @@
     from: home
   condition: []
   action:
-  - service: notify.all_phones
+  - service: notify.mobile_app_lisa_s_pixel_5
+    data:
+      message: Leaving Home?
+      data:
+        actions:
+        - action: lock_up
+          title: Lock Up
+        - action: lock_up_and_turn_off
+          title: Lock Up & Turn Off All
+  - service: notify.mobile_app_pixel_6_pro
     data:
       message: Leaving Home?
       data:
@@ -547,12 +556,14 @@
       hours: 0
       minutes: 5
       seconds: 0
-      milliseconds: 0
   condition: []
   action:
   - service: script.leaving
     data: {}
-  - service: notify.all_phones
+  - service: notify.mobile_app_lisa_s_pixel_5
+    data:
+      message: The house is auto-locked and devices off. Have a great day!
+  - service: notify.mobile_app_pixel_6_pro
     data:
       message: The house is auto-locked and devices off. Have a great day!
   mode: parallel
@@ -607,12 +618,13 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: device_tracker.pixel_5
+    entity_id: device_tracker.pixel_6_pro
     to: home
   condition: []
   action:
   - service: script.stop_vacuums
-  - service: notify.mobile_app_ken_s_pixel_5
+    data: {}
+  - service: notify.mobile_app_pixel_6_pro
     data:
       message: Welcome Home Ken!
       data:
@@ -1675,7 +1687,7 @@
     to: 'on'
   condition: []
   action:
-  - service: notify.mobile_app_ken_s_pixel_5
+  - service: notify.mobile_app_pixel_6_pro
     data:
       message: Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version')
         }} is available.
@@ -2144,4 +2156,61 @@
   - service: light.turn_off
     target:
       entity_id: light.festoon_control
+  mode: single
+- id: '1643676154036'
+  alias: Notify Phone on Person Detected
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 0bd7cff9916c12b774075d69f67cdef6
+    domain: nest
+    type: camera_person
+  - platform: device
+    device_id: 09e3b14eed2a522975148b2afa1d1319
+    domain: nest
+    type: camera_person
+  condition: []
+  action:
+  - service: notify.mobile_app_pixel_6_pro
+    data:
+      message: Person Detected
+      title: pixel 6
+  - service: notify.mobile_app_ken_s_pixel_5
+    data:
+      message: Person detected {{ trigger.to_state.name }}
+      title: pixel 5
+  mode: parallel
+  max: 10
+- id: '1643679107344'
+  alias: Coffee Counter Increment
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: sensor.linea_mini_total_drinks
+    attribute: drinks_k1
+  condition: []
+  action:
+  - service: input_number.increment
+    target:
+      entity_id: input_number.coffee_counter
+  mode: single
+- id: '1643679385144'
+  alias: Coffee Water Refill Required
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: input_number.coffee_counter
+    attribute: max
+    above: '13'
+  condition: []
+  action:
+  - service: notify.all_phones
+    data:
+      message: Refill resevoir
+      title: Espresso Machine
+  - service: input_number.set_value
+    target:
+      entity_id: input_number.coffee_counter
+    data:
+      value: 0
   mode: single

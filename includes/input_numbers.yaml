@@ -13,3 +13,6 @@ back_yard_all_stations_minutes:
   min: 15
   max: 60
   step: 15
+coffee_counter:
+  min: 0
+  max: 20
