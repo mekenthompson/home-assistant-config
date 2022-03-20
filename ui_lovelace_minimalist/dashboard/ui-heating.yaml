@@ -1,0 +1,160 @@
+- type: vertical-stack
+  cards:
+  #--------------------------------------#
+  # Tab : Header Menu                    #
+  #--------------------------------------#
+  - type: horizontal-stack
+    cards: !include ui-header-menu.yaml
+  #--------------------------------------#
+  # Tab : Cards                          #
+  #--------------------------------------#
+  - type: "custom:button-card"
+    template: card_title
+    name: Heating
+    label:
+  #     - type: "custom:button-card"
+  #       template: card_weather
+  #       entity: weather.ascot_vale
+  #       variables:
+  #         ulm_card_weather_name: " "
+  #         ulm_card_weather_primary_info:
+  #           - wind_speed
+  #           - precipitation_probability
+  #         ulm_card_weather_backdrop:
+  #           fade: true
+  - type: vertical-stack
+    cards:
+      - type: "custom:button-card"
+        template: card_graph
+        variables:
+          ulm_card_graph_color: "var(--google-red)"
+          ulm_card_graph_name: Average Temp
+          ulm_card_graph_entity: sensor.average_house_temperature
+          ulm_card_graph_type: fill
+          ulm_card_graph_hours: 24
+      - type: 'custom:button-card'
+        template: card_thermostat
+        entity: climate.all_heating
+        variables:
+          ulm_card_thermostat_enable_popup: true
+          ulm_card_thermostat_enable_collapse: false
+          ulm_card_thermostat_enable_controls: true
+          ulm_card_thermostat_enable_hvac_modes: false
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_graph
+            variables:
+              ulm_card_graph_color: "var(--google-red)"
+              ulm_card_graph_name: Living
+              ulm_card_graph_entity: sensor.living_temperature
+              ulm_card_graph_type: fill
+              ulm_card_graph_hours: 24
+          - type: 'custom:button-card'
+            template: card_thermostat
+            entity: climate.living
+            variables:
+              ulm_card_thermostat_enable_popup: true
+              ulm_card_thermostat_enable_collapse: false
+              ulm_card_thermostat_enable_controls: true
+              ulm_card_thermostat_enable_hvac_modes: false
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_graph
+            variables:
+              ulm_card_graph_color: "var(--google-red)"
+              ulm_card_graph_name: Guest Room
+              ulm_card_graph_entity: sensor.guest_room_temperature
+              ulm_card_graph_type: fill
+              ulm_card_graph_hours: 24
+          - type: 'custom:button-card'
+            template: card_thermostat
+            entity: climate.guest_room
+            variables:
+              ulm_card_thermostat_enable_popup: true
+              ulm_card_thermostat_enable_collapse: false
+              ulm_card_thermostat_enable_controls: true
+              ulm_card_thermostat_enable_hvac_modes: false
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_graph
+            variables:
+              ulm_card_graph_color: "var(--google-red)"
+              ulm_card_graph_name: Kid's Rooms
+              ulm_card_graph_entity: sensor.kids_rooms_temperature
+              ulm_card_graph_type: fill
+              ulm_card_graph_hours: 24
+          - type: 'custom:button-card'
+            template: card_thermostat
+            entity: climate.kid_s_rooms
+            variables:
+              ulm_card_thermostat_enable_popup: true
+              ulm_card_thermostat_enable_collapse: false
+              ulm_card_thermostat_enable_controls: true
+              ulm_card_thermostat_enable_hvac_modes: false
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_graph
+            variables:
+              ulm_card_graph_color: "var(--google-red)"
+              ulm_card_graph_name: Rumpus
+              ulm_card_graph_entity: sensor.rumpus_temperature
+              ulm_card_graph_type: fill
+              ulm_card_graph_hours: 24
+          - type: 'custom:button-card'
+            template: card_thermostat
+            entity: climate.rumpus
+            variables:
+              ulm_card_thermostat_enable_popup: true
+              ulm_card_thermostat_enable_collapse: false
+              ulm_card_thermostat_enable_controls: true
+              ulm_card_thermostat_enable_hvac_modes: false
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_graph
+            variables:
+              ulm_card_graph_color: "var(--google-red)"
+              ulm_card_graph_name: Master
+              ulm_card_graph_entity: sensor.master_temperature
+              ulm_card_graph_type: fill
+              ulm_card_graph_hours: 24
+          - type: 'custom:button-card'
+            template: card_thermostat
+            entity: climate.master
+            variables:
+              ulm_card_thermostat_enable_popup: true
+              ulm_card_thermostat_enable_collapse: false
+              ulm_card_thermostat_enable_controls: true
+              ulm_card_thermostat_enable_hvac_modes: false
+  - type: vertical-stack
+    cards:
+      - type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: card_graph
+            variables:
+              ulm_card_graph_color: "var(--google-red)"
+              ulm_card_graph_name: Office
+              ulm_card_graph_entity: sensor.office_temperature
+              ulm_card_graph_type: fill
+              ulm_card_graph_hours: 24
+          - type: 'custom:button-card'
+            template: card_thermostat
+            entity: climate.office
+            variables:
+              ulm_card_thermostat_enable_popup: true
+              ulm_card_thermostat_enable_collapse: false
+              ulm_card_thermostat_enable_controls: true
+              ulm_card_thermostat_enable_hvac_modes: false

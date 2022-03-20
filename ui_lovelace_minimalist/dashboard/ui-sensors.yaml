@@ -1,0 +1,186 @@
+- type: vertical-stack
+  cards:
+    #--------------------------------------#
+    # Tab : Header Menu                    #
+    #--------------------------------------#
+    - type: horizontal-stack
+      cards: !include ui-header-menu.yaml
+    #--------------------------------------#
+    # Section : NBN Status              #
+    #--------------------------------------#
+    - type: "custom:button-card"
+      template: "card_title"
+      name: "NBN"
+      label: "Status of NBN & 4G Failover"
+    - type: horizontal-stack
+      columns: 2
+      cards:
+        - type: "custom:button-card"
+          template: "card_binary_sensor_alert"
+          entity: sensor.wan_status
+          variables:
+        #            ulm_card_binary_sensor_alert: true
+        - type: "custom:button-card"
+          template: "card_binary_sensor_alert"
+          entity: sensor.4g_status
+          variables:
+    #            ulm_card_binary_sensor_alert: true
+    #--------------------------------------#
+    # Tab : Cards                          #
+    #--------------------------------------#
+    - type: "custom:button-card"
+      template: "card_title"
+      name: "Linea Mini"
+      label: "Boiler Temperature"
+    - type: "custom:button-card"
+      template: card_graph
+      variables:
+        ulm_card_graph_color: "var(--google-blue)"
+        ulm_card_graph_name: Coffee Temp
+        ulm_card_graph_entity: water_heater.linea_mini_coffee
+        # ulm_card_graph_color2: "var(--google-green)"
+        # ulm_card_graph_entity2: sensor.bedgroom_temperature
+        ulm_card_graph_type: fill
+        ulm_card_graph_hours: 24
+    #--------------------------------------#
+    # Section : Low Batteries              #
+    #--------------------------------------#
+    - type: "custom:button-card"
+      template: "card_title"
+      name: "Batteries"
+      label: "Charge < 25%"
+    - type: "custom:auto-entities"
+      card:
+        type: "grid"
+        columns: 2
+        square: false
+      card_param: "cards"
+      sort:
+        method: state
+        reverse: false
+      filter:
+        include:
+          - domain: sensor
+            attributes:
+              device_class: battery
+            state: "<=25"
+            options:
+              type: "custom:button-card"
+              template: "card_battery"
+              variables:
+                ulm_card_battery_battery_state_entity_id: "this.entity_id"
+                ulm_card_battery_battery_level_danger: 5
+                ulm_card_battery_battery_level_warning: 15
+            sort:
+              method: state
+              reverse: true
+    #--------------------------------------#
+    # Section : Motion Sensors             #
+    #--------------------------------------#
+    - type: "custom:button-card"
+      template: "card_title"
+      name: "Motion Sensors"
+      label: "Activated in last 10 minutes"
+    - type: "custom:auto-entities"
+      card:
+        type: "grid"
+        columns: 2
+        square: false
+      card_param: "cards"
+      sort:
+        method: last_changed
+        reverse: true
+      filter:
+        include:
+          # - name: /[Mm]otion/
+          #   domain: group
+          #   options:
+          #     type: "custom:button-card"
+          #     template: "card_binary_sensor_alert"
+          #     variables:
+          #       - ulm_card_binary_sensor_alert: true
+          #   last_changed: "<10"
+          - domain: binary_sensor
+            attributes:
+              device_class: motion
+            last_changed: "<10"
+            options:
+              type: "custom:button-card"
+              template: "card_binary_sensor_alert"
+              variables:
+                - ulm_card_binary_sensor_alert: true
+    #--------------------------------------#
+    # Section : Contact Sensors            #
+    #--------------------------------------#
+    - type: "custom:button-card"
+      template: "card_title"
+      name: "Contact Sensors"
+      label: "Open"
+    - type: "custom:auto-entities"
+      card:
+        type: "grid"
+        columns: 2
+        square: false
+      card_param: "cards"
+      sort:
+        reverse: true
+      filter:
+        include:
+          - domain: binary_sensor
+            attributes:
+              device_class: opening
+            state: "on"
+            options:
+              type: "custom:button-card"
+              template: "card_binary_sensor_alert"
+              variables:
+                - ulm_card_binary_sensor_alert: true
+    #--------------------------------------#
+    # Section : LIFX Debug                 #
+    #--------------------------------------#
+    - type: "custom:button-card"
+      template: "card_title"
+      name: "LIFX Lights"
+      label: "State = Unavailable"
+    - type: "custom:auto-entities"
+      card:
+        type: "grid"
+        columns: 2
+        square: false
+      card_param: "cards"
+      sort:
+        method: state
+        reverse: false
+      filter:
+        include:
+          - domain: light
+            state: unavailable
+            name: //
+            options:
+              type: "custom:button-card"
+              template: "card_generic"
+              hold_action:
+                action: more-info
+            sort:
+              method: state
+              reverse: true
+        exclude:
+          - name: /Festoon/
+          - name: /Lamp/
+    #--------------------------------------#
+    # Section : Sump Pump                  #
+    #--------------------------------------#
+    - type: "custom:button-card"
+      template: "card_title"
+      name: "Sump Pump"
+      label: "Activation (Past 3 Days)"
+    - type: "custom:button-card"
+      template: card_graph
+      variables:
+        ulm_card_graph_color: "var(--google-blue)"
+        ulm_card_graph_name: Sump Pump Activation (Past 3 Days)
+        ulm_card_graph_entity: sensor.power_sump_pump_electrical_measurement
+        # ulm_card_graph_color2: "var(--google-green)"
+        # ulm_card_graph_entity2: sensor.essendon_airport_rain_since_9am
+        ulm_card_graph_type: fill
+        ulm_card_graph_hours: 72

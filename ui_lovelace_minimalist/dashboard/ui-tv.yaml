@@ -1,0 +1,28 @@
+- type: vertical-stack
+  cards:
+    #--------------------------------------#
+    # Tab : Header Menu                    #
+    #--------------------------------------#
+    - type: horizontal-stack
+      cards: !include ui-header-menu.yaml
+    #--------------------------------------#
+    # Tab : Cards                          #
+    #--------------------------------------#
+    - type: "custom:button-card"
+      template: card_media_player
+      entity: media_player.living_room_shield
+      name: Livingroom TV
+      variables:
+        ulm_card_media_player_enable_controls: true
+        ulm_card_media_player_enable_popup: true
+        ulm_card_media_player_enable_art: true
+        ulm_card_media_player_icon: mdi:television-box
+    - type: "custom:button-card"
+      template: card_media_player
+      entity: media_player.kids_shield
+      name: Kids TV
+      variables:
+        ulm_card_media_player_enable_controls: true
+        ulm_card_media_player_enable_popup: true
+        ulm_card_media_player_enable_art: true
+        ulm_card_media_player_icon: mdi:television-box

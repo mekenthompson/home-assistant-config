@@ -1,0 +1,79 @@
+---
+button_card_templates: !include_dir_merge_named "../../custom_components/ui_lovelace_minimalist/__ui_minimalist__/ulm_templates/"
+
+title: "UI Lovelace Minimalist"
+theme: "minimalist-mobile"
+views:
+  #--------------------------------------#
+  # Tab : Home                           #
+  #--------------------------------------#
+  - title: Home
+    path: home
+    icon: "mdi:home"
+#    theme: "minimalist-desktop"
+    cards: !include ui-home.yaml
+  #--------------------------------------#
+  # Tab : Lights                         #
+  #--------------------------------------#
+  - title: Lights
+    path: lights
+    icon: "mdi:lightbulb"
+#    theme: "minimalist-desktop"
+    cards: !include ui-lights.yaml
+  #--------------------------------------#
+  # Tab : Heating                        #
+  #--------------------------------------#
+  - title: Heating
+    path: heating
+    icon: "mdi:fire"
+#    theme: "minimalist-desktop"
+    cards: !include ui-heating.yaml
+  #--------------------------------------#
+  # Tab : Cooling                        #
+  #--------------------------------------#
+  - title: Cooling
+    path: cooling
+    icon: "mdi:snowflake"
+#    theme: "minimalist-desktop"
+    cards: !include ui-cooling.yaml
+  #--------------------------------------#
+  # Tab : Audio                          #
+  #--------------------------------------#
+  - title: Audio
+    path: audio
+    icon: "mdi:speaker"
+#    theme: "minimalist-desktop"
+    cards: !include ui-audio.yaml
+  #--------------------------------------#
+  # Tab : TV                             #
+  #--------------------------------------#
+  - title: TV
+    path: tv
+    icon: "mdi:television"
+#    theme: "minimalist-desktop"
+    cards: !include ui-tv.yaml
+  #--------------------------------------#
+  # Tab : Sensors                        #
+  #--------------------------------------#
+  - title: Sensors
+    path: sensors
+    icon: "mdi:battery"
+#    theme: "minimalist-desktop"
+    cards: !include ui-sensors.yaml
+  #--------------------------------------#
+  # Tab : Automation                        #
+  #--------------------------------------#
+  - title: Automation
+    path: automation
+    icon: "mdi:rocket-launch"
+#    theme: "minimalist-desktop"
+    cards: !include ui-automation.yaml
+#   #--------------------------------------#
+#   # Tab : Example                        #
+#   #--------------------------------------#
+#   - title: lovelace-backup-starter
+#     path: lovelace-backup-starter
+#     icon: "mdi:rocket-launch"
+# #    theme: "minimalist-desktop"
+#     cards: !include ui-lovelace-backup-starter.yaml
+#sample icons ☑️💡⚡ 🔥  🏠🌳
