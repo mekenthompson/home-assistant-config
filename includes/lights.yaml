@@ -91,14 +91,16 @@
   entities:
     - light.front_1
     - light.front_2
-#Festoon Lights
-#- platform: flux_led
-#  automatic_add: true
-#  devices:
-#    192.168.2.195:
-#      name: Festoon 1
-#    192.168.2.198:
-#      name: Festoon 2
+
+# Festoon Lights
+
+# - platform: flux_led
+#   automatic_add: true
+#   devices:
+#     192.168.2.150:
+#       name: Festoon 1
+#     192.168.3.240:
+#       name: Festoon 2
 - platform: group
   name: Festoon Control
   entities:
@@ -165,6 +167,13 @@
     - light.master_4
 - platform: group
   name: Ensuite Lights
+  entities:
+    - light.master_bath_1
+    - light.master_bath_2
+    - light.master_bath_3
+    - light.master_bath_cabinet
+- platform: group
+  name: Master Bath Lights
   entities:
     - light.master_bath_1
     - light.master_bath_2

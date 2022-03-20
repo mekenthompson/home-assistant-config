@@ -1,107 +1,118 @@
-  - platform: average
-    name: 'Average Cooling Temperature'
-    entities:
-      - sensor.living_cooling_temperature
-      - sensor.office_cooling_temperature
-      - sensor.master_cooling_temperature
-  - platform: average
-    name: 'Average House Temperature'
-    entities:
-      # Tado Cooling Sensors
-      - sensor.living_cooling_temperature
-      - sensor.office_cooling_temperature
-      - sensor.master_cooling_temperature
-      # Tado Heating Sensors
-      - sensor.guest_bath_temperature
-      - sensor.guest_room_temperature
-      - sensor.living_temperature
-      - sensor.mabel_temperature
-      - sensor.master_temperature
-      - sensor.office_temperature
-      - sensor.rumpus_temperature
-      - sensor.sidney_temperature
-      # SmartThings Sensors
-      - sensor.motion_butlers_2_temperature
-      - sensor.button_simrig_temperature
-      - sensor.motion_butlers_temp
-      - sensor.motion_ensuite_temperature
-      - sensor.motion_guest_bathroom_temperature
-      - sensor.motion_guest_room_temperature
-      - sensor.motion_kids_bathroom_temperature
-      - sensor.motion_mabel_temperature
-      - sensor.motion_master_temperature
-      - sensor.motion_master_robe_temperature
-      - sensor.motion_office_temperature
-      - sensor.motion_rumpus_temperature
-      - sensor.motion_sidney_temperature
-      - sensor.motion_simrig_temperature
-      - sensor.multi_master_temperature
-  - platform: average
-    name: 'Ground Floor Temperature'
-    entities:
-      # Tado Cooling Sensors
-      - sensor.living_cooling_temperature
-      # Tado Heating Sensors
-      - sensor.guest_bath_temperature
-      - sensor.guest_room_temperature
-      - sensor.living_temperature
-      # SmartThings Sensors
-      - sensor.motion_butlers_2_temperature
-      - sensor.motion_butlers_temp
-      - sensor.motion_guest_bathroom_temperature
-      - sensor.motion_guest_room_temperature
-  - platform: average
-    name: 'First Floor Temperature'
-    entities:
-      # Tado Cooling Sensors
-      - sensor.office_cooling_temperature
-      - sensor.master_cooling_temperature
-      # Tado Heating Sensors
-      - sensor.master_temperature
-      - sensor.office_temperature
-      # SmartThings Sensors
-      - sensor.button_simrig_temperature
-      - sensor.motion_ensuite_temperature
-      - sensor.motion_master_temperature
-      - sensor.motion_master_robe_temperature
-      - sensor.motion_office_temperature
-      - sensor.motion_simrig_temperature
-      - sensor.multi_master_temperature
-  - platform: average
-    name: 'Lower Ground Temperature'
-    entities:
-      # Tado Cooling Sensors
-      # Tado Heating Sensors
-      - sensor.mabel_temperature
-      - sensor.rumpus_temperature
-      - sensor.sidney_temperature
-      # SmartThings Sensors
-      - sensor.motion_kids_bathroom_temperature
-      - sensor.motion_mabel_temperature
-      - sensor.motion_sidney_temperature
-  - platform: average
-    name: 'Kids Rooms Temperature'
-    entities:
-      # Tado Cooling Sensors
-      # Tado Heating Sensors
-      - sensor.mabel_temperature
-      - sensor.sidney_temperature
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+- platform: average
+  name: "Average Cooling Temperature"
+  entities:
+    - sensor.living_cooling_temperature
+    - sensor.office_cooling_temperature
+    - sensor.master_cooling_temperature
+- platform: average
+  name: "Average House Temperature"
+  entities:
+    # Tado Cooling Sensors
+    - sensor.living_cooling_temperature
+    - sensor.office_cooling_temperature
+    - sensor.master_cooling_temperature
+    # Tado Heating Sensors
+    - sensor.guest_bath_temperature
+    - sensor.guest_room_temperature
+    - sensor.living_temperature
+    - sensor.mabel_temperature
+    - sensor.master_temperature
+    - sensor.office_temperature
+    - sensor.rumpus_temperature
+    - sensor.sidney_temperature
+    # SmartThings Sensors
+    - sensor.motion_butlers_2_temperature
+    - sensor.button_simrig_temperature
+    - sensor.motion_butlers_temp
+    - sensor.motion_ensuite_temperature
+    - sensor.motion_guest_bathroom_temperature
+    - sensor.motion_guest_room_temperature
+    - sensor.motion_kids_bathroom_temperature
+    - sensor.motion_mabel_temperature
+    - sensor.motion_master_temperature
+    - sensor.motion_master_robe_temperature
+    - sensor.motion_office_temperature
+    - sensor.motion_rumpus_temperature
+    - sensor.motion_sidney_temperature
+    - sensor.motion_simrig_temperature
+    - sensor.multi_master_temperature
+- platform: average
+  name: "Ground Floor Temperature"
+  entities:
+    # Tado Cooling Sensors
+    - sensor.living_cooling_temperature
+    # Tado Heating Sensors
+    - sensor.guest_bath_temperature
+    - sensor.guest_room_temperature
+    - sensor.living_temperature
+    # SmartThings Sensors
+    - sensor.motion_butlers_2_temperature
+    - sensor.motion_butlers_temp
+    - sensor.motion_guest_bathroom_temperature
+    - sensor.motion_guest_room_temperature
+- platform: average
+  name: "First Floor Temperature"
+  entities:
+    # Tado Cooling Sensors
+    - sensor.office_cooling_temperature
+    - sensor.master_cooling_temperature
+    # Tado Heating Sensors
+    - sensor.master_temperature
+    - sensor.office_temperature
+    # SmartThings Sensors
+    - sensor.button_simrig_temperature
+    - sensor.motion_ensuite_temperature
+    - sensor.motion_master_temperature
+    - sensor.motion_master_robe_temperature
+    - sensor.motion_office_temperature
+    - sensor.motion_simrig_temperature
+    - sensor.multi_master_temperature
+- platform: average
+  name: "Lower Ground Temperature"
+  entities:
+    # Tado Cooling Sensors
+    # Tado Heating Sensors
+    - sensor.mabel_temperature
+    - sensor.rumpus_temperature
+    - sensor.sidney_temperature
+    # SmartThings Sensors
+    - sensor.motion_kids_bathroom_temperature
+    - sensor.motion_mabel_temperature
+    - sensor.motion_sidney_temperature
+- platform: average
+  name: "Kids Rooms Temperature"
+  entities:
+    # Tado Cooling Sensors
+    # Tado Heating Sensors
+    - sensor.mabel_temperature
+    - sensor.sidney_temperature
+# - name: 'Batteries Under 25%'
+#   unique_id: batteries_under_25_percent
+#   state: "{{ states.media_player | selectattr('state', 'equalto', 'playing') | list | length }}"
+# - name: 'LIFX Lights Unavailable'
+#   unique_id: lifx_lights_unavailable
+#   state: "{{ states.light | selectattr('state', 'equalto', 'playing') | list | length }}"
+- platform: template
+  sensors:
+    wan_status:
+      friendly_name: "NBN Status"
+      value_template: "{{ states('input_text.wan_status') | capitalize }}"
+      icon_template: >-
+        {% if is_state("input_text.wan_status", "active") %}
+          mdi:lan-connect
+        {% elif is_state("input_text.wan_status", "inactive") %}
+          mdi:lan-disconnect
+        {% else %}
+          mdi:lan-pending
+        {% endif %}
+    4g_status:
+      friendly_name: "4G Status"
+      value_template: "{{ states('input_text.4g_status') | capitalize }}"
+      icon_template: >-
+        {% if is_state("input_text.4g_status", "active") %}
+          mdi:lan-connect
+        {% elif is_state("input_text.4g_status", "inactive") %}
+          mdi:lan-disconnect
+        {% else %}
+          mdi:lan-pending
+        {% endif %}

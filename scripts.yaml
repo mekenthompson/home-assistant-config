@@ -64,6 +64,7 @@ reset_adaptive_lighting:
   alias: Reset Adaptive Lighting
   sequence:
   - service: script.reset_lights_to_neutral
+    data: {}
   - service: switch.turn_off
     target:
       entity_id:
@@ -74,6 +75,8 @@ reset_adaptive_lighting:
       - switch.adaptive_lighting_master
       - switch.adaptive_lighting_stairs_down
       - switch.adaptive_lighting_kids_bathroom_cabinet
+      - switch.adaptive_lighting_kids_bedside_lamps
+    data: {}
   - delay:
       hours: 0
       minutes: 0
@@ -89,6 +92,8 @@ reset_adaptive_lighting:
       - switch.adaptive_lighting_master
       - switch.adaptive_lighting_stairs_down
       - switch.adaptive_lighting_kids_bathroom_cabinet
+      - switch.adaptive_lighting_kids_bedside_lamps
+    data: {}
   mode: single
 kids_night_mode:
   sequence:
@@ -694,16 +699,57 @@ unifi_reset_switches:
   mode: single
   icon: mdi:restart
 increment_climate_temperature:
-    alias: Increment
-    sequence:
-        - service: climate.set_temperature
-          data_template:
-            entity_id: "{{ entity_id }}"
-            temperature: "{{ (state_attr(entity_id, 'temperature')|round(0)) + 1 }}"
+  alias: Increment
+  sequence:
+  - service: climate.set_temperature
+    data_template:
+      entity_id: '{{ entity_id }}'
+      temperature: '{{ (state_attr(entity_id, ''temperature'')|round(0)) + 1 }}'
 decrease_climate_temperature:
-    alias: Decrease
-    sequence:
-        - service: climate.set_temperature
-          data_template:
-            entity_id: "{{ entity_id }}"
-            temperature: "{{ (state_attr(entity_id, 'temperature')|round(0)) - 1 }}"
+  alias: Decrease
+  sequence:
+  - service: climate.set_temperature
+    data_template:
+      entity_id: '{{ entity_id }}'
+      temperature: '{{ (state_attr(entity_id, ''temperature'')|round(0)) - 1 }}'
+reset:
+  alias: Reset Dining 2
+  sequence:
+  - service: unifi.reconnect_client
+    data:
+      device_id: 71ce2df94fee48632cb499f8442092c3
+  mode: single
+reset_lights:
+  alias: Reset Lights
+  sequence:
+  - service: script.reset_lights_to_neutral
+    data: {}
+  - service: switch.turn_off
+    target:
+      entity_id:
+      - switch.adaptive_lighting_default
+      - switch.adaptive_lighting_bathroom_cabinets
+      - switch.adaptive_lighting_bathroom_default
+      - switch.adaptive_lighting_kids
+      - switch.adaptive_lighting_stairs_down
+      - switch.adaptive_lighting_kids_bathroom_cabinet
+      - switch.adaptive_lighting_kids_bedside_lamps
+    data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: switch.turn_on
+    target:
+      entity_id:
+      - switch.adaptive_lighting_default
+      - switch.adaptive_lighting_bathroom_cabinets
+      - switch.adaptive_lighting_bathroom_default
+      - switch.adaptive_lighting_kids
+      - switch.adaptive_lighting_master
+      - switch.adaptive_lighting_stairs_down
+      - switch.adaptive_lighting_kids_bathroom_cabinet
+      - switch.adaptive_lighting_kids_bedside_lamps
+    data: {}
+  mode: single

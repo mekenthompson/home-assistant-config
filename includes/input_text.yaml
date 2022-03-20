@@ -7,3 +7,7 @@ usercode:
 singleusecode:
   name: Single Use Code
   initial: 0000
+wan_status:
+  name: "NBN Status"
+4g_status:
+  name: "Telstra 4G Status"

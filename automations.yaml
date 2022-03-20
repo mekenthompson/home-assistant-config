@@ -74,13 +74,11 @@
     entity_id: light.stairs_down_lights
   mode: single
 - id: '1608018493807'
-  alias: Light Off - Stairs Down - Sunrise
+  alias: Light Off - Stairs Down - 9pm
   description: ''
   trigger:
-  - platform: numeric_state
-    entity_id: sun.sun
-    above: '-5'
-    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+  - platform: time
+    at: 09:30
   condition: []
   action:
   - service: light.turn_off
@@ -349,11 +347,11 @@
     entity_id: switch.power_kids_shield_on_off
   mode: single
 - id: '1609972159052'
-  alias: AV - Kids TV off at 9am
+  alias: AV - Kids TV off at 10am
   description: ''
   trigger:
   - platform: time
-    at: 09:00
+    at: '10:00:00'
   condition: []
   action:
   - service: switch.turn_off
@@ -380,22 +378,25 @@
   - platform: state
     entity_id: sun.sun
     to: above_horizon
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
   condition: []
   action:
   - service: switch.turn_off
     data: {}
-    entity_id: switch.adaptive_lighting_sleep_mode_default
-  - service: switch.turn_off
+    target:
+      entity_id:
+      - switch.adaptive_lighting_sleep_mode_default
+      - switch.adaptive_lighting_sleep_mode_bathroom_cabinets
+      - switch.adaptive_lighting_sleep_mode_bathroom_default
+      - switch.adaptive_lighting_sleep_mode_kids
+      - switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
+      - switch.adaptive_lighting_sleep_mode_kids_bedside_lamps
+      - switch.adaptive_lighting_sleep_mode_stairs_down
+  - service: script.reset_adaptive_lighting
     data: {}
-    target:
-      entity_id: switch.adaptive_lighting_sleep_mode_kids
-  - service: switch.turn_off
-    data: {}
-    target:
-      entity_id: switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
-  - service: switch.turn_off
-    target:
-      entity_id: switch.adaptive_lighting_sleep_mode_kids_bedside_lamps
   mode: single
 - id: '1610451576424'
   alias: Adaptive Lighting - Sleep Mode - Master
@@ -520,7 +521,7 @@
           title: Lock Up
         - action: lock_up_and_turn_off
           title: Lock Up & Turn Off All
-  - service: notify.mobile_app_pixel_6_pro
+  - service: notify.mobile_app_ken_s_pixel_6_pro
     data:
       message: Leaving Home?
       data:
@@ -563,7 +564,7 @@
   - service: notify.mobile_app_lisa_s_pixel_5
     data:
       message: The house is auto-locked and devices off. Have a great day!
-  - service: notify.mobile_app_pixel_6_pro
+  - service: notify.mobile_app_ken_s_pixel_6_pro
     data:
       message: The house is auto-locked and devices off. Have a great day!
   mode: parallel
@@ -618,13 +619,13 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: device_tracker.pixel_6_pro
+    entity_id: device_tracker.ken_s_pixel_6_pro
     to: home
   condition: []
   action:
   - service: script.stop_vacuums
     data: {}
-  - service: notify.mobile_app_pixel_6_pro
+  - service: notify.mobile_app_ken_s_pixel_6_pro
     data:
       message: Welcome Home Ken!
       data:
@@ -742,11 +743,7 @@
     to: 'on'
     from: 'off'
   - platform: device
-    device_id: dc922ce042f2f9b48cd076f70f7a8418
-    domain: nest
-    type: camera_person
-  - platform: device
-    device_id: 2d28d062313f77e39c944c9379b234ad
+    device_id: 09e3b14eed2a522975148b2afa1d1319
     domain: nest
     type: camera_person
   condition:
@@ -1077,6 +1074,8 @@
       minutes: 4
       seconds: 0
       milliseconds: 0
+  - platform: time
+    at: '13:00'
   condition:
   - condition: numeric_state
     entity_id: sun.sun
@@ -1086,12 +1085,16 @@
   - service: cover.open_cover
     target:
       entity_id: cover.master_curtains
+    data: {}
   - service: switch.turn_off
     target:
       entity_id:
       - switch.adaptive_lighting_sleep_mode_master
       - switch.adaptive_lighting_sleep_mode_bathroom_cabinets
       - switch.adaptive_lighting_sleep_mode_bathroom_default
+    data: {}
+  - service: script.reset_adaptive_lighting
+    data: {}
   mode: single
 - id: '1622262782957'
   alias: Curtains Close after Sunset
@@ -1687,7 +1690,7 @@
     to: 'on'
   condition: []
   action:
-  - service: notify.mobile_app_pixel_6_pro
+  - service: notify.mobile_app_ken_s_pixel_6_pro
     data:
       message: Home Assistant {{ state_attr('binary_sensor.updater', 'newest_version')
         }} is available.
@@ -1717,7 +1720,11 @@
     domain: binary_sensor
   condition: []
   action:
-  - service: notify.all_phones
+  - service: notify.mobile_app_ken_s_pixel_6_pro
+    data:
+      title: Moisture Detected
+      message: '{{ trigger.to_state.attributes.friendly_name }}'
+  - service: notify.mobile_app_lisa_s_pixel_5
     data:
       title: Moisture Detected
       message: '{{ trigger.to_state.attributes.friendly_name }}'
@@ -1753,7 +1760,11 @@
       seconds: 5
   condition: []
   action:
-  - service: notify.all_phones
+  - service: notify.mobile_app_ken_s_pixel_6_pro
+    data:
+      title: '[RESOLVED] Water Leak'
+      message: '{{ trigger.to_state.attributes.friendly_name }}'
+  - service: notify.mobile_app_lisa_s_pixel_5
     data:
       title: '[RESOLVED] Water Leak'
       message: '{{ trigger.to_state.attributes.friendly_name }}'
@@ -1785,7 +1796,14 @@
       - 113f5c23e2f3861a6a75f67cc102a40a
     data:
       code_slot: '100'
-  - service: notify.all_phones
+  - service: notify.mobile_app_ken_s_pixel_6_pro
+    data:
+      title: Single Use Code Used
+      message: Single Use Code was used to access house and now deleted
+      data:
+        ttl: 0
+        priority: high
+  - service: notify.mobile_app_lisa_s_pixel_5
     data:
       title: Single Use Code Used
       message: Single Use Code was used to access house and now deleted
@@ -1812,7 +1830,14 @@
       - condition: template
         value_template: '{{ slot == 2 }}'
       sequence:
-      - service: notify.all_phones
+      - service: notify.mobile_app_ken_s_pixel_6_pro
+        data:
+          title: Front Door Unlocked
+          message: by Ken
+          data:
+            ttl: 0
+            priority: high
+      - service: notify.mobile_app_lisa_s_pixel_5
         data:
           title: Front Door Unlocked
           message: by Ken
@@ -1823,7 +1848,14 @@
       - condition: template
         value_template: '{{ slot == 3 }}'
       sequence:
-      - service: notify.all_phones
+      - service: notify.mobile_app_ken_s_pixel_6_pro
+        data:
+          message: by Ken
+          title: Front Door Unlocked
+          data:
+            ttl: 0
+            priority: high
+      - service: notify.mobile_app_lisa_s_pixel_5
         data:
           message: by Ken
           title: Front Door Unlocked
@@ -1834,7 +1866,14 @@
       - condition: template
         value_template: '{{ slot == 4 }}'
       sequence:
-      - service: notify.all_phones
+      - service: notify.mobile_app_ken_s_pixel_6_pro
+        data:
+          message: by Lisa
+          title: Front Door Unlocked
+          data:
+            ttl: 0
+            priority: high
+      - service: notify.mobile_app_lisa_s_pixel_5
         data:
           message: by Lisa
           title: Front Door Unlocked
@@ -1845,7 +1884,14 @@
       - condition: template
         value_template: '{{ slot == 5 }}'
       sequence:
-      - service: notify.all_phones
+      - service: notify.mobile_app_ken_s_pixel_6_pro
+        data:
+          message: by Cleaners
+          title: Front Door Unlocked
+          data:
+            ttl: 0
+            priority: high
+      - service: notify.mobile_app_lisa_s_pixel_5
         data:
           message: by Cleaners
           title: Front Door Unlocked
@@ -1856,7 +1902,14 @@
       - condition: template
         value_template: '{{ slot == 6 }}'
       sequence:
-      - service: notify.all_phones
+      - service: notify.mobile_app_ken_s_pixel_6_pro
+        data:
+          message: by Sidney
+          title: Front Door Unlocked
+          data:
+            ttl: 0
+            priority: high
+      - service: notify.mobile_app_lisa_s_pixel_5
         data:
           message: by Sidney
           title: Front Door Unlocked
@@ -1867,12 +1920,23 @@
       - condition: template
         value_template: '{{ slot == 65536 }}'
       sequence:
-      - service: notify.all_phones
+      - service: notify.mobile_app_ken_s_pixel_6_pro
+        data:
+          title: Front Door Unlocked
+          message: by automation
+      - service: notify.mobile_app_lisa_s_pixel_5
         data:
           title: Front Door Unlocked
           message: by automation
     default:
-    - service: notify.all_phones
+    - service: notify.mobile_app_ken_s_pixel_6_pro
+      data:
+        title: Front Door Unlocked
+        message: by Unknown
+        data:
+          ttl: 0
+          priority: high
+    - service: notify.mobile_app_lisa_s_pixel_5
       data:
         title: Front Door Unlocked
         message: by Unknown
@@ -1900,7 +1964,14 @@
       - condition: template
         value_template: '{{ slot == 2 }}'
       sequence:
-      - service: notify.all_phones
+      - service: notify.mobile_app_ken_s_pixel_6_pro
+        data:
+          title: Garage Entry Unlocked
+          message: by Ken
+          data:
+            ttl: 0
+            priority: high
+      - service: notify.mobile_app_lisa_s_pixel_5
         data:
           title: Garage Entry Unlocked
           message: by Ken
@@ -1911,7 +1982,14 @@
       - condition: template
         value_template: '{{ slot == 3 }}'
       sequence:
-      - service: notify.all_phones
+      - service: notify.mobile_app_ken_s_pixel_6_pro
+        data:
+          message: by Ken
+          title: Garage Entry Unlocked
+          data:
+            ttl: 0
+            priority: high
+      - service: notify.mobile_app_lisa_s_pixel_5
         data:
           message: by Ken
           title: Garage Entry Unlocked
@@ -1922,7 +2000,14 @@
       - condition: template
         value_template: '{{ slot == 4 }}'
       sequence:
-      - service: notify.all_phones
+      - service: notify.mobile_app_ken_s_pixel_6_pro
+        data:
+          message: by Lisa
+          title: Garage Entry Unlocked
+          data:
+            ttl: 0
+            priority: high
+      - service: notify.mobile_app_lisa_s_pixel_5
         data:
           message: by Lisa
           title: Garage Entry Unlocked
@@ -1933,7 +2018,14 @@
       - condition: template
         value_template: '{{ slot == 5 }}'
       sequence:
-      - service: notify.all_phones
+      - service: notify.mobile_app_ken_s_pixel_6_pro
+        data:
+          message: by Cleaners
+          title: Garage Entry Unlocked
+          data:
+            ttl: 0
+            priority: high
+      - service: notify.mobile_app_lisa_s_pixel_5
         data:
           message: by Cleaners
           title: Garage Entry Unlocked
@@ -1944,7 +2036,14 @@
       - condition: template
         value_template: '{{ slot == 6 }}'
       sequence:
-      - service: notify.all_phones
+      - service: notify.mobile_app_ken_s_pixel_6_pro
+        data:
+          message: by Sidney
+          title: Garage Entry Unlocked
+          data:
+            ttl: 0
+            priority: high
+      - service: notify.mobile_app_lisa_s_pixel_5
         data:
           message: by Sidney
           title: Garage Entry Unlocked
@@ -1955,12 +2054,23 @@
       - condition: template
         value_template: '{{ slot == 65536 }}'
       sequence:
-      - service: notify.all_phones
+      - service: notify.mobile_app_ken_s_pixel_6_pro
+        data:
+          title: Garage Entry Unlocked
+          message: by automation
+      - service: notify.mobile_app_lisa_s_pixel_5
         data:
           title: Garage Entry Unlocked
           message: by automation
     default:
-    - service: notify.all_phones
+    - service: notify.mobile_app_ken_s_pixel_6_pro
+      data:
+        title: Garage Entry Unlocked
+        message: by Unknown
+        data:
+          ttl: 0
+          priority: high
+    - service: notify.mobile_app_lisa_s_pixel_5
       data:
         title: Garage Entry Unlocked
         message: by Unknown
@@ -2095,10 +2205,9 @@
     above: 500
   condition: []
   action:
-  - service: notify.mobile_app_ken_s_pixel_5
+  - service: notify.mobile_app_ken_s_pixel_6_pro
     data:
-      title: Sump Pump
-      message: Activated
+      message: Sump Pump Activated
   mode: single
 - id: '1641247039424'
   alias: Coffee Machine at Temp (Trigger)
@@ -2139,11 +2248,9 @@
   alias: Patio - Festoons Off after 30 Mins
   description: ''
   trigger:
-  - platform: device
-    type: turned_on
-    device_id: c7589e7be2e928f97ab6f08db1cc9964
-    entity_id: light.festoon_1
-    domain: light
+  - platform: state
+    entity_id: light.festoon_lights
+    to: 'on'
     for:
       hours: 0
       minutes: 30
@@ -2154,8 +2261,9 @@
     after: sunrise
   action:
   - service: light.turn_off
+    data: {}
     target:
-      entity_id: light.festoon_control
+      entity_id: light.festoon_lights
   mode: single
 - id: '1643676154036'
   alias: Notify Phone on Person Detected
@@ -2171,14 +2279,14 @@
     type: camera_person
   condition: []
   action:
-  - service: notify.mobile_app_pixel_6_pro
+  - service: notify.mobile_app_ken_s_pixel_6_pro
     data:
       message: Person Detected
       title: pixel 6
-  - service: notify.mobile_app_ken_s_pixel_5
+  - service: notify.mobile_app_ken_s_pixel_6_pro
     data:
       message: Person detected {{ trigger.to_state.name }}
-      title: pixel 5
+      title: pixel 6
   mode: parallel
   max: 10
 - id: '1643679107344'
@@ -2200,17 +2308,282 @@
   trigger:
   - platform: numeric_state
     entity_id: input_number.coffee_counter
-    attribute: max
     above: '13'
   condition: []
   action:
-  - service: notify.all_phones
+  - service: notify.mobile_app_ken_s_pixel_6_pro
+    data:
+      message: Refill resevoir
+      title: Espresso Machine
+  - service: notify.mobile_app_lisa_s_pixel_5
     data:
       message: Refill resevoir
       title: Espresso Machine
   - service: input_number.set_value
-    target:
-      entity_id: input_number.coffee_counter
     data:
       value: 0
+    target:
+      entity_id: input_number.coffee_counter
   mode: single
+- id: '1644697237427'
+  alias: front yard person
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 0bd7cff9916c12b774075d69f67cdef6
+    domain: nest
+    type: camera_person
+  condition: []
+  action:
+  - service: notify.mobile_app_ken_s_pixel_6_pro
+    data:
+      message: person front yard
+  mode: parallel
+  max: 10
+- id: '1644697282507'
+  alias: front yard motion
+  description: ''
+  trigger:
+  - platform: device
+    device_id: 0bd7cff9916c12b774075d69f67cdef6
+    domain: nest
+    type: camera_motion
+  condition: []
+  action:
+  - service: notify.mobile_app_ken_s_pixel_6_pro
+    data:
+      message: front yard motion
+  mode: parallel
+  max: 10
+- id: '1645351524101'
+  alias: Office - Air Con On - Heater Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: climate.office_cooling
+    from: 'off'
+  condition: []
+  action:
+  - device_id: 25ff439d4c7050b2dee20e5034787197
+    domain: climate
+    entity_id: climate.office
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  mode: parallel
+  max: 10
+- id: '1645351549371'
+  alias: Office - Air Con Off - Heater Auto
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: climate.office_cooling
+    to: 'off'
+  condition: []
+  action:
+  - device_id: 25ff439d4c7050b2dee20e5034787197
+    domain: climate
+    entity_id: climate.office
+    type: set_hvac_mode
+    hvac_mode: auto
+  mode: parallel
+  max: 10
+- id: '1645351752203'
+  alias: Master - Air Con Off - Heater Auto
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: climate.master_cooling
+    to: 'off'
+  condition: []
+  action:
+  - device_id: 7608996f3041d2d954ed875a0003dc6e
+    domain: climate
+    entity_id: climate.master
+    type: set_hvac_mode
+    hvac_mode: auto
+  mode: parallel
+  max: 10
+- id: '1645351795587'
+  alias: Master - Air Con On - Heater Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: climate.master_cooling
+    from: 'off'
+  condition: []
+  action:
+  - device_id: 7608996f3041d2d954ed875a0003dc6e
+    domain: climate
+    entity_id: climate.master
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  mode: parallel
+  max: 10
+- id: '1645351857797'
+  alias: Living - Air Con On - Heater Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: climate.living_cooling
+    from: 'off'
+  condition: []
+  action:
+  - device_id: 93f4b208732c08edfa56165bcbfb4fde
+    domain: climate
+    entity_id: climate.living
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  mode: parallel
+  max: 10
+- id: '1645351897981'
+  alias: Living - Air Con Off - Heater Auto
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: climate.living_cooling
+    to: 'off'
+  condition: []
+  action:
+  - device_id: 93f4b208732c08edfa56165bcbfb4fde
+    domain: climate
+    entity_id: climate.living
+    type: set_hvac_mode
+    hvac_mode: auto
+  mode: parallel
+  max: 10
+- id: '1645570361866'
+  alias: Notification Light Unavailable
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - light.balcony_1
+    - light.balcony_2
+    - light.butlers_1
+    - light.butlers_2
+    - light.butlers_bench
+    - light.deck_1
+    - light.deck_2
+    - light.deck_3
+    - light.deck_4
+    - light.dining_1
+    - light.dining_2
+    - light.dining_3
+    - light.dining_4
+    - light.dining_5
+    - light.dining_6
+    - light.entry_1
+    - light.entry_2
+    - light.entry_3
+    - light.entry_4
+    - light.fireplace_left_bottom
+    - light.fireplace_left_middle
+    - light.fireplace_left_top
+    - light.fireplace_left_top_up
+    - light.fireplace_right_bottom
+    - light.fireplace_right_middle
+    - light.fireplace_right_top
+    - light.fireplace_right_top_up
+    - light.front_1
+    - light.front_2
+    - light.guest_1
+    - light.guest_2
+    - light.guest_3
+    - light.guest_4
+    - light.guest_bath_1
+    - light.guest_bath_2
+    - light.guest_bath_cabinet
+    - light.kids_bath_1
+    - light.kids_bath_2
+    - light.kids_bath_cabinet
+    - light.kitchen_bench
+    - light.kitchen_island_1
+    - light.kitchen_island_2
+    - light.kitchen_island_3
+    - light.kitchen_walkway_1
+    - light.kitchen_walkway_2
+    - light.library_1
+    - light.library_2
+    - light.library_3
+    - light.library_4
+    - light.living_1
+    - light.living_2
+    - light.living_3
+    - light.living_4
+    - light.living_5
+    - light.living_6
+    - light.living_7
+    - light.mabel_1
+    - light.mabel_2
+    - light.master_1
+    - light.master_2
+    - light.master_3
+    - light.master_4
+    - light.master_bath_cabinet
+    - light.master_robe_1
+    - light.master_robe_2
+    - light.master_robe_3
+    - light.master_robe_4
+    - light.office_1
+    - light.office_2
+    - light.office_3
+    - light.office_desk
+    - light.rumpus_1
+    - light.rumpus_2
+    - light.rumpus_3
+    - light.rumpus_4
+    - light.rumpus_5
+    - light.rumpus_6
+    - light.rumpus_7
+    - light.rumpus_8
+    - light.rumpus_9
+    - light.server_room
+    - light.sidney_1
+    - light.sidney_2
+    - light.stairs_down_1
+    - light.stairs_up_1
+    - light.stairs_up_2
+    - light.stairs_up_3
+    to: unavailable
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  condition: []
+  action:
+  - service: notify.mobile_app_ken_s_pixel_6_pro
+    data:
+      title: Light Unavailable
+      message: '{{ trigger.to_state.name }} has been unavailable for 10 minutes
+
+        '
+      data:
+        ttl: 0
+        priority: high
+  mode: parallel
+  max: 10
+- id: '1646968884743'
+  alias: WAN Failover Webhook
+  description: ''
+  trigger:
+  - platform: webhook
+    webhook_id: wan_failover
+  condition: []
+  action:
+  - data_template:
+      entity_id: '{{ ''input_text.wan_status'' if trigger.json.interface == ''eth1''
+        else ''input_text.4g_status'' }}'
+      value: '{{ trigger.json.status }}'
+    service: input_text.set_value
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 20
+      milliseconds: 0
+  - data_template:
+      message: '{{ ''WAN'' if trigger.json.interface == ''eth1'' else ''4G'' }} interface
+        is now {{ trigger.json.status }}'
+      title: WAN Failover
+    service: notify.mobile_app_ken_s_pixel_6_pro
+  mode: parallel
+  max: 10

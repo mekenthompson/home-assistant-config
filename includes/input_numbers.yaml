@@ -1,15 +1,15 @@
 back_yard_rear_station_minutes:
-  initial: 15
+  initial: 30
   min: 15
   max: 60
   step: 15
 back_yard_front_station_minutes:
-  initial: 15
+  initial: 30
   min: 15
   max: 60
   step: 15
 back_yard_all_stations_minutes:
-  initial: 15
+  initial: 30
   min: 15
   max: 60
   step: 15

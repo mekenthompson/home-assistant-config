@@ -18,9 +18,9 @@
   host: 8.8.8.8
   name: "Google DNS"
   count: 3
-  scan_interval: 1
+  scan_interval: 5
 - platform: ping
   host: 1.1.1.1
   name: "CloudFlare DNS"
   count: 3
-  scan_interval: 1
+  scan_interval: 5

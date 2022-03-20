@@ -10,6 +10,7 @@ back_yard_sprinklers:
     - switch.back_yard_rear
 entry_motion_detection:
   name: Front Yard Motion
+  icon: mdi:motion-sensor
   entities:
     - binary_sensor.multi_front_gate_contact
     - binary_sensor.front_yard_motion
@@ -18,28 +19,33 @@ entry_motion_detection:
     - binary_sensor.multi_driveway_gate_contact
 butlers_motion_detection:
   name: Butler's Pantry Motion
+  icon: mdi:motion-sensor
   entities:
     - binary_sensor.motion_butlers_motion
     - binary_sensor.motion_butlers_2_motion
 kitchen_motion_detection:
   name: Kitchen Motion
+  icon: mdi:motion-sensor
   entities:
     - binary_sensor.motion_kitchen_1_motion
     - binary_sensor.motion_kitchen_2_motion
     - binary_sensor.motion_kitchen_bench_motion
 ensuite_motion_detection:
   name: Ensuite Motion Detection
+  icon: mdi:motion-sensor
   entities:
     - binary_sensor.motion_ensuite_motion
     - binary_sensor.motion_ensuite_shower_1_motion
     - binary_sensor.motion_ensuite_shower_2_motion
 ensuite_shower_motion_detection:
   name: Ensuite Shower Motion
+  icon: mdi:motion-sensor
   entities:
     - binary_sensor.motion_ensuite_shower_1_motion
     - binary_sensor.motion_ensuite_shower_2_motion
 garage_motion_detection:
   name: Garage Motion
+  icon: mdi:motion-sensor
   entities:
     - binary_sensor.multi_garage_entry_contact
     - binary_sensor.motion_garage_motion
@@ -60,11 +66,13 @@ adaptive_lighting_reset:
     - switch.adaptive_lighting_adapt_color_kids_bedside_lamps
 patio_motion:
   name: Patio Table Motion and Door Shut
+  icon: mdi:motion-sensor
   entities:
     - binary_sensor.multi_patio_contact
     - binary_sensor.motion_patio_table_motion
 office_motion:
   name: Office Motion
+  icon: mdi:motion-sensor
   entities:
     - binary_sensor.motion_office_motion
     - binary_sensor.motion_simrig_motion
