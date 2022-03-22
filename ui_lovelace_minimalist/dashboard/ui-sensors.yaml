@@ -16,12 +16,12 @@
       columns: 2
       cards:
         - type: "custom:button-card"
-          template: "card_binary_sensor_alert"
+          template: "custom_card_mekenthompson_wan_failover_alert"
           entity: sensor.wan_status
           variables:
         #            ulm_card_binary_sensor_alert: true
         - type: "custom:button-card"
-          template: "card_binary_sensor_alert"
+          template: "custom_card_mekenthompson_wan_failover_alert"
           entity: sensor.4g_status
           variables:
     #            ulm_card_binary_sensor_alert: true
@@ -39,7 +39,7 @@
         ulm_card_graph_name: Coffee Temp
         ulm_card_graph_entity: water_heater.linea_mini_coffee
         # ulm_card_graph_color2: "var(--google-green)"
-        # ulm_card_graph_entity2: sensor.bedgroom_temperature
+        # ulm_card_graph_entity2: sensor.bedroom_temperature
         ulm_card_graph_type: fill
         ulm_card_graph_hours: 24
     #--------------------------------------#
