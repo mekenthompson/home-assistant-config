@@ -1,5 +1,5 @@
 # home-assistant-config
-My Home Assistant config, including UI Lovelace Minimalist dashboard <br>
+My Home Assistant config, including UI Lovelace Minimalist dashboard <br>https://ui-lovelace-minimalist.github.io/UI/<br>
 <img src="https://github.com/mekenthompson/ui-lovelace-minimalist-config/blob/ba0eccd18d52c267219c6648a296f6832efd920b/mekenthompson-minimalist-1-home.png" width="300">
 <img src="https://github.com/mekenthompson/ui-lovelace-minimalist-config/blob/ba0eccd18d52c267219c6648a296f6832efd920b/mekenthompson-minimalist-2-lights.png" width="300">
 <img src="https://github.com/mekenthompson/ui-lovelace-minimalist-config/blob/ba0eccd18d52c267219c6648a296f6832efd920b/mekenthompson-minimalist-3-heating.png" width="300">
