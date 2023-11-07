@@ -1,8 +1,31 @@
-- platform: workday
-  country: AU
-  province: VIC
-  workdays: [mon, tue, wed, thu, fri]
-  excludes: [sat, sun, holiday]
+# All Motion Sensors
+- platform: group
+  name: Motion Inside (All)
+  entities:
+    - binary_sensor.motion_butlers_2_motion
+    - binary_sensor.motion_butlers_motion
+    - binary_sensor.motion_dining_motion
+    - binary_sensor.motion_ensuite_motion
+    - binary_sensor.motion_ensuite_shower_1_motion
+    - binary_sensor.motion_ensuite_shower_2_motion
+    - binary_sensor.motion_guest_bathroom_motion
+    - binary_sensor.motion_guest_room_motion
+    - binary_sensor.motion_kids_bathroom_motion
+    - binary_sensor.motion_kitchen_1_motion
+    - binary_sensor.motion_kitchen_2_motion
+    - binary_sensor.motion_kitchen_bench_motion
+    - binary_sensor.motion_mabel_motion
+    - binary_sensor.motion_master_motion
+    - binary_sensor.motion_master_robe_motion
+    - binary_sensor.motion_office_motion
+    - binary_sensor.motion_rumpus_motion
+    - binary_sensor.motion_sidney_motion
+    - binary_sensor.motion_simrig_motion
+# - platform: workday
+#   country: AU
+#   province: VIC
+#   workdays: [mon, tue, wed, thu, fri]
+#   excludes: [sat, sun, holiday]
 - platform: ping
   host: 192.168.3.163
   name: Linea Mini Uptime
@@ -12,7 +35,7 @@
   sensors:
     anyone_home:
       device_class: occupancy
-      friendly_name: 'Anyone Home'
+      friendly_name: "Anyone Home"
       value_template: "{{ states.person | selectattr('state','eq','home') | list | count > 0 }}"
 - platform: ping
   host: 8.8.8.8

@@ -25,6 +25,13 @@
           entity: sensor.4g_status
           variables:
     #            ulm_card_binary_sensor_alert: true
+    # - type: "custom:button-card"
+    #   template: card_generic
+    #   entity: sensor.unifi_gateway_wan
+    #   attribute: wan_ip
+    - type: entity
+      entity: sensor.unifi_gateway_wan
+      attribute: wan_ip
     #--------------------------------------#
     # Tab : Cards                          #
     #--------------------------------------#
@@ -32,48 +39,28 @@
       template: "card_title"
       name: "Linea Mini"
       label: "Boiler Temperature"
-    - type: "custom:button-card"
-      template: card_graph
-      variables:
-        ulm_card_graph_color: "var(--google-blue)"
-        ulm_card_graph_name: Coffee Temp
-        ulm_card_graph_entity: water_heater.linea_mini_coffee
-        # ulm_card_graph_color2: "var(--google-green)"
-        # ulm_card_graph_entity2: sensor.bedroom_temperature
-        ulm_card_graph_type: fill
-        ulm_card_graph_hours: 24
-    #--------------------------------------#
-    # Section : Low Batteries              #
-    #--------------------------------------#
-    - type: "custom:button-card"
-      template: "card_title"
-      name: "Batteries"
-      label: "Charge < 25%"
-    - type: "custom:auto-entities"
-      card:
-        type: "grid"
-        columns: 2
-        square: false
-      card_param: "cards"
-      sort:
-        method: state
-        reverse: false
-      filter:
-        include:
-          - domain: sensor
-            attributes:
-              device_class: battery
-            state: "<=25"
-            options:
-              type: "custom:button-card"
-              template: "card_battery"
-              variables:
-                ulm_card_battery_battery_state_entity_id: "this.entity_id"
-                ulm_card_battery_battery_level_danger: 5
-                ulm_card_battery_battery_level_warning: 15
-            sort:
-              method: state
-              reverse: true
+    - type: "grid"
+      columns: 2
+      square: false
+      cards:
+        - type: "custom:button-card"
+          template: card_generic
+          entity: water_heater.linea_mini_coffee
+        - type: "custom:button-card"
+          template: card_power_outlet
+          entity: switch.linea_mini_main
+          name: Linea Mini
+    # - type: "custom:button-card"
+    #   template: card_graph
+    #   variables:
+    #     ulm_card_graph_color: "var(--google-blue)"
+    #     ulm_card_graph_name: Coffee Temp
+    #     ulm_card_graph_entity: water_heater.linea_mini_coffee
+    #     # ulm_card_graph_color2: "var(--google-green)"
+    #     # ulm_card_graph_entity2: sensor.bedroom_temperature
+    #     ulm_card_graph_type: fill
+    #     ulm_card_graph_hours: 24
+
     #--------------------------------------#
     # Section : Motion Sensors             #
     #--------------------------------------#
@@ -168,6 +155,56 @@
           - name: /Festoon/
           - name: /Lamp/
     #--------------------------------------#
+    # Section : Low Batteries              #
+    #--------------------------------------#
+    - type: "custom:button-card"
+      template: "card_title"
+      name: "Batteries"
+      label: "Charge < 25%"
+    - type: "custom:auto-entities"
+      card:
+        type: "grid"
+        columns: 2
+        square: false
+      card_param: "cards"
+      sort:
+        method: state
+        reverse: false
+      filter:
+        include:
+          - domain: sensor
+            attributes:
+              device_class: battery
+            state: "<=25"
+            options:
+              type: "custom:button-card"
+              template: "card_battery"
+              variables:
+                ulm_card_battery_battery_state_entity_id: "this.entity_id"
+                ulm_card_battery_battery_level_danger: 5
+                ulm_card_battery_battery_level_warning: 15
+          - domain: sensor
+            attributes:
+              device_class: battery
+            state: "unavailable"
+            options:
+              type: "custom:button-card"
+              template: "card_binary_sensor_alert"
+              variables:
+                - ulm_card_binary_sensor_alert: true
+          - domain: binary_sensor
+            attributes:
+              device_class: battery
+            state: "on"
+            options:
+              type: "custom:button-card"
+              template: "card_binary_sensor_alert"
+              variables:
+                - ulm_card_binary_sensor_alert: true
+        sort:
+          method: state
+          reverse: true
+    #--------------------------------------#
     # Section : Sump Pump                  #
     #--------------------------------------#
     - type: "custom:button-card"
@@ -176,6 +213,7 @@
       label: "Activation (Past 3 Days)"
     - type: "custom:button-card"
       template: card_graph
+      entity: sensor.power_sump_pump_electrical_measurement
       variables:
         ulm_card_graph_color: "var(--google-blue)"
         ulm_card_graph_name: Sump Pump Activation (Past 3 Days)

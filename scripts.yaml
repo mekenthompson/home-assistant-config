@@ -10,13 +10,18 @@ turn_off_everything:
       - light.lower_ground_lights
       - light.first_floor_lights
       - light.deck_lights
+      - light.festoon_lights
   - service: switch.turn_off
     entity_id:
     - switch.fireplace
     - switch.kids_power
     - switch.linea_mini_main
   - service: fan.turn_off
-    entity_id: fan.living_room_fan
+    data: {}
+    target:
+      entity_id:
+      - fan.living_room_fan
+      - fan.fireplace
   - service: media_player.media_stop
     entity_id: all
   - service: media_player.turn_off
@@ -37,8 +42,23 @@ leaving:
   alias: Leaving Home
   sequence:
   - service: script.lock_up
+    data: {}
   - service: script.turn_off_everything
+    data: {}
   - service: script.start_roomba
+    data: {}
+    enabled: false
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: 'off'
+    target:
+      device_id:
+      - 93f4b208732c08edfa56165bcbfb4fde
+      - 7608996f3041d2d954ed875a0003dc6e
+      - e3a50cc77f945352f0fa1ea792ecdd1e
+      - 59553f65676a57a7bf7aa6ad29f4109b
+      - b2fe25284c6d35673fe6f4cb5daa3234
+      - 9dfd53579ad8635e18979a93b1a5e1c5
   mode: single
 unlock:
   alias: Unlock
@@ -53,18 +73,25 @@ unlock_and_open_garage:
   alias: Open Garage & Unlock
   mode: parallel
   sequence:
-  - service: lock.unlock
-    entity_id:
-    - lock.lock_front_door_lock
-    - lock.lock_garage_entry_door_lock
   - service: cover.open_cover
     entity_id: cover.garage_door
+  - service: lock.unlock
+    data: {}
+    target:
+      entity_id:
+      - lock.lock_front_door_lock
+      - lock.lock_garage_entry_door_lock
   max: 10
 reset_adaptive_lighting:
   alias: Reset Adaptive Lighting
   sequence:
   - service: script.reset_lights_to_neutral
     data: {}
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
   - service: switch.turn_off
     target:
       entity_id:
@@ -80,7 +107,7 @@ reset_adaptive_lighting:
   - delay:
       hours: 0
       minutes: 0
-      seconds: 1
+      seconds: 2
       milliseconds: 0
   - service: switch.turn_on
     target:
@@ -220,70 +247,26 @@ master_robe_start_projector_on_usb:
       minutes: 0
       seconds: 2
       milliseconds: 0
+    enabled: true
   - service: remote.send_command
-    target:
-      device_id: 212574ed6249894a050e80d8874e0000
     data:
       device: robe_projector
       command: ok
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
   - delay:
       hours: 0
       minutes: 0
-      seconds: 1
+      seconds: 2
       milliseconds: 0
   - service: remote.send_command
-    target:
-      device_id: 212574ed6249894a050e80d8874e0000
-    data:
-      device: robe_projector
-      command: right
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-  - service: remote.send_command
-    target:
-      device_id: 212574ed6249894a050e80d8874e0000
-    data:
-      device: robe_projector
-      command: right
-  - service: remote.send_command
-    target:
-      device_id: 212574ed6249894a050e80d8874e0000
     data:
       device: robe_projector
       command: ok
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-  - service: remote.send_command
     target:
       device_id: 212574ed6249894a050e80d8874e0000
-    data:
-      device: robe_projector
-      command: down
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-  - service: remote.send_command
-    target:
-      device_id: 212574ed6249894a050e80d8874e0000
-    data:
-      device: robe_projector
-      command: down
-  - service: remote.send_command
-    target:
-      device_id: 212574ed6249894a050e80d8874e0000
-    data:
-      device: robe_projector
-      command: ok
   mode: single
-  alias: Robe Projector - Start Projector on USB
+  alias: Robe Projector - Start Projector on HDMI
 robe_projector_power_off:
   alias: Robe Projector - Power Off
   sequence:
@@ -374,7 +357,7 @@ projector_on_usb:
   mode: single
   alias: Projector on USB
 office_projector_start_projector_on_usb:
-  alias: Office Projector - Start Projector on USB
+  alias: Office Projector - Start Projector on HDMI
   sequence:
   - service: remote.send_command
     target:
@@ -397,88 +380,14 @@ office_projector_start_projector_on_usb:
   - delay:
       hours: 0
       minutes: 0
-      seconds: 2
-      milliseconds: 0
-  - service: remote.send_command
-    target:
-      device_id:
-      - c39475d06c8c8752fc30dff3197bcc2d
-    data:
-      device: office_projector
-      command: right
-  - delay:
-      hours: 0
-      minutes: 0
       seconds: 1
       milliseconds: 0
-  - service: remote.send_command
-    target:
-      device_id:
-      - c39475d06c8c8752fc30dff3197bcc2d
-    data:
-      device: office_projector
-      command: right
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-  - service: remote.send_command
-    target:
-      device_id:
-      - c39475d06c8c8752fc30dff3197bcc2d
-    data:
-      device: office_projector
-      command: right
   - service: remote.send_command
     data:
       device: office_projector
       command: ok
     target:
       device_id: c39475d06c8c8752fc30dff3197bcc2d
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-  - service: remote.send_command
-    target:
-      device_id:
-      - c39475d06c8c8752fc30dff3197bcc2d
-    data:
-      device: office_projector
-      command: down
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-  - service: remote.send_command
-    target:
-      device_id:
-      - c39475d06c8c8752fc30dff3197bcc2d
-    data:
-      device: office_projector
-      command: down
-  - delay:
-      hours: 0
-      minutes: 0
-      seconds: 1
-      milliseconds: 0
-  - service: remote.send_command
-    target:
-      device_id:
-      - c39475d06c8c8752fc30dff3197bcc2d
-    data:
-      device: office_projector
-      command: down
-  - service: remote.send_command
-    target:
-      device_id:
-      - c39475d06c8c8752fc30dff3197bcc2d
-    data:
-      device: office_projector
-      command: ok
   mode: single
 office_projector_power_off:
   alias: Office Projector - Power Off
@@ -712,13 +621,6 @@ decrease_climate_temperature:
     data_template:
       entity_id: '{{ entity_id }}'
       temperature: '{{ (state_attr(entity_id, ''temperature'')|round(0)) - 1 }}'
-reset:
-  alias: Reset Dining 2
-  sequence:
-  - service: unifi.reconnect_client
-    data:
-      device_id: 71ce2df94fee48632cb499f8442092c3
-  mode: single
 reset_lights:
   alias: Reset Lights
   sequence:
@@ -740,6 +642,7 @@ reset_lights:
       minutes: 0
       seconds: 1
       milliseconds: 0
+    enabled: false
   - service: switch.turn_on
     target:
       entity_id:
@@ -752,4 +655,142 @@ reset_lights:
       - switch.adaptive_lighting_kids_bathroom_cabinet
       - switch.adaptive_lighting_kids_bedside_lamps
     data: {}
+  mode: single
+reset_heating:
+  alias: Reset Heating
+  sequence:
+  - service: climate.set_temperature
+    data:
+      temperature: 25
+      hvac_mode: heat
+    target:
+      entity_id:
+      - climate.all_heating
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: auto
+    target:
+      entity_id:
+      - climate.all_heating
+  mode: single
+  icon: mdi:fire-alert
+bed_time:
+  alias: Bed Time
+  sequence:
+  - service: script.lock_up
+    data: {}
+  - service: script.turn_off_everything
+    data: {}
+  mode: parallel
+  icon: mdi:sleep
+'1651135314567':
+  alias: New Script
+  sequence:
+  - service: light.turn_on
+    data:
+      brightness_pct: 5
+    target:
+      entity_id: light.dining_lights
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id: light.dining_lights
+office_projector_start_projector:
+  alias: Office Projector - Start Projector
+  sequence:
+  - service: remote.send_command
+    target:
+      device_id:
+      - c39475d06c8c8752fc30dff3197bcc2d
+    data:
+      device: office_projector
+      command: power
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 55
+      milliseconds: 0
+  mode: single
+office_projector_source_hdmi:
+  alias: Office Projector - Select HDMI Source
+  sequence:
+  - service: remote.send_command
+    data:
+      device: office_projector
+      command: source
+    target:
+      device_id: c39475d06c8c8752fc30dff3197bcc2d
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+  - service: remote.send_command
+    data:
+      device: office_projector
+      command: ok
+    target:
+      device_id: c39475d06c8c8752fc30dff3197bcc2d
+  mode: single
+robe_projector_source_hdmi:
+  alias: Robe Projector - Source HDMI
+  sequence:
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: menu
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+    enabled: true
+  - service: remote.send_command
+    data:
+      device: robe_projector
+      command: ok
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 2
+      milliseconds: 0
+  - service: remote.send_command
+    data:
+      device: robe_projector
+      command: ok
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+  mode: single
+robe_projector_start_projector:
+  alias: Robe Projector - Start Projector
+  sequence:
+  - service: remote.send_command
+    target:
+      device_id: 212574ed6249894a050e80d8874e0000
+    data:
+      device: robe_projector
+      command: power
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 55
+      milliseconds: 0
+  mode: single
+office_cooling_on:
+  alias: office cooling on
+  sequence:
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: cool
+    target:
+      entity_id: climate.office_cooling
   mode: single

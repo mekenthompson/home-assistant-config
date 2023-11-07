@@ -4,3 +4,5 @@ switch.fireplace:
 switch.festoon_switch:
   icon: mdi:lightbulb-group
   assumed_state: false
+zone.home:
+  radius: 150

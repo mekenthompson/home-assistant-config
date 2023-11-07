@@ -1,3 +1,6 @@
 sonos_group:
   name: "Sonos Move & Living Group"
   initial: off
+guest_mode:
+  name: "Guest Mode"
+  initial: off

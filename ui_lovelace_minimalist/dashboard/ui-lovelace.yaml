@@ -10,7 +10,7 @@ views:
   - title: Home
     path: home
     icon: "mdi:home"
-#    theme: "minimalist-desktop"
+    #    theme: "minimalist-desktop"
     cards: !include ui-home.yaml
   #--------------------------------------#
   # Tab : Lights                         #
@@ -18,7 +18,7 @@ views:
   - title: Lights
     path: lights
     icon: "mdi:lightbulb"
-#    theme: "minimalist-desktop"
+    #    theme: "minimalist-desktop"
     cards: !include ui-lights.yaml
   #--------------------------------------#
   # Tab : Heating                        #
@@ -26,7 +26,7 @@ views:
   - title: Heating
     path: heating
     icon: "mdi:fire"
-#    theme: "minimalist-desktop"
+    #    theme: "minimalist-desktop"
     cards: !include ui-heating.yaml
   #--------------------------------------#
   # Tab : Cooling                        #
@@ -34,31 +34,31 @@ views:
   - title: Cooling
     path: cooling
     icon: "mdi:snowflake"
-#    theme: "minimalist-desktop"
+    #    theme: "minimalist-desktop"
     cards: !include ui-cooling.yaml
   #--------------------------------------#
-  # Tab : Audio                          #
+  # Tab : Media                             #
   #--------------------------------------#
-  - title: Audio
-    path: audio
-    icon: "mdi:speaker"
-#    theme: "minimalist-desktop"
-    cards: !include ui-audio.yaml
-  #--------------------------------------#
-  # Tab : TV                             #
-  #--------------------------------------#
-  - title: TV
-    path: tv
+  - title: Media
+    path: media
     icon: "mdi:television"
-#    theme: "minimalist-desktop"
-    cards: !include ui-tv.yaml
+    #    theme: "minimalist-desktop"
+    cards: !include ui-media.yaml
+  #--------------------------------------#
+  # Tab : Security                          #
+  #--------------------------------------#
+  - title: Cameras
+    path: cameras
+    icon: "mdi:camera"
+    #    theme: "minimalist-desktop"
+    cards: !include ui-cameras.yaml
   #--------------------------------------#
   # Tab : Sensors                        #
   #--------------------------------------#
   - title: Sensors
     path: sensors
     icon: "mdi:battery"
-#    theme: "minimalist-desktop"
+    #    theme: "minimalist-desktop"
     cards: !include ui-sensors.yaml
   #--------------------------------------#
   # Tab : Automation                        #
@@ -66,7 +66,7 @@ views:
   - title: Automation
     path: automation
     icon: "mdi:rocket-launch"
-#    theme: "minimalist-desktop"
+    #    theme: "minimalist-desktop"
     cards: !include ui-automation.yaml
 #   #--------------------------------------#
 #   # Tab : Example                        #

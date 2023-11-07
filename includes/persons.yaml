@@ -3,7 +3,7 @@
   user_id: fbd663fe975741a7a1b89b7f4a73cf2b
   #  picture: !secret profile_photo_ken
   device_trackers:
-    - device_tracker.pixel_6_pro # from Android app
+    - device_tracker.pixel_7_pro # from Android app
     - device_tracker.ken_pixel_ping
 - name: Lisa
   id: lisa

@@ -116,3 +116,14 @@
         {% else %}
           mdi:lan-pending
         {% endif %}
+- platform: unifigateway
+  host: 192.168.2.2
+  username: !secret unifi_user
+  password: !secret unifi_pw
+  port: 443
+  version: UDMP-unifiOS
+  # monitored_conditions:
+  #   - www
+  #   - wlan
+  #   - alerts
+  #   - firmware

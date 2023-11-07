@@ -26,6 +26,7 @@
       cards:
         - type: "custom:button-card"
           template: card_graph
+          entity: sensor.average_house_temperature
           variables:
             ulm_card_graph_color: "var(--google-blue)"
             ulm_card_graph_name: Average Temp
@@ -36,7 +37,7 @@
           template: card_thermostat
           entity: climate.all_cooling
           variables:
-            ulm_card_thermostat_enable_popup: true
+            ulm_card_thermostat_enable_popup: false
             ulm_card_thermostat_enable_collapse: false
             ulm_card_thermostat_enable_controls: true
             ulm_card_thermostat_enable_hvac_modes: false
@@ -44,6 +45,7 @@
           cards:
             - type: "custom:button-card"
               template: card_graph
+              entity: sensor.ground_floor_temperature
               variables:
                 ulm_card_graph_color: "var(--google-blue)"
                 ulm_card_graph_name: Ground Floor
@@ -54,7 +56,7 @@
               template: card_thermostat
               entity: climate.living_cooling
               variables:
-                ulm_card_thermostat_enable_popup: true
+                ulm_card_thermostat_enable_popup: false
                 ulm_card_thermostat_enable_collapse: false
                 ulm_card_thermostat_enable_controls: true
                 ulm_card_thermostat_enable_hvac_modes: false
@@ -64,26 +66,7 @@
           cards:
             - type: "custom:button-card"
               template: card_graph
-              variables:
-                ulm_card_graph_color: "var(--google-blue)"
-                ulm_card_graph_name: Master
-                ulm_card_graph_entity: sensor.master_temperature
-                ulm_card_graph_type: fill
-                ulm_card_graph_hours: 24
-            - type: "custom:button-card"
-              template: card_thermostat
-              entity: climate.master_cooling
-              variables:
-                ulm_card_thermostat_enable_popup: true
-                ulm_card_thermostat_enable_collapse: false
-                ulm_card_thermostat_enable_controls: true
-                ulm_card_thermostat_enable_hvac_modes: false
-    - type: vertical-stack
-      cards:
-        - type: horizontal-stack
-          cards:
-            - type: "custom:button-card"
-              template: card_graph
+              entity: sensor.office_temperature
               variables:
                 ulm_card_graph_color: "var(--google-blue)"
                 ulm_card_graph_name: Office
@@ -94,7 +77,28 @@
               template: card_thermostat
               entity: climate.office_cooling
               variables:
-                ulm_card_thermostat_enable_popup: true
+                ulm_card_thermostat_enable_popup: false
+                ulm_card_thermostat_enable_collapse: false
+                ulm_card_thermostat_enable_controls: true
+                ulm_card_thermostat_enable_hvac_modes: false
+    - type: vertical-stack
+      cards:
+        - type: horizontal-stack
+          cards:
+            - type: "custom:button-card"
+              template: card_graph
+              entity: sensor.master_bed_temperature
+              variables:
+                ulm_card_graph_color: "var(--google-blue)"
+                ulm_card_graph_name: Master
+                ulm_card_graph_entity: sensor.master_bed_temperature
+                ulm_card_graph_type: fill
+                ulm_card_graph_hours: 24
+            - type: "custom:button-card"
+              template: card_thermostat
+              entity: climate.master_cooling
+              variables:
+                ulm_card_thermostat_enable_popup: false
                 ulm_card_thermostat_enable_collapse: false
                 ulm_card_thermostat_enable_controls: true
                 ulm_card_thermostat_enable_hvac_modes: false

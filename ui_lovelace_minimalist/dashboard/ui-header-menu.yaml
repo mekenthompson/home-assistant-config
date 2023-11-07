@@ -2,21 +2,21 @@
 #--------------------------------------#
 # Tab : Header Menu                    #
 #--------------------------------------#
-  - type: "custom:mod-card"
-    style:
-      .: |
-        ha-card {
-          # background-color: var(--card-background-color);
-          # border-radius: var(--border-radius);
-          # padding: 5px 10px;
-        }
-      hui-horizontal-stack-card$: |
-        #root {
-          justify-content: space-between;
-        }
-    card:
-      type: horizontal-stack
-      cards:
+- type: "custom:mod-card"
+  style:
+    .: |
+      ha-card {
+        # background-color: var(--card-background-color);
+        # border-radius: var(--border-radius);
+        # padding: 5px 10px;
+      }
+    hui-horizontal-stack-card$: |
+      #root {
+        justify-content: space-between;
+      }
+  card:
+    type: horizontal-stack
+    cards:
       # - type: "custom:button-card"
       #   color_type: blank-card
       - type: "custom:button-card"
@@ -50,17 +50,17 @@
       - type: "custom:button-card"
         template: chip_icon_only
         variables:
-          ulm_chip_icon_only: "🔉"
-        tap_action:
-          action: "navigate"
-          navigation_path: audio
-      - type: "custom:button-card"
-        template: chip_icon_only
-        variables:
           ulm_chip_icon_only: "📺"
         tap_action:
           action: "navigate"
-          navigation_path: tv
+          navigation_path: media
+      - type: "custom:button-card"
+        template: chip_icon_only
+        variables:
+          ulm_chip_icon_only: "📷"
+        tap_action:
+          action: "navigate"
+          navigation_path: cameras
       - type: "custom:button-card"
         template: chip_icon_only
         variables:
@@ -75,5 +75,5 @@
         tap_action:
           action: "navigate"
           navigation_path: automation
-      # - type: "custom:button-card"
-      #   color_type: blank-card
+    # - type: "custom:button-card"
+    #   color_type: blank-card

@@ -21,7 +21,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
     - type: horizontal-stack
       cards:
@@ -32,7 +32,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
@@ -42,7 +42,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
     - type: horizontal-stack
@@ -54,7 +54,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
@@ -64,7 +64,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
     - type: horizontal-stack
@@ -76,7 +76,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
@@ -86,7 +86,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
     - type: horizontal-stack
@@ -98,7 +98,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
@@ -108,7 +108,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
     - type: horizontal-stack
@@ -120,7 +120,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
@@ -130,7 +130,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
     - type: "custom:button-card"
@@ -146,7 +146,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
     - type: horizontal-stack
       cards:
@@ -157,7 +157,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
@@ -167,7 +167,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
     - type: horizontal-stack
@@ -179,7 +179,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
@@ -189,7 +189,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
     - type: horizontal-stack
@@ -201,7 +201,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
@@ -219,7 +219,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
     - type: horizontal-stack
       cards:
@@ -230,7 +230,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
@@ -240,7 +240,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
     - type: horizontal-stack
@@ -252,17 +252,17 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
           template: card_light
-          entity: light.sidney_lamp
+          entity: light.sidney_s_lamp
           variables:
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
     - type: horizontal-stack
@@ -274,7 +274,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
@@ -284,7 +284,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
     - type: horizontal-stack
@@ -296,7 +296,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
@@ -314,7 +314,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
     - type: horizontal-stack
       cards:
@@ -325,7 +325,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
@@ -335,7 +335,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
     - type: horizontal-stack
@@ -347,7 +347,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
@@ -357,7 +357,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
     - type: horizontal-stack
@@ -369,7 +369,7 @@
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
             ulm_card_light_enable_color: false
-            ulm_card_light_enable_popup: true
+            ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"

@@ -56,8 +56,11 @@
   condition: []
   action:
   - service: light.turn_on
-    data: {}
-    entity_id: light.ensuite_lights
+    data:
+      brightness_pct: '{{ state_attr(''switch.adaptive_lighting_master'', ''brightness_pct'')
+        }}'
+    target:
+      entity_id: light.ensuite_lights
   mode: single
 - id: '1608018403580'
   alias: Light On - Stairs Down - Sunset
@@ -65,9 +68,12 @@
   trigger:
   - platform: numeric_state
     entity_id: sun.sun
+    attribute: elevation
     below: '10'
-    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
-  condition: []
+  condition:
+  - condition: state
+    entity_id: group.persons
+    state: home
   action:
   - service: light.turn_on
     data: {}
@@ -152,7 +158,10 @@
   - entity_id: group.entry_motion_detection
     platform: state
     to: 'off'
-    for: 00:05:00
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
   condition: []
   action:
   - service: light.turn_off
@@ -160,7 +169,11 @@
     target:
       entity_id:
       - light.entry_lights
-      - light.front_yard_lights
+  - service: light.turn_off
+    data: {}
+    target:
+      entity_id: light.front_yard_lights
+    enabled: true
   mode: single
 - id: '1609477935315'
   alias: Motion Off - Butlers
@@ -275,8 +288,11 @@
   condition: []
   action:
   - service: light.turn_on
-    data: {}
-    entity_id: light.guest_bath_lights
+    data:
+      brightness_pct: '{{ state_attr(''switch.adaptive_lighting_default'', ''brightness_pct'')
+        }}'
+    target:
+      entity_id: light.guest_bath_lights
   mode: single
 - id: '1609817172392'
   alias: Motion Off - Guest Bathroom
@@ -309,8 +325,13 @@
   condition: []
   action:
   - service: light.turn_on
-    data: {}
-    entity_id: light.kid_s_bathroom
+    data:
+      brightness_pct: '{{ state_attr(''switch.adaptive_lighting_kids'', ''brightness_pct'')
+        }}'
+      color_temp_kelvin: '{{ state_attr(''switch.adaptive_lighting_kids'', ''color_temp_kelvin'')
+        }}'
+    target:
+      entity_id: light.kid_s_bathroom
   mode: single
 - id: '1609817421503'
   alias: Motion Off - Kids Bathroom
@@ -336,7 +357,7 @@
   description: ''
   trigger:
   - platform: time
-    at: 05:45
+    at: 06:00:00
   condition:
   - condition: state
     entity_id: binary_sensor.workday_sensor
@@ -345,13 +366,15 @@
   - service: switch.turn_on
     data: {}
     entity_id: switch.power_kids_shield_on_off
-  mode: single
+  mode: parallel
 - id: '1609972159052'
   alias: AV - Kids TV off at 10am
   description: ''
   trigger:
   - platform: time
     at: '10:00:00'
+  - platform: time
+    at: '22:00:00'
   condition: []
   action:
   - service: switch.turn_off
@@ -364,11 +387,13 @@
   trigger:
   - platform: time
     at: '21:30:00'
-  - platform: time
-    at: '21:00'
-  condition: []
+  condition:
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
   action:
   - service: script.kids_night_mode
+    data: {}
   mode: parallel
   max: 10
 - id: '1610451345279'
@@ -397,6 +422,7 @@
       - switch.adaptive_lighting_sleep_mode_stairs_down
   - service: script.reset_adaptive_lighting
     data: {}
+    enabled: false
   mode: single
 - id: '1610451576424'
   alias: Adaptive Lighting - Sleep Mode - Master
@@ -508,7 +534,8 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: group.persons
+    entity_id:
+    - group.persons
     from: home
   condition: []
   action:
@@ -521,15 +548,15 @@
           title: Lock Up
         - action: lock_up_and_turn_off
           title: Lock Up & Turn Off All
-  - service: notify.mobile_app_ken_s_pixel_6_pro
+  - service: notify.mobile_app_pixel_7_pro
     data:
-      message: Leaving Home?
       data:
         actions:
         - action: lock_up
           title: Lock Up
         - action: lock_up_and_turn_off
           title: Lock Up & Turn Off All
+      message: Leaving Home?
   mode: parallel
   max: 10
 - id: '1610751721964'
@@ -557,16 +584,18 @@
       hours: 0
       minutes: 5
       seconds: 0
-  condition: []
+  condition:
+  - condition: state
+    entity_id: switch.guest_mode
+    state: 'off'
   action:
   - service: script.leaving
     data: {}
   - service: notify.mobile_app_lisa_s_pixel_5
     data:
       message: The house is auto-locked and devices off. Have a great day!
-  - service: notify.mobile_app_ken_s_pixel_6_pro
-    data:
-      message: The house is auto-locked and devices off. Have a great day!
+  - service: notify.mobile_app_pixel_7_pro
+    data: {}
   mode: parallel
   max: 10
 - id: '1610760794370'
@@ -598,11 +627,15 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: device_tracker.lisa_s_pixel_5
+    entity_id:
+    - person.lisa
     to: home
+    from: not_home
   condition: []
   action:
   - service: script.stop_vacuums
+    data: {}
+    enabled: false
   - service: notify.mobile_app_lisa_s_pixel_5
     data:
       message: Welcome Home Lisa!
@@ -612,6 +645,14 @@
           title: Unlock
         - action: unlock_and_open_garage
           title: Open Garage & Unlock
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: auto
+    target:
+      device_id:
+      - 93f4b208732c08edfa56165bcbfb4fde
+      - 7608996f3041d2d954ed875a0003dc6e
+      - e3a50cc77f945352f0fa1ea792ecdd1e
   mode: parallel
   max: 10
 - id: '1610793175228'
@@ -619,21 +660,32 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: device_tracker.ken_s_pixel_6_pro
+    entity_id:
+    - person.ken
     to: home
+    from: not_home
   condition: []
   action:
   - service: script.stop_vacuums
     data: {}
-  - service: notify.mobile_app_ken_s_pixel_6_pro
+    enabled: false
+  - service: notify.mobile_app_pixel_7_pro
     data:
-      message: Welcome Home Ken!
       data:
         actions:
         - action: unlock
           title: Unlock
         - action: unlock_and_open_garage
           title: Open Garage & Unlock
+      message: Welcome Home Ken!
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: auto
+    target:
+      device_id:
+      - 93f4b208732c08edfa56165bcbfb4fde
+      - 7608996f3041d2d954ed875a0003dc6e
+      - e3a50cc77f945352f0fa1ea792ecdd1e
   mode: parallel
   max: 10
 - id: '1610793816462'
@@ -671,12 +723,18 @@
   trigger:
   - platform: state
     entity_id: media_player.living_room_shield
+    to: 'on'
+  - platform: state
+    entity_id: media_player.living_room_shield
+    to: idle
+  - platform: state
+    entity_id: media_player.living_room_shield
     to: playing
   condition:
   - condition: numeric_state
     entity_id: sun.sun
     below: '10'
-    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+    attribute: elevation
   action:
   - service: light.turn_on
     data: {}
@@ -692,8 +750,11 @@
   trigger:
   - platform: state
     entity_id: media_player.living_room_shield
-    from: playing
-    for: 00:15:00
+    for:
+      hours: 0
+      minutes: 15
+      seconds: 0
+    to: 'off'
   condition: []
   action:
   - service: light.turn_off
@@ -706,12 +767,15 @@
   trigger:
   - platform: numeric_state
     entity_id: sun.sun
+    attribute: elevation
     below: '10'
-    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
   condition:
   - condition: state
     entity_id: media_player.living_room_shield
     state: playing
+  - condition: state
+    entity_id: media_player.living_room_shield
+    state: idle
   action:
   - service: light.turn_on
     data: {}
@@ -746,11 +810,15 @@
     device_id: 09e3b14eed2a522975148b2afa1d1319
     domain: nest
     type: camera_person
+  - platform: device
+    device_id: 0bd7cff9916c12b774075d69f67cdef6
+    domain: nest
+    type: camera_person
   condition:
   - condition: numeric_state
     entity_id: sun.sun
-    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
-    below: '-1'
+    attribute: elevation
+    below: '10'
   action:
   - service: light.turn_on
     data: {}
@@ -804,6 +872,20 @@
     entity_id: sun.sun
     below: '20'
     value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+  - condition: state
+    entity_id: group.persons
+    state: home
+  - condition: time
+    before: '22:00:00'
+    after: 06:00:00
+    weekday:
+    - sat
+    - sun
+    - fri
+    - thu
+    - wed
+    - tue
+    - mon
   action:
   - service: light.turn_on
     data: {}
@@ -822,7 +904,8 @@
   action:
   - service: light.turn_off
     data: {}
-    entity_id: light.dining_lights
+    target:
+      entity_id: light.dining_lights
   mode: parallel
   max: 10
 - id: '1613890720084'
@@ -865,10 +948,7 @@
     to: 'off'
     for: 00:15:00
     entity_id: group.patio_motion
-  condition:
-  - condition: time
-    after: '23:30'
-    before: '17:00'
+  condition: []
   action:
   - service: light.turn_off
     data: {}
@@ -954,73 +1034,30 @@
       entity_id:
       - switch.master_fan_switch
   mode: single
-- id: '1620124425409'
-  alias: Simrig - Cool when over 23
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: group.office_motion
-    to: 'on'
-    for: 00:01:00
-  - platform: event
-    event_type: zha_event
-    event_data:
-      device_id: e9273a89b1505228992b646c2d621c77
-      command: button_single
-  condition:
-  - condition: and
-    conditions:
-    - type: is_temperature
-      condition: device
-      device_id: 25ff439d4c7050b2dee20e5034787197
-      entity_id: sensor.office_temperature
-      domain: sensor
-      below: 0
-      above: 23
-    - condition: state
-      entity_id: group.office_windows
-      state: 'off'
-  action:
-  - service: climate.set_temperature
-    target:
-      entity_id: climate.office_cooling
-    data:
-      temperature: 17
-      hvac_mode: cool
-  - service: climate.set_fan_mode
-    target:
-      device_id: 4dd25ec3a326f5a7a3cbdcc89c47b73a
-    data:
-      fan_mode: high
-  mode: single
 - id: '1620124643737'
-  alias: Simrig - Cooling off when under 21
+  alias: Simrig - Cooling off when under 18 - 45min
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.motion_simrig_motion
+    entity_id:
+    - binary_sensor.motion_simrig_motion
     to: 'off'
-    for: 00:10:00
-  - type: temperature
-    platform: device
-    device_id: 5c49a7ea833556d5108a89404487a77b
-    entity_id: sensor.motion_simrig_temperature
-    domain: sensor
-    below: 18
     for:
       hours: 0
-      minutes: 10
+      minutes: 45
       seconds: 0
+    enabled: true
   - platform: event
-    event_type: smartthings.button
+    event_type: ''
     event_data:
-      device_id: 2de0559d-9f0f-47a5-a86b-dcc3a01c1334
-      value: double
+      device_id: e9273a89b1505228992b646c2d621c77
+      command: button_double
   condition: []
   action:
   - service: climate.turn_off
     target:
       entity_id: climate.office_cooling
+    data: {}
   - service: climate.set_hvac_mode
     target:
       entity_id: climate.office
@@ -1071,16 +1108,22 @@
     domain: binary_sensor
     for:
       hours: 0
-      minutes: 4
+      minutes: 5
       seconds: 0
-      milliseconds: 0
   - platform: time
     at: '13:00'
   condition:
-  - condition: numeric_state
-    entity_id: sun.sun
-    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
-    above: '0'
+  - condition: time
+    after: 06:00:00
+    before: '12:00:00'
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+    - sun
   action:
   - service: cover.open_cover
     target:
@@ -1092,9 +1135,16 @@
       - switch.adaptive_lighting_sleep_mode_master
       - switch.adaptive_lighting_sleep_mode_bathroom_cabinets
       - switch.adaptive_lighting_sleep_mode_bathroom_default
+      - switch.adaptive_lighting_sleep_mode_kids
+      - switch.adaptive_lighting_sleep_mode_default
+      - switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
+      - switch.adaptive_lighting_sleep_mode_kids_bedside_lamps
+      - switch.adaptive_lighting_sleep_mode_walk_in_robe
+      - switch.adaptive_lighting_sleep_mode_stairs_down
     data: {}
   - service: script.reset_adaptive_lighting
     data: {}
+    enabled: false
   mode: single
 - id: '1622262782957'
   alias: Curtains Close after Sunset
@@ -1113,13 +1163,11 @@
   condition:
   - condition: numeric_state
     entity_id: sun.sun
-    value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
     below: '0'
-  - condition: state
-    entity_id: cover.master_curtains
-    state: open
+    attribute: elevation
   action:
   - service: cover.close_cover
+    data: {}
     target:
       entity_id: cover.master_curtains
   mode: parallel
@@ -1141,13 +1189,14 @@
   description: ''
   trigger:
   - platform: time
-    at: 06:30
+    at: 06:15:00
   condition: []
   action:
   - service: switch.turn_on
     data: {}
-    entity_id: switch.power_kids_shield_on_off
-  mode: single
+    target:
+      device_id: bd576f2277b298284ad2083f5b08f773
+  mode: parallel
 - id: '1624871319438'
   alias: Zigbee Button - Turn on Aircon
   description: ''
@@ -1161,15 +1210,20 @@
   action:
   - service: climate.set_temperature
     target:
-      device_id: 4dd25ec3a326f5a7a3cbdcc89c47b73a
+      entity_id: climate.office_cooling
     data:
       temperature: 17
       hvac_mode: cool
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 5
+      milliseconds: 0
   - service: climate.set_fan_mode
     target:
-      device_id: 4dd25ec3a326f5a7a3cbdcc89c47b73a
+      entity_id: climate.office_cooling
     data:
-      fan_mode: high
+      fan_mode: turbo
   mode: single
 - id: '1624878781245'
   alias: Zigbee Button - Turn off Aircon
@@ -1184,7 +1238,8 @@
   action:
   - service: climate.turn_off
     target:
-      device_id: 4dd25ec3a326f5a7a3cbdcc89c47b73a
+      entity_id: climate.office_cooling
+    data: {}
   mode: single
 - id: '1626167170930'
   alias: Motion - Sidney - Lights On
@@ -1204,6 +1259,9 @@
   - service: light.turn_on
     target:
       entity_id: light.sidney_s_lights
+    data:
+      brightness_pct: '{{ state_attr(''switch.adaptive_lighting_kids'', ''brightness_pct'')
+        }}'
   mode: parallel
   max: 10
 - id: '1626167199896'
@@ -1224,6 +1282,9 @@
   - service: light.turn_on
     target:
       entity_id: light.mabel_s_lights
+    data:
+      brightness_pct: '{{ state_attr(''switch.adaptive_lighting_kids'', ''brightness_pct'')
+        }}'
   mode: parallel
   max: 10
 - id: '1626167307023'
@@ -1283,11 +1344,13 @@
   - condition: sun
     after: sunset
   - condition: time
-    before: '19:45'
+    before: '20:45:00'
+    after: '16:00:00'
   action:
   - service: light.turn_on
     target:
       entity_id: light.rumpus_lights
+    data: {}
   mode: parallel
   max: 10
 - id: '1626253747269'
@@ -1333,10 +1396,19 @@
     device_id: 22c46f3939305dd9f5ff01e4f0964741
     entity_id: binary_sensor.mutli_master_contact
     domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
   action:
   - service: light.turn_on
     target:
       entity_id: light.master_bedroom_lights
+    data:
+      brightness_pct: '{{ state_attr(''switch.adaptive_lighting_master'', ''brightness_pct'')
+        }}'
+      color_temp_kelvin: '{{ state_attr(''switch.adaptive_lighting_master'', ''color_temp_kelvin'')
+        }}'
   mode: parallel
   max: 10
 - id: '1626492902751'
@@ -1456,13 +1528,13 @@
   description: ''
   trigger:
   - platform: state
-    entity_id: binary_sensor.motion_guest_room_motion
+    entity_id:
+    - binary_sensor.motion_guest_room_motion
     to: 'off'
     for:
-      hours: 2
+      hours: 4
       minutes: 0
       seconds: 0
-      milliseconds: 0
   condition: []
   action:
   - service: light.turn_off
@@ -1482,6 +1554,17 @@
     entity_id: sun.sun
     below: '5'
     value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
+  - condition: time
+    after: 09:00:00
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    - sat
+    - sun
+    before: '21:30:00'
   action:
   - service: light.turn_on
     data: {}
@@ -1521,17 +1604,13 @@
       hours: 0
       minutes: 5
       seconds: 0
-      milliseconds: 0
   condition: []
   action:
   - service: climate.set_hvac_mode
-    target:
-      device_id:
-      - 93f4b208732c08edfa56165bcbfb4fde
-      - ba9946930611d42c9e3fc2ce2ccd055b
-      - e2acdb5156b0f614d08d8138098aa312
     data:
       hvac_mode: 'off'
+    target:
+      device_id: 93f4b208732c08edfa56165bcbfb4fde
   mode: parallel
   max: 10
 - id: '1632464809207'
@@ -1541,13 +1620,27 @@
   - platform: state
     entity_id: group.ground_doors
     to: 'off'
-  condition: []
+  condition:
+  - condition: state
+    entity_id: person.lisa
+    state: home
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  - condition: state
+    entity_id: person.ken
+    state: home
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
   action:
   - service: climate.set_hvac_mode
-    target:
-      device_id: 93f4b208732c08edfa56165bcbfb4fde
     data:
       hvac_mode: auto
+    target:
+      device_id: 93f4b208732c08edfa56165bcbfb4fde
   mode: parallel
   max: 10
 - id: '1632464909829'
@@ -1567,13 +1660,10 @@
   condition: []
   action:
   - service: climate.set_hvac_mode
-    target:
-      device_id:
-      - e3a50cc77f945352f0fa1ea792ecdd1e
-      - ecfe486e5d25b2a6606ec2a96786ee10
-      - 098cb2deb24718134a32e613ed436be6
     data:
       hvac_mode: 'off'
+    target:
+      device_id: e3a50cc77f945352f0fa1ea792ecdd1e
   mode: parallel
   max: 10
 - id: '1632464963738'
@@ -1590,16 +1680,27 @@
       minutes: 1
       seconds: 0
       milliseconds: 0
-  condition: []
+  condition:
+  - condition: state
+    entity_id: person.lisa
+    state: home
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
+  - condition: state
+    entity_id: person.ken
+    state: home
+    for:
+      hours: 0
+      minutes: 5
+      seconds: 0
   action:
   - service: climate.set_hvac_mode
-    target:
-      device_id:
-      - e3a50cc77f945352f0fa1ea792ecdd1e
-      - ecfe486e5d25b2a6606ec2a96786ee10
-      - 098cb2deb24718134a32e613ed436be6
     data:
       hvac_mode: auto
+    target:
+      device_id: e3a50cc77f945352f0fa1ea792ecdd1e
   mode: parallel
   max: 10
 - id: '1633866856921'
@@ -1611,11 +1712,15 @@
   condition: []
   action:
   - service: scene.turn_on
+    data: {}
     target:
-      entity_id:
-      - scene.xmas
+      entity_id: scene.xmas
   - service: script.master_robe_start_projector_on_usb
+    data: {}
+    enabled: false
   - service: script.office_projector_start_projector_on_usb
+    data: {}
+    enabled: false
   mode: single
 - id: '1633866959271'
   alias: Halloween Off
@@ -1631,9 +1736,15 @@
       - light.balcony_lights
       - light.front_yard_lights
       - light.wled_segment_0
-      - light.festoon_lights_2
+      - light.festoon_lights
+      - light.deck_lights
+    data: {}
   - service: script.robe_projector_power_off
+    data: {}
+    enabled: false
   - service: script.office_projector_power_off
+    data: {}
+    enabled: false
   mode: single
 - id: '1633916134915'
   alias: Master Robe Button - Toggle
@@ -1830,10 +1941,10 @@
       - condition: template
         value_template: '{{ slot == 2 }}'
       sequence:
-      - service: notify.mobile_app_ken_s_pixel_6_pro
+      - service: notify.mobile_app_pixel_7_pro
         data:
-          title: Front Door Unlocked
           message: by Ken
+          title: Front Door Unlocked
           data:
             ttl: 0
             priority: high
@@ -1848,7 +1959,7 @@
       - condition: template
         value_template: '{{ slot == 3 }}'
       sequence:
-      - service: notify.mobile_app_ken_s_pixel_6_pro
+      - service: notify.mobile_app_pixel_7_pro
         data:
           message: by Ken
           title: Front Door Unlocked
@@ -1866,10 +1977,10 @@
       - condition: template
         value_template: '{{ slot == 4 }}'
       sequence:
-      - service: notify.mobile_app_ken_s_pixel_6_pro
+      - service: notify.mobile_app_pixel_7_pro
         data:
-          message: by Lisa
           title: Front Door Unlocked
+          message: by Lisa
           data:
             ttl: 0
             priority: high
@@ -1884,7 +1995,7 @@
       - condition: template
         value_template: '{{ slot == 5 }}'
       sequence:
-      - service: notify.mobile_app_ken_s_pixel_6_pro
+      - service: notify.mobile_app_pixel_7_pro
         data:
           message: by Cleaners
           title: Front Door Unlocked
@@ -1902,7 +2013,7 @@
       - condition: template
         value_template: '{{ slot == 6 }}'
       sequence:
-      - service: notify.mobile_app_ken_s_pixel_6_pro
+      - service: notify.mobile_app_pixel_7_pro
         data:
           message: by Sidney
           title: Front Door Unlocked
@@ -1920,19 +2031,22 @@
       - condition: template
         value_template: '{{ slot == 65536 }}'
       sequence:
-      - service: notify.mobile_app_ken_s_pixel_6_pro
+      - service: notify.mobile_app_pixel_7_pro
         data:
-          title: Front Door Unlocked
           message: by automation
+          title: Front Door Unlocked
+          data:
+            ttl: 0
+            priority: high
       - service: notify.mobile_app_lisa_s_pixel_5
         data:
           title: Front Door Unlocked
           message: by automation
     default:
-    - service: notify.mobile_app_ken_s_pixel_6_pro
+    - service: notify.mobile_app_pixel_7_pro
       data:
+        message: by Unkown
         title: Front Door Unlocked
-        message: by Unknown
         data:
           ttl: 0
           priority: high
@@ -1964,10 +2078,10 @@
       - condition: template
         value_template: '{{ slot == 2 }}'
       sequence:
-      - service: notify.mobile_app_ken_s_pixel_6_pro
+      - service: notify.mobile_app_pixel_7_pro
         data:
-          title: Garage Entry Unlocked
           message: by Ken
+          title: Garage Entry Unlocked
           data:
             ttl: 0
             priority: high
@@ -1982,25 +2096,22 @@
       - condition: template
         value_template: '{{ slot == 3 }}'
       sequence:
-      - service: notify.mobile_app_ken_s_pixel_6_pro
-        data:
-          message: by Ken
-          title: Garage Entry Unlocked
-          data:
-            ttl: 0
-            priority: high
       - service: notify.mobile_app_lisa_s_pixel_5
         data:
-          message: by Ken
+          message: by Lisa
           title: Garage Entry Unlocked
           data:
             ttl: 0
             priority: high
+      - service: notify.mobile_app_pixel_7_pro
+        data:
+          message: by Lisa
+          title: Garage Entry Unlocked
     - conditions:
       - condition: template
         value_template: '{{ slot == 4 }}'
       sequence:
-      - service: notify.mobile_app_ken_s_pixel_6_pro
+      - service: notify.mobile_app_pixel_7_pro
         data:
           message: by Lisa
           title: Garage Entry Unlocked
@@ -2018,7 +2129,7 @@
       - condition: template
         value_template: '{{ slot == 5 }}'
       sequence:
-      - service: notify.mobile_app_ken_s_pixel_6_pro
+      - service: notify.mobile_app_pixel_7_pro
         data:
           message: by Cleaners
           title: Garage Entry Unlocked
@@ -2036,7 +2147,7 @@
       - condition: template
         value_template: '{{ slot == 6 }}'
       sequence:
-      - service: notify.mobile_app_ken_s_pixel_6_pro
+      - service: notify.mobile_app_pixel_7_pro
         data:
           message: by Sidney
           title: Garage Entry Unlocked
@@ -2054,19 +2165,22 @@
       - condition: template
         value_template: '{{ slot == 65536 }}'
       sequence:
-      - service: notify.mobile_app_ken_s_pixel_6_pro
+      - service: notify.mobile_app_pixel_7_pro
         data:
-          title: Garage Entry Unlocked
           message: by automation
+          title: Garage Entry Unlocked
+          data:
+            ttl: 0
+            priority: high
       - service: notify.mobile_app_lisa_s_pixel_5
         data:
           title: Garage Entry Unlocked
           message: by automation
     default:
-    - service: notify.mobile_app_ken_s_pixel_6_pro
+    - service: notify.mobile_app_pixel_7_pro
       data:
-        title: Garage Entry Unlocked
         message: by Unknown
+        title: Garage Entry Unlocked
         data:
           ttl: 0
           priority: high
@@ -2128,14 +2242,17 @@
       "temperature")|float }}'
     timeout: 00:10:00
     continue_on_timeout: true
-  - service: notify.mobile_app_ken_s_pixel_5
+  - service: notify.mobile_app_pixel_7_pro
     data:
       title: Espresso Ready
-      message: Boiler has reached 93
+      message: Coffee machine at temp
+      data:
+        ttl: 0
+        priority: high
   - service: tts.google_translate_say
     data:
-      entity_id: media_player.kitchen_display
-      message: Espresso Ready
+      entity_id: media_player.kitchen_hub
+      message: Espresso ready
   mode: parallel
   max: 10
 - id: '1637035577253'
@@ -2255,10 +2372,23 @@
       hours: 0
       minutes: 30
       seconds: 0
+  - platform: time
+    at: 00:00:00
   condition:
   - condition: sun
     before: sunset
     after: sunrise
+  - condition: time
+    after: 00:00:00
+    before: '16:30:00'
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - sat
+    - sun
+    - fri
   action:
   - service: light.turn_off
     data: {}
@@ -2309,21 +2439,36 @@
   - platform: numeric_state
     entity_id: input_number.coffee_counter
     above: '13'
+  - platform: state
+    entity_id:
+    - binary_sensor.linea_mini_water_reservoir
+    to: 'off'
+    enabled: false
   condition: []
   action:
-  - service: notify.mobile_app_ken_s_pixel_6_pro
+  - service: notify.mobile_app_pixel_7_pro
     data:
       message: Refill resevoir
       title: Espresso Machine
+      data:
+        ttl: 0
+        priority: high
   - service: notify.mobile_app_lisa_s_pixel_5
     data:
       message: Refill resevoir
       title: Espresso Machine
+      data:
+        ttl: 0
+        priority: high
   - service: input_number.set_value
     data:
       value: 0
     target:
       entity_id: input_number.coffee_counter
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.kitchen_hub
+      message: Please refill water reservoir in coffee machine
   mode: single
 - id: '1644697237427'
   alias: front yard person
@@ -2364,11 +2509,11 @@
     from: 'off'
   condition: []
   action:
-  - device_id: 25ff439d4c7050b2dee20e5034787197
-    domain: climate
-    entity_id: climate.office
-    type: set_hvac_mode
-    hvac_mode: 'off'
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: 'off'
+    target:
+      entity_id: climate.office
   mode: parallel
   max: 10
 - id: '1645351549371'
@@ -2380,11 +2525,11 @@
     to: 'off'
   condition: []
   action:
-  - device_id: 25ff439d4c7050b2dee20e5034787197
-    domain: climate
-    entity_id: climate.office
-    type: set_hvac_mode
-    hvac_mode: auto
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: auto
+    target:
+      entity_id: climate.office
   mode: parallel
   max: 10
 - id: '1645351752203'
@@ -2396,11 +2541,13 @@
     to: 'off'
   condition: []
   action:
-  - device_id: 7608996f3041d2d954ed875a0003dc6e
-    domain: climate
-    entity_id: climate.master
-    type: set_hvac_mode
-    hvac_mode: auto
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: auto
+    target:
+      device_id:
+      - 7608996f3041d2d954ed875a0003dc6e
+      - 5489146044a0cfaec1e32b762308aee6
   mode: parallel
   max: 10
 - id: '1645351795587'
@@ -2412,11 +2559,13 @@
     from: 'off'
   condition: []
   action:
-  - device_id: 7608996f3041d2d954ed875a0003dc6e
-    domain: climate
-    entity_id: climate.master
-    type: set_hvac_mode
-    hvac_mode: 'off'
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: 'off'
+    target:
+      device_id:
+      - 7608996f3041d2d954ed875a0003dc6e
+      - 5489146044a0cfaec1e32b762308aee6
   mode: parallel
   max: 10
 - id: '1645351857797'
@@ -2563,27 +2712,291 @@
   mode: parallel
   max: 10
 - id: '1646968884743'
-  alias: WAN Failover Webhook
+  alias: WAN Failover
   description: ''
   trigger:
-  - platform: webhook
-    webhook_id: wan_failover
+  - platform: state
+    entity_id:
+    - sensor.unifi_gateway_wan
+    attribute: wan_ip
+    from: 125.63.21.182
   condition: []
   action:
-  - data_template:
-      entity_id: '{{ ''input_text.wan_status'' if trigger.json.interface == ''eth1''
-        else ''input_text.4g_status'' }}'
-      value: '{{ trigger.json.status }}'
-    service: input_text.set_value
+  - service: input_text.set_value
+    data:
+      value: Inactive
+    enabled: true
+    target:
+      entity_id: input_text.wan_status
+  - service: input_text.set_value
+    data:
+      value: Active
+    enabled: true
+    target:
+      entity_id: input_text.4g_status
   - delay:
       hours: 0
       minutes: 0
       seconds: 20
       milliseconds: 0
-  - data_template:
-      message: '{{ ''WAN'' if trigger.json.interface == ''eth1'' else ''4G'' }} interface
-        is now {{ trigger.json.status }}'
-      title: WAN Failover
-    service: notify.mobile_app_ken_s_pixel_6_pro
+  - service: notify.mobile_app_pixel_7_pro
+    data:
+      title: WAN Failover Event
+      message: WAN interface is now 4G Failover
+  mode: parallel
+  max: 10
+- id: '1648032573396'
+  alias: Heater Reset
+  description: ''
+  trigger:
+  - platform: state
+    entity_id: climate.all_heating
+    to: heating
+    attribute: hvac_action
+  condition:
+  - condition: state
+    entity_id: climate.all_heating
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
+    attribute: hvac_action
+    state: idle
+  action:
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: heat
+    target:
+      entity_id: climate.all_heating
+  - delay:
+      hours: 0
+      minutes: 1
+      seconds: 0
+      milliseconds: 0
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: auto
+    target:
+      entity_id: climate.all_heating
+  - delay:
+      hours: 2
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  mode: single
+- id: '1650751468381'
+  alias: Bed Time - Auto Off & Lock Up
+  description: ''
+  trigger:
+  - platform: time
+    at: '23:00:00'
+  condition: []
+  action:
+  - wait_for_trigger:
+    - platform: state
+      entity_id: binary_sensor.motion_inside_all
+      to: 'Off'
+      for:
+        hours: 0
+        minutes: 25
+        seconds: 0
+    timeout: 02:00:00
+  - service: script.bed_time
+    data: {}
+  mode: parallel
+- id: '1652432860191'
+  alias: Simrig - Office Cooling - Turbo
+  description: ''
+  trigger:
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: e9273a89b1505228992b646c2d621c77
+      command: button_hold
+  condition: []
+  action:
+  - service: light.toggle
+    data: {}
+    target:
+      entity_id: light.office_lights
+    enabled: false
+  - service: climate.set_fan_mode
+    data:
+      fan_mode: turbo
+    target:
+      entity_id: climate.office_cooling
+  mode: parallel
+- id: '1653437644581'
+  alias: Blinds - Open Kids at 9am
+  description: ''
+  trigger:
+  - platform: time
+    at: 09:00:00
+  condition: []
+  action:
+  - device_id: f933656b6a931d81c839dc85e7e1c059
+    domain: cover
+    entity_id: cover.blinds_mabel_window_covering
+    type: set_position
+    position: 100
+  - device_id: b40cc55de10a95eba1f5649f4e0bab3a
+    domain: cover
+    entity_id: cover.blinds_sidney_window_covering
+    type: set_position
+    position: 100
+  mode: parallel
+- id: '1653437837078'
+  alias: Blinds - Close Kids at Sunset
+  description: ''
+  trigger:
+  - platform: numeric_state
+    entity_id: sun.sun
+    attribute: elevation
+    below: '0'
+  condition: []
+  action:
+  - device_id: f933656b6a931d81c839dc85e7e1c059
+    domain: cover
+    entity_id: cover.blinds_mabel_window_covering
+    type: set_position
+    position: 0
+  - device_id: b40cc55de10a95eba1f5649f4e0bab3a
+    domain: cover
+    entity_id: cover.blinds_sidney_window_covering
+    type: set_position
+    position: 0
+  mode: parallel
+- id: '1660968161297'
+  alias: Disable Heater if Simrig in use
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - climate.office
+    to: heat
+  condition:
+  - condition: state
+    entity_id: binary_sensor.motion_simrig_motion
+    state: 'on'
+  action:
+  - device_id: 8f1338ed1be9c54b64b4f2cf3ff13238
+    domain: climate
+    entity_id: climate.office
+    type: set_hvac_mode
+    hvac_mode: 'off'
+  mode: single
+- id: '1669151010818'
+  alias: Coffee Machine - Water Empty Notification
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - binary_sensor.linea_mini_water_reservoir
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  condition: []
+  action:
+  - service: notify.mobile_app_pixel_7_pro
+    data:
+      message: Linea Mini Water Empty
+  - service: tts.google_translate_say
+    data:
+      entity_id: media_player.kitchen_hub
+      message: Please refill the water reservoir in the coffee machine
+  mode: parallel
+  max: 10
+- id: '1683681413658'
+  alias: WAN Failback
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.unifi_gateway_wan
+    attribute: wan_ip
+    to: 125.63.21.182
+  condition: []
+  action:
+  - service: input_text.set_value
+    data:
+      value: Active
+    enabled: true
+    target:
+      entity_id: input_text.wan_status
+  - service: input_text.set_value
+    data:
+      value: Failover
+    enabled: true
+    target:
+      entity_id: input_text.4g_status
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 20
+      milliseconds: 0
+  - service: notify.mobile_app_pixel_7_pro
+    data:
+      title: WAN Failover Event
+      message: WAN interface is now NBN
+  mode: parallel
+  max: 10
+- id: '1684053768194'
+  alias: Simrig - Start cooling
+  description: ''
+  trigger:
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: e9273a89b1505228992b646c2d621c77
+      command: button_single
+  condition: []
+  action:
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: cool
+    target:
+      entity_id: climate.office_cooling
+    enabled: true
+  - service: climate.set_temperature
+    data:
+      temperature: 17
+    target:
+      entity_id: climate.living_cooling
+  - service: climate.set_fan_mode
+    data:
+      fan_mode: high
+    target:
+      entity_id: climate.office_cooling
+  mode: single
+- id: '1698221223707'
+  alias: Motion On - Kitchen (Cooking for 1.5mins)
+  description: Turn on Kitchen lights when motion detected
+  trigger:
+  - platform: state
+    entity_id:
+    - group.kitchen_motion_detection
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 30
+  condition: []
+  action:
+  - service: light.turn_on
+    data: {}
+    entity_id: light.kitchen_lights
+  mode: single
+- id: '1698808818734'
+  alias: Sleep Mode - Kids - 11.30
+  description: ''
+  trigger:
+  - platform: time
+    at: '23:30:00'
+  condition: []
+  action:
+  - service: script.kids_night_mode
+    data: {}
   mode: parallel
   max: 10

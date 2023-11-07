@@ -57,6 +57,19 @@
         - service: input_boolean.turn_off
           data:
             entity_id: input_boolean.sonos_group
+    guest_mode:
+      friendly_name: Guest Mode
+      value_template: "{{ is_state('input_boolean.guest_mode', 'on') }}"
+      turn_on:
+        - service: input_boolean.turn_on
+          entity_id: input_boolean.guest_mode
+          # data_template:
+          #   entity_id: input_boolean.guest_mode
+      turn_off:
+        - service: input_boolean.turn_off
+          entity_id: input_boolean.guest_mode
+          # data_template:
+          #   entity_id: input_boolean.guest_mode
 #    festoon_switch:
 #      friendly_name: Festoon Switch
 #      turn_on:
