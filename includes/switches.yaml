@@ -1,127 +1,4 @@
-- switch:
-    - turn_on:
-        - action: opensprinkler.run
-          data_template:
-            entity_id: binary_sensor.back_yard_front_station_running
-            run_seconds:
-              "{{ ((states('input_number.back_yard_all_stations_minutes')
-              | float) * 60) | int }}"
-        - action: switch.turn_on
-          target:
-            entity_id:
-              - switch.ff424023004b1200_water_switch
-      turn_off:
-        - action: opensprinkler.stop
-          data:
-            entity_id: binary_sensor.back_yard_front_station_running
-        - action: switch.turn_off
-          target:
-            entity_id:
-              - switch.ff424023004b1200_water_switch
-      default_entity_id: switch.back_yard_front
-      name: Sprinkler Front
-      state: "{{ is_state('binary_sensor.back_yard_front_station_running', 'on')
-        }}"
-- switch:
-    - turn_on:
-        - action: opensprinkler.run
-          data_template:
-            entity_id: binary_sensor.back_yard_rear_station_running
-            run_seconds:
-              "{{ ((states('input_number.back_yard_all_stations_minutes')
-              | float) * 60) | int }}"
-        - action: switch.turn_on
-          target:
-            entity_id:
-              - switch.ff424023004b1200_water_switch
-      turn_off:
-        - action: opensprinkler.stop
-          data:
-            entity_id: binary_sensor.back_yard_rear_station_running
-        - action: switch.turn_off
-          target:
-            entity_id:
-              - switch.ff424023004b1200_water_switch
-      default_entity_id: switch.back_yard_rear
-      name: Back Yard Rear
-      state: "{{ is_state('binary_sensor.back_yard_rear_station_running', 'on')
-        }}"
-- switch:
-    - turn_on:
-        - action: script.turn_on
-          entity_id:
-            - script.sonos_butlers_join_living
-          data_template:
-            entity_id: input_boolean.sonos_group
-        - action: input_boolean.turn_on
-          data:
-            entity_id: input_boolean.sonos_group
-      turn_off:
-        - action: script.turn_on
-          entity_id:
-            - script.sonos_butlers_leave_living
-          data:
-            entity_id: input_boolean.sonos_group
-        - action: input_boolean.turn_off
-          data:
-            entity_id: input_boolean.sonos_group
-      default_entity_id: switch.sonos_group
-      name: Sonos Group
-      state: "{{ is_state('input_boolean.sonos_group', 'on') }}"
-- switch:
-    - turn_on:
-        - action: script.turn_on
-          entity_id:
-            - script.spa_heating_on
-          data_template:
-            entity_id: input_boolean.spa_heating
-        - action: input_boolean.turn_on
-          data:
-            entity_id: input_boolean.spa_heating
-      turn_off:
-        - action: script.turn_on
-          entity_id:
-            - script.spa_heating_off
-          data:
-            entity_id: input_boolean.spa_heating
-        - action: input_boolean.turn_off
-          data:
-            entity_id: input_boolean.spa_heating
-      default_entity_id: switch.spa_heating
-      name: Spa Heating
-      state: "{{ is_state('input_boolean.spa_heating', 'on') }}"
-- switch:
-    - turn_on:
-        - action: input_boolean.turn_on
-          entity_id:
-            - input_boolean.guest_mode
-      turn_off:
-        - action: input_boolean.turn_off
-          entity_id:
-            - input_boolean.guest_mode
-      default_entity_id: switch.guest_mode
-      name: Guest Mode
-      state: "{{ is_state('input_boolean.guest_mode', 'on') }}"
-#    festoon_switch:
-#      friendly_name: Festoon Switch
-#      turn_on:
-#        action: system_log.write
-#        data:
-#          message: "Festoon Switch On"
-#      turn_off:
-#        action: system_log.write
-#        data:
-#          message: "Festoon Switch Off"
-#- platform: broadlink
-#  host: 192.168.2.156
-#  mac: 24:df:a7:f9:1c:cd
-#  switches:
-#    - name: Fireplace
-#      command_on: scCGAgCfBgAlDwsdDBAYHRkQCx0ZEAsQCxIlHhgeGBALHQsQGR4KEBgXJR4LEAsQChEKEQsQGB4KEBkQChMlHgsQCxAYHgsQChEYHgoRFxUlEAseGB4YEAsQCx4KERgQCxUlEAsQCxALHQsQCxALEBgeCxAYEyUdCxEYEAsRCRELHRkdGBEKqyYRCh4LEBgeGBEKHhgRChALEiUeGB4YEAseCxAYHQwQGBQlHgsQCxALEAsQCxAYHgsQGBALEiYdCxALEBgeCxALEBgeCxAYEyUQCx0ZHRkQCxALHgoRGBAKEyUQCxALEQoeChALEAsQGR4KEBkSJR4KERgQCxALEQoeGB4YEAquJhALHgsQGB0ZEAsdGRALEAsRJh4YHRkQCx4KERgdCxAYEiYeCw8LEQoQCxALEBkdCxEXEQoTJR4KEQoQGR0MEAoQGR0LEBgWJRAKHxceGRAKEQoeCxAYEQoTJRALEAsQCx4KEAsQCxAZHQsQGBImHgoRFxELEAsQCx0YHxgQCqsmEAseCxAYHhgQCx4YEAsQCxYlHhgeGBEKHgsQGB4LEBgSJR4LEAsQCxALEAsQGB4LEBgQCxUkHgsQCxAYHgsQCxAYHQsRGBQmEAseGB0ZEAsQCx0LEBgQCxMlEQoQCxALHgoQCxALEBkdCxAYEyUeChAZEAsQCxALHhgdGRAKrCYQCh4LEBgeGBALHhgQCxALFCYdGR0ZEAseChEYHQsQGBImHgoRChALEAsQCxAZHQsQGBEKEiYeChALEBkeChEKERgdCxAYEiYRCh4YHhgQCxALHgsQGBALEiURCw8LEQseChALEAsQGB0LEBkUJh4KEBgRCxAKEQoeGB4YEQoABdw=
-#      command_off: scCaAgCfBgAoDQ0bDg0bGxsODRwaDg0ODRAnHBocGg8MHQsPGR4LDxoRJR4LEAsQCxALEAsQGB4LEBgQCxImHQsQCxEYHQsQCxALEAsQGRAKFSYQCx0YHhkQCxALHQsRFxALEiYQCxALHQsQCxALEQsPCxALEAsQGREmHgsPGRALEAsQCx4YHhgQC6smEAseCw8ZHRkQCx0ZEAsQCxQmHRkdGRALHQsQGR0LEBgSJh4KEQoQCxALEAsQGR0LEBgQCxMlHgsQCxAYHgsQCxALEAsQGBALEiURCh4YHhgRChELHQsQGBALEiYQCxALHQsQCxEKEAsQCxALEAsQGBUlHgsQGBEKEAwQCh4YHhgRCqwlEAseCxAYHhgQCx4YEAsQCxImHRocGBELHQsQGB4LEBgSJR4LEAsQCxALEAsQGR0LEBgQCxUlHgsQCxAYHgsQCxALEAsQGBALEiYQCx4YHhgQCxALHQsQGRALEiUQCxALHgsQCxALEAsQCxALDwsRGBIlHgsQGBALEAsQCx4YHhgQC7AlEAseCxAYHhkPEBkYEAsQCxImHRkdGBELHQsQGR0LEBgUJR4LEAsQCxALEAsQGB4LEBgQCxUlHgsQCxAYHgsQCxALEAsQGBALEiURCh4ZHRkQChEKHgsQGBALEyUQCxALHgsPCxALEAsQCxAMDwsQGBImHgsQGBALEAsQCx4YHhgQC64lEQoeCxAZHRkQCh4YEAsQCxMlHRkdGRALHQsQGR0LEBgSJh4KEAsQDA8LEAsQGR0LEBkQChImHgsQChAZHgsQCxALDwwPGRALEiURCh4ZHRgRChEKHgsQGBALFSURChEKHgsQCxALEAsQCxALEAsQGBIlHgsQGBEKEAsRCh4YHhgQCwAF3AAAAAAAAAAAAAAAAA==
-#    - name: Fireplace High
-#      command_on: scCQAgCfBgAnDQ4bDQ4aHBoPDBwaDwwPDBEmHRkdGRALHQwPGR0LEBkWJR0MDwwQCxALEAsPGR4LDxkQCxIlHgsQCxAYHgsQCxAYHgsQGBQlEQoRCh4LEBkQChEKHgsQGBEKFSURChEKEQoeCxALEAsQGB4LEBgSJREKHwoQGBEKHhgRCx0YEQqsJhAKHgsQGB4ZEAoeGBALEAsSJh0YHhkQCx0LEBkdCxAYFSUeCxALEAsQCxALEBgeCxAYEAsSJh4KEAsQGR0LEAsRFx4LEBgTJRALEAseCxAYEAsQCx4LEBgQCxIlEQoRChEKHgsQCxALEBgeCxAYEiURCh4LEBgRCh4YEQoeGBEKriYQCx0MEBgdGRALHRkQCxALEiUeGB4YEQoeCxAYHgsPGRIlHgsQCxALEAsQCxAYHgsQGBALEiYdCxALEBkdCxALEBgeCxAYFSURChEKHgsQGBEKEQoeCxAYEQoSJhEKEAsRCh0MEAoRChEYHQsRFxMlEAseCxAYEQoeGBALHhgQC6smEAsdCxAZHRkQCx0ZEAsQCxYlHhgeGBEKHgsQGB4LEBgSJR4LEAsQCxALEAsQGB4LEBgQCxQmHQsQCxAYHgsQCxAYHgsQGBUlEQoRCh4LEBgRChEKHgsQGBALEiYQCxALEAseChEKEAsQGR0LEBgTJRALHgoRGBALHhgQCx4YEAurJhALHgoQGR0ZEAsdGRALEAsUJh0YHhgRCh4LEBgeCxAYEiYdCxALEAsQCxALEBgeCxAYEQoTJR0LEQoQGR4KEQoQGR4KEBgTJREKEQoeCxAYEQoRCh4LEBgQCxImEAoRCxALHgoQCxALERgdCxAYFSUQCx4LEBkQCh4YEQoeGBEKAAXc
-#      command_off: scCaAgCfBgAoDQ0bDg0bGxsODRwaDg0ODRAnHBocGg8MHQsPGR4LDxoRJR4LEAsQCxALEAsQGB4LEBgQCxImHQsQCxEYHQsQCxALEAsQGRAKFSYQCx0YHhkQCxALHQsRFxALEiYQCxALHQsQCxALEQsPCxALEAsQGREmHgsPGRALEAsQCx4YHhgQC6smEAseCw8ZHRkQCx0ZEAsQCxQmHRkdGRALHQsQGR0LEBgSJh4KEQoQCxALEAsQGR0LEBgQCxMlHgsQCxAYHgsQCxALEAsQGBALEiURCh4YHhgRChELHQsQGBALEiYQCxALHQsQCxEKEAsQCxALEAsQGBUlHgsQGBEKEAwQCh4YHhgRCqwlEAseCxAYHhgQCx4YEAsQCxImHRocGBELHQsQGB4LEBgSJR4LEAsQCxALEAsQGR0LEBgQCxUlHgsQCxAYHgsQCxALEAsQGBALEiYQCx4YHhgQCxALHQsQGRALEiUQCxALHgsQCxALEAsQCxALDwsRGBIlHgsQGBALEAsQCx4YHhgQC7AlEAseCxAYHhkPEBkYEAsQCxImHRkdGBELHQsQGR0LEBgUJR4LEAsQCxALEAsQGB4LEBgQCxUlHgsQCxAYHgsQCxALEAsQGBALEiURCh4ZHRkQChEKHgsQGBALEyUQCxALHgsPCxALEAsQCxAMDwsQGBImHgsQGBALEAsQCx4YHhgQC64lEQoeCxAZHRkQCh4YEAsQCxMlHRkdGRALHQsQGR0LEBgSJh4KEAsQDA8LEAsQGR0LEBkQChImHgsQChAZHgsQCxALDwwPGRALEiURCh4ZHRgRChEKHgsQGBALFSURChEKHgsQCxALEAsQCxALEAsQGBIlHgsQGBEKEAsRCh4YHhgQCwAF3AAAAAAAAAAAAAAAAA==
+# Non-template switches (group, broadlink, etc.)
 - platform: group
   name: Adaptive Lights (Master Switch)
   entities:
@@ -136,3 +13,15 @@
     - switch.adaptive_lighting_sid_s_lamps
     - switch.adaptive_lighting_stairs_down
     - switch.adaptive_lighting_walk_in_robe
+
+# Uncomment below if you want to re-enable Broadlink switches
+# - platform: broadlink
+#   host: 192.168.2.156
+#   mac: 24:df:a7:f9:1c:cd
+#   switches:
+#     - name: Fireplace
+#       command_on: scCGAgCfBgAlDwsdDBAYHRkQCx0ZEAsQCxIlHhgeGBALHQsQGR4KEBgXJR4LEAsQChEKEQsQGB4KEBkQChMlHgsQCxAYHgsQChEYHgoRFxUlEAseGB4YEAsQCx4KERgQCxUlEAsQCxALHQsQCxALEBgeCxAYEyUdCxEYEAsRCRELHRkdGBEKqyYRCh4LEBgeGBEKHhgRChALEiUeGB4YEAseCxAYHQwQGBQlHgsQCxALEAsQCxAYHgsQGBALEiYdCxALEBgeCxALEBgeCxAYEyUQCx0ZHRkQCxALHgoRGBAKEyUQCxALEQoeChALEAsQGR4KEBkSJR4KERgQCxALEQoeGB4YEAquJhALHgsQGB0ZEAsdGRALEAsRJh4YHRkQCx4KERgdCxAYEiYeCw8LEQoQCxALEBkdCxEXEQoTJR4KEQoQGR0MEAoQGR0LEBgWJRAKHxceGRAKEQoeCxAYEQoTJRALEAsQCx4KEAsQCxAZHQsQGBImHgoRFxELEAsQCx0YHxgQCqsmEAseCxAYHhgQCx4YEAsQCxYlHhgeGBEKHgsQGB4LEBgSJR4LEAsQCxALEAsQGB4LEBgQCxUkHgsQCxAYHgsQCxAYHQsRGBQmEAseGB0ZEAsQCx0LEBgQCxMlEQoQCxALHgoQCxALEBkdCxAYEyUeChAZEAsQCxALHhgdGRAKrCYQCh4LEBgeGBALHhgQCxALFCYdGR0ZEAseChEYHQsQGBImHgoRChALEAsQCxAZHQsQGBEKEiYeChALEBkeChEKERgdCxAYEiYRCh4YHhgQCxALHgsQGBALEiURCw8LEQseChALEAsQGB0LEBkUJh4KEBgRCxAKEQoeGB4YEQoABdw=
+#       command_off: scCaAgCfBgAoDQ0bDg0bGxsODRwaDg0ODRAnHBocGg8MHQsPGR4LDxoRJR4LEAsQCxALEAsQGB4LEBgQCxImHQsQCxEYHQsQCxALEAsQGRAKFSYQCx0YHhkQCxALHQsRFxALEiYQCxALHQsQCxALEQsPCxALEAsQGREmHgsPGRALEAsQCx4YHhgQC6smEAseCw8ZHRkQCx0ZEAsQCxQmHRkdGRALHQsQGR0LEBgSJh4KEQoQCxALEAsQGR0LEBgQCxMlHgsQCxAYHgsQCxALEAsQGBALEiURCh4YHhgRChELHQsQGBALEiYQCxALHQsQCxEKEAsQCxALEAsQGBUlHgsQGBEKEAwQCh4YHhgRCqwlEAseCxAYHhgQCx4YEAsQCxImHRocGBELHQsQGB4LEBgSJR4LEAsQCxALEAsQGR0LEBgQCxUlHgsQCxAYHgsQCxALEAsQGBALEiYQCx4YHhgQCxALHQsQGRALEiUQCxALHgsQCxALEAsQCxALDwsRGBIlHgsQGBALEAsQCx4YHhgQC7AlEAseCxAYHhkPEBkYEAsQCxImHRkdGBELHQsQGR0LEBgUJR4LEAsQCxALEAsQGB4LEBgQCxUlHgsQCxAYHgsQCxALEAsQGBALEiURCh4ZHRkQChEKHgsQGBALEyUQCxALHgsPCxALEAsQCxAMDwsQGBImHgsQGBALEAsQCx4YHhgQC64lEQoeCxAZHRkQCh4YEAsQCxMlHRkdGRALHQsQGR0LEBgSJh4KEAsQDA8LEAsQGR0LEBkQChImHgsQChAZHgsQCxALDwwPGRALEiURCh4ZHRgRChEKHgsQGBALFSURChEKHgsQCxALEAsQCxALEAsQGBIlHgsQGBEKEAsRCh4YHhgQCwAF3AAAAAAAAAAAAAAAAA==
+#     - name: Fireplace High
+#       command_on: scCQAgCfBgAnDQ4bDQ4aHBoPDBwaDwwPDBEmHRkdGRALHQwPGR0LEBkWJR0MDwwQCxALEAsPGR4LDxkQCxIlHgsQCxAYHgsQCxAYHgsQGBQlEQoRCh4LEBkQChEKHgsQGBEKFSURChEKEQoeCxALEAsQGB4LEBgSJREKHwoQGBEKHhgRCx0YEQqsJhAKHgsQGB4ZEAoeGBALEAsSJh0YHhkQCx0LEBkdCxAYFSUeCxALEAsQCxALEBgeCxAYEAsSJh4KEAsQGR0LEAsRFx4LEBgTJRALEAseCxAYEAsQCx4LEBgQCxIlEQoRChEKHgsQCxALEBgeCxAYEiURCh4LEBgRCh4YEQoeGBEKriYQCx0MEBgdGRALHRkQCxALEiUeGB4YEQoeCxAYHgsPGRIlHgsQCxALEAsQCxAYHgsQGBALEiYdCxALEBkdCxALEBgeCxAYFSURChEKHgsQGBEKEQoeCxAYEQoSJhEKEAsRCh0MEAoRChEYHQsRFxMlEAseCxAYEQoeGBALHhgQC6smEAsdCxAZHRkQCx0ZEAsQCxYlHhgeGBEKHgsQGB4LEBgSJR4LEAsQCxALEAsQGB4LEBgQCxQmHQsQCxAYHgsQCxAYHgsQGBUlEQoRCh4LEBgRChEKHgsQGBALEiYQCxALEAseChEKEAsQGR0LEBgTJRALHgoRGBALHhgQCx4YEAurJhALHgoQGR0ZEAsdGRALEAsUJh0YHhgRCh4LEBgeCxAYEiYdCxALEAsQCxALEBgeCxAYEQoTJR0LEQoQGR4KEQoQGR4KEBgTJREKEQoeCxAYEQoRCh4LEBgQCxImEAoRCxALHgoQCxALERgdCxAYFSUQCx4LEBkQCh4YEQoeGBEKAAXc
+#       command_off: scCaAgCfBgAoDQ0bDg0bGxsODRwaDg0ODRAnHBocGg8MHQsPGR4LDxoRJR4LEAsQCxALEAsQGB4LEBgQCxImHQsQCxEYHQsQCxALEAsQGRAKFSYQCx0YHhkQCxALHQsRFxALEiYQCxALHQsQCxALEQsPCxALEAsQGREmHgsPGRALEAsQCx4YHhgQC6smEAseCw8ZHRkQCx0ZEAsQCxQmHRkdGRALHQsQGR0LEBgSJh4KEQoQCxALEAsQGR0LEBgQCxMlHgsQCxAYHgsQCxALEAsQGBALEiURCh4YHhgRChELHQsQGBALEiYQCxALHQsQCxEKEAsQCxALEAsQGBUlHgsQGBEKEAwQCh4YHhgRCqwlEAseCxAYHhgQCx4YEAsQCxImHRocGBELHQsQGB4LEBgSJR4LEAsQCxALEAsQGR0LEBgQCxUlHgsQCxAYHgsQCxALEAsQGBALEiYQCx4YHhgQCxALHQsQGRALEiUQCxALHgsQCxALEAsQCxALDwsRGBIlHgsQGBALEAsQCx4YHhgQC7AlEAseCxAYHhkPEBkYEAsQCxImHRkdGBELHQsQGR0LEBgUJR4LEAsQCxALEAsQGB4LEBgQCxUlHgsQCxAYHgsQCxALEAsQGBALEiURCh4ZHRkQChEKHgsQGBALEyUQCxALHgsPCxALEAsQCxAMDwsQGBImHgsQGBALEAsQCx4YHhgQC64lEQoeCxAZHRkQCh4YEAsQCxMlHRkdGRALHQsQGR0LEBgSJh4KEAsQDA8LEAsQGR0LEBkQChImHgsQChAZHgsQCxALDwwPGRALEiURCh4ZHRgRChEKHgsQGBALFSURChEKHgsQCxALEAsQCxALEAsQGBIlHgsQGBEKEAsRCh4YHhgQCwAF3AAAAAAAAAAAAAAAAA==
