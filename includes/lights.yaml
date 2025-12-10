@@ -5,6 +5,14 @@
 
 # Light Groups
 
+- platform: group
+  name: Twinkly Lights
+  entities:
+    - light.side_gutter
+    - light.front_gutter
+    - light.patio_gutter
+
+
 # Ground Floor Groups
 
 - platform: group
@@ -101,11 +109,6 @@
 #       name: Festoon 1
 #     192.168.3.240:
 #       name: Festoon 2
-- platform: group
-  name: Festoon Control
-  entities:
-    - light.festoon_1
-    - light.festoon_2
 # Lower Ground Groups
 - platform: group
   name: Stairs Down Lights
@@ -301,6 +304,14 @@
     - light.deck_2
     - light.deck_3
     - light.deck_4
-    - light.festoon_lights
+    - light.patio
     - light.balcony_1
     - light.balcony_2
+    - light.gutter_3
+    - light.side_gutter
+    - light.front_gutter
+- platform: group
+  name: Reading Lights
+  entities:
+      - light.master_2
+      - light.master_4

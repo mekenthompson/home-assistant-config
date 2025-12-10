@@ -14,17 +14,28 @@
 - id: '1606647092536'
   alias: Motion On - Master Robe
   description: ''
-  trigger:
+  triggers:
   - type: motion
-    platform: device
     device_id: ded143add4f480e6eb22c0a00026204c
     entity_id: binary_sensor.motion_master_robe_motion
     domain: binary_sensor
-  condition: []
-  action:
-  - service: light.turn_on
-    data: {}
+    trigger: device
+  conditions:
+  - condition: time
+    after: 06:00:00
+    before: '23:00:00'
+    weekday:
+    - sun
+    - sat
+    - fri
+    - thu
+    - wed
+    - tue
+    - mon
+  actions:
+  - data: {}
     entity_id: light.master_robe_lights
+    action: light.turn_on
   mode: single
 - id: '1606818882600'
   alias: Security - Doors - Lock at Night
@@ -53,7 +64,10 @@
     device_id: 6dd915d5d86e3e51176e33eb5ec8c095
     entity_id: binary_sensor.motion_ensuite_motion
     domain: binary_sensor
-  condition: []
+  condition:
+  - condition: state
+    entity_id: light.master_bath_lights
+    state: 'off'
   action:
   - service: light.turn_on
     data:
@@ -117,29 +131,10 @@
     for: 01:00:00
   condition: []
   action:
-  - device_id: 8c8da50538a89c6ba8065484d32caf0e
-    domain: cover
-    entity_id: cover.garage_door
-    type: close
-  mode: single
-- id: '1608774341516'
-  alias: Heater Tampering
-  description: ''
-  trigger:
-  - type: value
-    platform: device
-    device_id: ad756006a9a050e75bf1138df6245fac
-    entity_id: sensor.living_temperature
-    domain: sensor
-    above: 22
-  condition: []
-  action:
-  - service: notify.mobile_app_ken_s_pixel_5
-    data:
-      message: Heater tampering
-  - service: notify.notify
-    data:
-      message: Heater tampering
+  - service: cover.close_cover
+    target:
+      entity_id: cover.garage_door
+    data: {}
   mode: single
 - id: '1609012948827'
   alias: AV - Sonos - Turn Volume Down Overnight
@@ -154,26 +149,34 @@
 - id: '1609473133030'
   alias: Motion Off - Front Door
   description: ''
-  trigger:
+  triggers:
   - entity_id: group.entry_motion_detection
-    platform: state
     to: 'off'
     for:
       hours: 0
       minutes: 10
       seconds: 0
-  condition: []
-  action:
-  - service: light.turn_off
-    data: {}
+    trigger: state
+  - trigger: state
+    entity_id:
+    - light.front_yard_lights
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
+  conditions: []
+  actions:
+  - data: {}
     target:
       entity_id:
       - light.entry_lights
-  - service: light.turn_off
-    data: {}
+    action: light.turn_off
+  - data: {}
     target:
       entity_id: light.front_yard_lights
     enabled: true
+    action: light.turn_off
   mode: single
 - id: '1609477935315'
   alias: Motion Off - Butlers
@@ -195,21 +198,38 @@
 - id: '1609478441059'
   alias: Motion Off - Master Robe
   description: ''
-  trigger:
+  triggers:
   - type: no_motion
-    platform: device
     device_id: ded143add4f480e6eb22c0a00026204c
     entity_id: binary_sensor.motion_master_robe_motion
     domain: binary_sensor
     for:
       hours: 0
-      minutes: 5
+      minutes: 3
       seconds: 0
-  condition: []
-  action:
-  - service: light.turn_off
-    data: {}
+    trigger: device
+  - trigger: state
+    entity_id:
+    - binary_sensor.motion_master_robe_motion
+    to: 'off'
+    for:
+      hours: 0
+      minutes: 10
+      seconds: 0
+  - type: no_motion
+    device_id: ded143add4f480e6eb22c0a00026204c
+    entity_id: 4e6d2b9c3460a06fc838eae3ae16a900
+    domain: binary_sensor
+    trigger: device
+    for:
+      hours: 2
+      minutes: 30
+      seconds: 0
+  conditions: []
+  actions:
+  - data: {}
     entity_id: light.master_robe_lights
+    action: light.turn_off
   mode: single
 - id: '1609478593120'
   alias: Motion Off - Ensuite
@@ -352,48 +372,19 @@
     data: {}
     entity_id: light.kid_s_bathroom
   mode: single
-- id: '1609954309558'
-  alias: AV - Kids TV On - Weekend & Public Holiday Mornings
-  description: ''
-  trigger:
-  - platform: time
-    at: 06:00:00
-  condition:
-  - condition: state
-    entity_id: binary_sensor.workday_sensor
-    state: 'off'
-  action:
-  - service: switch.turn_on
-    data: {}
-    entity_id: switch.power_kids_shield_on_off
-  mode: parallel
-- id: '1609972159052'
-  alias: AV - Kids TV off at 10am
-  description: ''
-  trigger:
-  - platform: time
-    at: '10:00:00'
-  - platform: time
-    at: '22:00:00'
-  condition: []
-  action:
-  - service: switch.turn_off
-    data: {}
-    entity_id: switch.power_kids_shield_on_off
-  mode: single
 - id: '1610450162748'
   alias: Adaptive Lighting - Sleep Mode - Kids
   description: ''
-  trigger:
-  - platform: time
-    at: '21:30:00'
-  condition:
+  triggers:
+  - at: '22:30:00'
+    trigger: time
+  conditions:
   - condition: state
     entity_id: input_boolean.guest_mode
     state: 'off'
-  action:
-  - service: script.kids_night_mode
-    data: {}
+  actions:
+  - data: {}
+    action: script.kids_night_mode
   mode: parallel
   max: 10
 - id: '1610451345279'
@@ -445,33 +436,44 @@
 - id: '1610504137463'
   alias: Motion On - Kitchen
   description: Turn on Kitchen lights when motion detected
-  trigger:
-  - platform: state
-    entity_id: group.kitchen_motion_detection
+  triggers:
+  - entity_id: group.kitchen_motion_detection
     to: 'on'
-  condition:
+    trigger: state
+  conditions:
   - condition: numeric_state
     entity_id: sun.sun
     below: '20'
     value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
-  action:
-  - service: light.turn_on
-    data: {}
+  - condition: time
+    after: 05:00:00
+    before: 00:00:00
+  actions:
+  - data: {}
     entity_id: light.kitchen_lights
+    action: light.turn_on
   mode: single
 - id: '1610505689358'
   alias: Motion Off - Kitchen
   description: ''
-  trigger:
-  - platform: state
-    entity_id: group.kitchen_motion_detection
+  triggers:
+  - entity_id: group.kitchen_motion_detection
     to: 'off'
     for: 00:05:00
-  condition: []
-  action:
-  - service: light.turn_off
-    data: {}
+    trigger: state
+  - trigger: state
+    entity_id:
+    - group.kitchen_motion_detection
+    to: 'Off'
+    for:
+      hours: 0
+      minutes: 6
+      seconds: 0
+  conditions: []
+  actions:
+  - data: {}
     entity_id: light.kitchen_lights
+    action: light.turn_off
   mode: single
 - alias: 'Adaptive lighting: reset manual_control after 1 hour'
   mode: parallel
@@ -491,7 +493,7 @@
       entity_id: '{{ switch }}'
       lights: '{{ light }}'
       manual_control: false
-  - service: notify.mobile_app_ken_s_pixel_5
+  - service: notify.mobile_app_pixel_8_pro
     data:
       title: 'Adaptive Ligthing: manual_control reset'
       message: '{{ light }} is reset to not ''manually controlled'''
@@ -510,7 +512,7 @@
       message: '{{ light }} is manually controlled'
       level: error
       logger: yolo.yolo
-  - service: notify.mobile_app_ken_s_pixel_5
+  - service: notify.mobile_app_pixel_8_pro
     data:
       title: 'Adaptive Ligthing: manual_control'
       message: '{{ light }} is now ''manually controlled'', context={{ trigger.event.context
@@ -532,24 +534,14 @@
 - id: '1610702236937'
   alias: Location - Leaving - Notification Prompt
   description: ''
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - group.persons
     from: home
-  condition: []
-  action:
-  - service: notify.mobile_app_lisa_s_pixel_5
-    data:
-      message: Leaving Home?
-      data:
-        actions:
-        - action: lock_up
-          title: Lock Up
-        - action: lock_up_and_turn_off
-          title: Lock Up & Turn Off All
-  - service: notify.mobile_app_pixel_7_pro
-    data:
+    trigger: state
+  conditions: []
+  actions:
+  - data:
       data:
         actions:
         - action: lock_up
@@ -557,6 +549,16 @@
         - action: lock_up_and_turn_off
           title: Lock Up & Turn Off All
       message: Leaving Home?
+    action: notify.mobile_app_lisa_z_flip_sm_f731b
+  - data:
+      message: Leaving Home?
+      data:
+        actions:
+        - action: lock_up
+          title: Lock Up
+        - action: lock_up_and_turn_off
+          title: Lock Up & Turn Off All
+    action: notify.mobile_app_pixel_10_pro_xl
   mode: parallel
   max: 10
 - id: '1610751721964'
@@ -576,26 +578,55 @@
 - id: '1610757054758'
   alias: Security - Auto Lock - No One Home
   description: Lock up if no one home for 5 minutes
-  trigger:
-  - platform: state
-    entity_id: group.persons
+  triggers:
+  - entity_id: group.persons
     from: home
     for:
       hours: 0
       minutes: 5
       seconds: 0
-  condition:
+    trigger: state
+  conditions:
   - condition: state
     entity_id: switch.guest_mode
     state: 'off'
-  action:
-  - service: script.leaving
+  actions:
+  - target:
+      entity_id:
+      - lock.lock_front_door_lock
+      - lock.lock_garage_entry_door_lock
     data: {}
-  - service: notify.mobile_app_lisa_s_pixel_5
-    data:
-      message: The house is auto-locked and devices off. Have a great day!
-  - service: notify.mobile_app_pixel_7_pro
+    action: lock.lock
+  - data: {}
+    target:
+      entity_id: cover.garage_door
+    action: cover.close_cover
+  - data: {}
+    action: script.leaving
+  - data:
+      message: The house is auto-locked and all devices turned off. Have a great day!
+    action: notify.mobile_app_lisa_z_flip_sm_f731b
+  - data:
+      message: The house is auto-locked and all devices turned off. Have a great day!
+    action: notify.mobile_app_pixel_10_pro_xl
+  - delay:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
+  - target:
+      entity_id: cover.garage_door
     data: {}
+    action: cover.close_cover
+  - delay:
+      hours: 0
+      minutes: 10
+      seconds: 0
+      milliseconds: 0
+  - target:
+      entity_id: cover.garage_door
+    data: {}
+    action: cover.close_cover
   mode: parallel
   max: 10
 - id: '1610760794370'
@@ -636,56 +667,44 @@
   - service: script.stop_vacuums
     data: {}
     enabled: false
-  - service: notify.mobile_app_lisa_s_pixel_5
+  - service: notify.mobile_app_lisa_z_flip_sm_f731b
     data:
-      message: Welcome Home Lisa!
       data:
         actions:
         - action: unlock
           title: Unlock
         - action: unlock_and_open_garage
           title: Open Garage & Unlock
-  - service: climate.set_hvac_mode
-    data:
-      hvac_mode: auto
-    target:
-      device_id:
-      - 93f4b208732c08edfa56165bcbfb4fde
-      - 7608996f3041d2d954ed875a0003dc6e
-      - e3a50cc77f945352f0fa1ea792ecdd1e
+      message: Welcome Home Lisa!
+  - service: script.heating_auto_doors_closed
+    data: {}
   mode: parallel
   max: 10
 - id: '1610793175228'
   alias: 'Location - Returning Home - Ken '
   description: ''
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - person.ken
     to: home
     from: not_home
-  condition: []
-  action:
-  - service: script.stop_vacuums
-    data: {}
+    trigger: state
+  conditions: []
+  actions:
+  - data: {}
     enabled: false
-  - service: notify.mobile_app_pixel_7_pro
+    action: script.stop_vacuums
+  - action: notify.mobile_app_pixel_10_pro_xl
     data:
+      message: Welcome Home Ken
       data:
         actions:
         - action: unlock
           title: Unlock
         - action: unlock_and_open_garage
           title: Open Garage & Unlock
-      message: Welcome Home Ken!
-  - service: climate.set_hvac_mode
-    data:
-      hvac_mode: auto
-    target:
-      device_id:
-      - 93f4b208732c08edfa56165bcbfb4fde
-      - 7608996f3041d2d954ed875a0003dc6e
-      - e3a50cc77f945352f0fa1ea792ecdd1e
+  - data: {}
+    action: script.heating_auto_doors_closed
   mode: parallel
   max: 10
 - id: '1610793816462'
@@ -720,66 +739,70 @@
   alias: State - TV Playing after Sunset - Fireplace Lights
   description: When TV playing after sunset, turn on fireplace lights, turn off living
     lights
-  trigger:
-  - platform: state
-    entity_id: media_player.living_room_shield
+  triggers:
+  - entity_id:
+    - media_player.the_tv
     to: 'on'
-  - platform: state
-    entity_id: media_player.living_room_shield
+    trigger: state
+  - entity_id:
+    - media_player.the_tv
     to: idle
-  - platform: state
-    entity_id: media_player.living_room_shield
+    trigger: state
+  - entity_id:
+    - media_player.the_tv
     to: playing
-  condition:
+    trigger: state
+  conditions:
   - condition: numeric_state
     entity_id: sun.sun
     below: '10'
     attribute: elevation
-  action:
-  - service: light.turn_on
-    data: {}
+  actions:
+  - data: {}
     entity_id: light.fireplace_lights
-  - service: light.turn_off
-    data: {}
+    action: light.turn_on
+  - data: {}
     entity_id: light.living_room_lights
+    action: light.turn_off
   mode: parallel
   max: 10
 - id: '1610870696550'
   alias: State - TV Stops - Turn Off Fireplace Lights
   description: ''
-  trigger:
-  - platform: state
-    entity_id: media_player.living_room_shield
+  triggers:
+  - entity_id:
+    - media_player.the_tv
     for:
       hours: 0
       minutes: 15
       seconds: 0
     to: 'off'
-  condition: []
-  action:
-  - service: light.turn_off
-    data: {}
+    trigger: state
+  conditions: []
+  actions:
+  - data: {}
     entity_id: light.fireplace_lights
+    action: light.turn_off
   mode: single
 - id: '1610879387952'
   alias: State - Sunset - Fireplace Lights on if TV Playing
   description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id: sun.sun
+  triggers:
+  - entity_id: sun.sun
     attribute: elevation
     below: '10'
-  condition:
+    trigger: numeric_state
+  conditions:
   - condition: state
-    entity_id: media_player.living_room_shield
+    entity_id: media_player.the_tv
     state: playing
   - condition: state
-    entity_id: media_player.living_room_shield
+    entity_id: media_player.the_tv
     state: idle
-  action:
-  - service: light.turn_on
-    data: {}
+  actions:
+  - data: {}
     entity_id: light.fireplace_lights
+    action: light.turn_on
   mode: single
 - id: '1611442798172'
   alias: Motion On - Kitchen Bench (Daytime)
@@ -847,27 +870,33 @@
 - id: '1611995269412'
   alias: Door Close - Server Room - Light Off
   description: ''
-  trigger:
+  triggers:
   - type: not_opened
-    platform: device
     device_id: 8f15a3baa8ccfb3333cf3015f8bf779e
     entity_id: binary_sensor.contact_server_room_contact
     domain: binary_sensor
-  condition: []
-  action:
-  - service: light.turn_off
-    data: {}
-    entity_id: light.server_room
+    trigger: device
+  conditions: []
+  actions:
+  - data: {}
+    action: light.turn_off
+    target:
+      entity_id: light.server_room
   mode: parallel
   max: 10
 - id: '1613205099776'
   alias: Motion On - Dining
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.motion_dining_motion
+  triggers:
+  - entity_id:
+    - binary_sensor.samjin_motion_dining_motion
     to: 'on'
-  condition:
+    trigger: state
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 30
+  conditions:
   - condition: numeric_state
     entity_id: sun.sun
     below: '20'
@@ -886,76 +915,82 @@
     - wed
     - tue
     - mon
-  action:
-  - service: light.turn_on
-    data: {}
+  actions:
+  - data: {}
     entity_id: light.dining_lights
+    action: light.turn_on
   mode: parallel
   max: 10
 - id: '1613205160858'
   alias: Motion Off - Dining Lights
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.motion_dining_motion
+  triggers:
+  - entity_id:
+    - binary_sensor.samjin_motion_dining_motion
     to: 'off'
-    for: 00:30:00
-  condition: []
-  action:
-  - service: light.turn_off
-    data: {}
+    for:
+      hours: 0
+      minutes: 30
+      seconds: 0
+    trigger: state
+  conditions: []
+  actions:
+  - data: {}
     target:
       entity_id: light.dining_lights
+    action: light.turn_off
   mode: parallel
   max: 10
 - id: '1613890720084'
   alias: Motion On - Patio Table
   description: ''
-  trigger:
+  triggers:
   - type: motion
-    platform: device
-    device_id: 7bf9386e6926cdf9bd4bb82298f5d97e
-    entity_id: binary_sensor.motion_patio_table_motion
+    device_id: b24fa08efabd6ca4db3b07614654be32
+    entity_id: e969f20f59c0f153b2313d5ade13130d
     domain: binary_sensor
+    trigger: device
     for:
       hours: 0
       minutes: 1
-      seconds: 15
-      milliseconds: 0
+      seconds: 0
   - type: opened
-    platform: device
-    device_id: 4ea28f7fc66dfb5e8513dcbaf75b1018
-    entity_id: binary_sensor.multi_patio_contact
+    device_id: b79aec8c758d9677ba040847e2cf380e
+    entity_id: 59685ec02a36d9c2046e3fb7f1b6351d
     domain: binary_sensor
-  condition:
+    trigger: device
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 0
+  conditions:
   - condition: numeric_state
     entity_id: sun.sun
     value_template: '{{ state_attr(''sun.sun'', ''elevation'') }}'
     below: '15'
-  action:
-  - service: light.turn_on
-    data: {}
+  actions:
+  - data: {}
+    action: light.turn_on
     target:
-      entity_id:
-      - light.festoon_lights
+      entity_id: light.patio
   mode: parallel
   max: 10
 - id: '1613891986552'
   alias: Motion Off - Patio Table
   description: ''
-  trigger:
-  - platform: state
-    to: 'off'
+  triggers:
+  - to: 'off'
     for: 00:15:00
     entity_id: group.patio_motion
-  condition: []
-  action:
-  - service: light.turn_off
-    data: {}
+    trigger: state
+  conditions: []
+  actions:
+  - data: {}
     target:
       entity_id:
       - light.front_yard_lights
-      - light.festoon_lights
+      device_id: a76b4d5a304bb474f5027f88d158a0a2
+    action: light.turn_off
   mode: parallel
   max: 10
 - id: '1613892109918'
@@ -1184,46 +1219,38 @@
     target:
       entity_id: light.lower_ground_lights
   mode: single
-- id: '1624805426627'
-  alias: AV - Kids TV On - Holidays
-  description: ''
-  trigger:
-  - platform: time
-    at: 06:15:00
-  condition: []
-  action:
-  - service: switch.turn_on
-    data: {}
-    target:
-      device_id: bd576f2277b298284ad2083f5b08f773
-  mode: parallel
 - id: '1624871319438'
   alias: Zigbee Button - Turn on Aircon
   description: ''
-  trigger:
+  triggers:
   - event_data:
       device_id: e9273a89b1505228992b646c2d621c77
       command: button_single
     event_type: zha_event
-    platform: event
-  condition: []
-  action:
-  - service: climate.set_temperature
+    trigger: event
+  conditions: []
+  actions:
+  - action: climate.turn_on
+    metadata: {}
     target:
+      entity_id: climate.office_cooling
+    data: {}
+  - target:
       entity_id: climate.office_cooling
     data:
       temperature: 17
       hvac_mode: cool
+    action: climate.set_temperature
   - delay:
       hours: 0
       minutes: 0
       seconds: 5
       milliseconds: 0
-  - service: climate.set_fan_mode
-    target:
+  - target:
       entity_id: climate.office_cooling
     data:
       fan_mode: turbo
+    action: climate.set_fan_mode
   mode: single
 - id: '1624878781245'
   alias: Zigbee Button - Turn off Aircon
@@ -1458,18 +1485,17 @@
       hours: 0
       minutes: 15
       seconds: 0
-      milliseconds: 0
   condition:
   - condition: device
-    device_id: 8c8da50538a89c6ba8065484d32caf0e
+    device_id: 1f7015e38229b97cde55bfee2ae95de7
     domain: cover
-    entity_id: cover.garage_door
+    entity_id: 10700cdade0cc1920f81a18bbfabb393
     type: is_open
   action:
-  - device_id: 8c8da50538a89c6ba8065484d32caf0e
-    domain: cover
-    entity_id: cover.garage_door
-    type: close
+  - service: cover.close_cover
+    target:
+      entity_id: cover.garage_door
+    data: {}
   mode: single
 - id: '1629099970920'
   alias: Time - WLED - Fence on at 5pm
@@ -1596,59 +1622,61 @@
 - id: '1632464736757'
   alias: Doors Open - Ground Floor - Heating Off
   description: ''
-  trigger:
-  - platform: state
-    entity_id: group.ground_doors
+  triggers:
+  - entity_id: group.ground_doors
     to: 'on'
     for:
       hours: 0
       minutes: 5
       seconds: 0
-  condition: []
-  action:
-  - service: climate.set_hvac_mode
-    data:
+    trigger: state
+  conditions: []
+  actions:
+  - data:
       hvac_mode: 'off'
+    action: climate.set_hvac_mode
     target:
-      device_id: 93f4b208732c08edfa56165bcbfb4fde
+      entity_id: climate.all_heating
   mode: parallel
   max: 10
 - id: '1632464809207'
   alias: Doors Closed - Ground Floor - Heating Auto
   description: ''
-  trigger:
-  - platform: state
-    entity_id: group.ground_doors
+  triggers:
+  - entity_id: group.ground_doors
     to: 'off'
-  condition:
-  - condition: state
-    entity_id: person.lisa
-    state: home
-    for:
-      hours: 0
-      minutes: 5
-      seconds: 0
-  - condition: state
-    entity_id: person.ken
-    state: home
-    for:
-      hours: 0
-      minutes: 5
-      seconds: 0
-  action:
-  - service: climate.set_hvac_mode
-    data:
+    trigger: state
+  conditions:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: person.ken
+      state: home
+      for:
+        hours: 0
+        minutes: 5
+        seconds: 0
+    - condition: state
+      entity_id: person.lisa
+      state: home
+      for:
+        hours: 0
+        minutes: 5
+        seconds: 0
+  actions:
+  - data:
       hvac_mode: auto
     target:
-      device_id: 93f4b208732c08edfa56165bcbfb4fde
+      device_id:
+      - 3b6ee99763c25df7bc01882afb6b9bd4
+    action: climate.set_hvac_mode
   mode: parallel
   max: 10
 - id: '1632464909829'
   alias: Doors Open - Lower Ground - Heating Off
   description: ''
-  trigger:
+  triggers:
   - type: opened
-    platform: device
     device_id: 97aef1f1cff3f36a63307a874fd5c1d2
     entity_id: binary_sensor.multi_rumpus_slider_contact
     domain: binary_sensor
@@ -1657,13 +1685,14 @@
       minutes: 5
       seconds: 0
       milliseconds: 0
-  condition: []
-  action:
-  - service: climate.set_hvac_mode
-    data:
+    trigger: device
+  conditions: []
+  actions:
+  - data:
       hvac_mode: 'off'
+    action: climate.set_hvac_mode
     target:
-      device_id: e3a50cc77f945352f0fa1ea792ecdd1e
+      entity_id: climate.all_heating
   mode: parallel
   max: 10
 - id: '1632464963738'
@@ -1688,13 +1717,22 @@
       hours: 0
       minutes: 5
       seconds: 0
-  - condition: state
-    entity_id: person.ken
-    state: home
-    for:
-      hours: 0
-      minutes: 5
-      seconds: 0
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: person.ken
+      state: home
+      for:
+        hours: 0
+        minutes: 5
+        seconds: 0
+    - condition: state
+      entity_id: person.lisa
+      state: home
+      for:
+        hours: 0
+        minutes: 5
+        seconds: 0
   action:
   - service: climate.set_hvac_mode
     data:
@@ -1704,47 +1742,75 @@
   mode: parallel
   max: 10
 - id: '1633866856921'
-  alias: Halloween Christmas On 5pm
+  alias: Halloween Christmas XMAS On 5pm
   description: ''
-  trigger:
-  - platform: time
-    at: '17:00'
-  condition: []
-  action:
-  - service: scene.turn_on
-    data: {}
+  triggers:
+  - at: '17:00'
+    trigger: time
+  conditions: []
+  actions:
+  - data: {}
+    action: scene.turn_on
     target:
       entity_id: scene.xmas
-  - service: script.master_robe_start_projector_on_usb
+  - action: light.turn_on
+    metadata: {}
     data: {}
-    enabled: false
-  - service: script.office_projector_start_projector_on_usb
+    target:
+      entity_id: light.xmas_tree
+  - action: light.turn_on
+    metadata: {}
     data: {}
+    target:
+      entity_id: light.patio
+  - action: select.select_option
+    metadata: {}
+    data:
+      option: halloween
+    target:
+      entity_id: select.patio_theme
+  - data: {}
+    enabled: true
+    action: script.master_robe_start_projector_on_usb
+  - data: {}
     enabled: false
+    action: script.office_projector_start_projector_on_usb
   mode: single
 - id: '1633866959271'
   alias: Halloween Off
   description: ''
-  trigger:
-  - platform: time
-    at: '23:30'
-  condition: []
-  action:
-  - service: light.turn_off
-    target:
+  triggers:
+  - at: '23:30'
+    trigger: time
+  conditions: []
+  actions:
+  - target:
       entity_id:
       - light.balcony_lights
       - light.front_yard_lights
-      - light.wled_segment_0
-      - light.festoon_lights
       - light.deck_lights
+      - light.gutter_3
+      - light.side_gutter
+      - light.front_gutter
+      - light.patio
+      - light.xmas_tree
     data: {}
-  - service: script.robe_projector_power_off
-    data: {}
+    action: light.turn_off
+  - data: {}
     enabled: false
-  - service: script.office_projector_power_off
-    data: {}
+    action: script.robe_projector_power_off
+  - data: {}
     enabled: false
+    action: script.office_projector_power_off
+  - action: script.robe_projector_power_off
+    metadata: {}
+    data: {}
+  - action: script.office_projector_power_off
+    metadata: {}
+    data: {}
+  - action: light.turn_off
+    metadata: {}
+    data: {}
   mode: single
 - id: '1633916134915'
   alias: Master Robe Button - Toggle
@@ -1813,72 +1879,86 @@
 - id: '1636250835506'
   alias: Water Alert - Moisture Detected
   description: ''
-  trigger:
+  triggers:
   - type: moist
-    platform: device
     device_id: 5469b720983113f9e9bc73f04a69fe6d
     entity_id: binary_sensor.water_sensor_kitchen_fridge_sensor
     domain: binary_sensor
+    trigger: device
   - type: moist
-    platform: device
     device_id: 55ab7d304a48d827abcd2baf98fc7e9e
     entity_id: binary_sensor.water_sensor_butlers_pantry_sink_moisture
     domain: binary_sensor
+    trigger: device
   - type: moist
-    platform: device
     device_id: dac0ffbbb142718a65fc6e6eb4e86d8c
     entity_id: binary_sensor.water_sensor_kitchen_sink_moisture
     domain: binary_sensor
-  condition: []
-  action:
-  - service: notify.mobile_app_ken_s_pixel_6_pro
-    data:
+    trigger: device
+  - type: moist
+    device_id: dac0ffbbb142718a65fc6e6eb4e86d8c
+    entity_id: bf0999fb009f3d1f23e69cd36a2785c0
+    domain: binary_sensor
+    trigger: device
+  conditions: []
+  actions:
+  - data:
       title: Moisture Detected
       message: '{{ trigger.to_state.attributes.friendly_name }}'
-  - service: notify.mobile_app_lisa_s_pixel_5
-    data:
+    action: notify.mobile_app_pixel_8_pro
+  - data:
       title: Moisture Detected
       message: '{{ trigger.to_state.attributes.friendly_name }}'
+    action: notify.mobile_app_lisa_z_flip_sm_f731b
   mode: parallel
   max: 10
 - id: '1636250932638'
   alias: Water Alert - Back to Normal
   description: ''
-  trigger:
-  - platform: state
-    entity_id: binary_sensor.water_sensor_kitchen_fridge_sensor
+  triggers:
+  - entity_id: binary_sensor.water_sensor_kitchen_fridge_sensor
     to: 'off'
     for:
       hours: 0
       minutes: 0
       seconds: 5
     from: 'on'
-  - platform: state
-    entity_id: binary_sensor.water_sensor_butlers_pantry_sink_moisture
+    trigger: state
+  - entity_id: binary_sensor.water_sensor_butlers_pantry_sink_moisture
     from: 'on'
     to: 'off'
     for:
       hours: 0
       minutes: 0
       seconds: 5
-  - platform: state
-    entity_id: binary_sensor.water_sensor_kitchen_sink_moisture
+    trigger: state
+  - entity_id: binary_sensor.water_sensor_kitchen_sink_moisture
     from: 'on'
     to: 'off'
     for:
       hours: 0
       minutes: 0
       seconds: 5
-  condition: []
-  action:
-  - service: notify.mobile_app_ken_s_pixel_6_pro
-    data:
+    trigger: state
+  - type: not_moist
+    device_id: dac0ffbbb142718a65fc6e6eb4e86d8c
+    entity_id: bf0999fb009f3d1f23e69cd36a2785c0
+    domain: binary_sensor
+    trigger: device
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 5
+  conditions: []
+  actions:
+  - data:
       title: '[RESOLVED] Water Leak'
       message: '{{ trigger.to_state.attributes.friendly_name }}'
-  - service: notify.mobile_app_lisa_s_pixel_5
-    data:
+    action: notify.mobile_app_pixel_8_pro
+  - data:
       title: '[RESOLVED] Water Leak'
       message: '{{ trigger.to_state.attributes.friendly_name }}'
+    action: notify.mobile_app_lisa_z_flip_sm_f731b
   mode: parallel
   max: 10
 - id: '1636264907778'
@@ -1914,7 +1994,7 @@
       data:
         ttl: 0
         priority: high
-  - service: notify.mobile_app_lisa_s_pixel_5
+  - service: notify.mobile_app_lisa_z_flip_sm_f731b
     data:
       title: Single Use Code Used
       message: Single Use Code was used to access house and now deleted
@@ -1941,14 +2021,14 @@
       - condition: template
         value_template: '{{ slot == 2 }}'
       sequence:
-      - service: notify.mobile_app_pixel_7_pro
+      - service: notify.mobile_app_pixel_8_pro
         data:
           message: by Ken
           title: Front Door Unlocked
           data:
             ttl: 0
             priority: high
-      - service: notify.mobile_app_lisa_s_pixel_5
+      - service: notify.mobile_app_lisa_z_flip_sm_f731b
         data:
           title: Front Door Unlocked
           message: by Ken
@@ -1959,14 +2039,14 @@
       - condition: template
         value_template: '{{ slot == 3 }}'
       sequence:
-      - service: notify.mobile_app_pixel_7_pro
+      - service: notify.mobile_app_pixel_8_pro
         data:
           message: by Ken
           title: Front Door Unlocked
           data:
             ttl: 0
             priority: high
-      - service: notify.mobile_app_lisa_s_pixel_5
+      - service: notify.mobile_app_lisa_z_flip_sm_f731b
         data:
           message: by Ken
           title: Front Door Unlocked
@@ -1977,14 +2057,14 @@
       - condition: template
         value_template: '{{ slot == 4 }}'
       sequence:
-      - service: notify.mobile_app_pixel_7_pro
+      - service: notify.mobile_app_pixel_8_pro
         data:
           title: Front Door Unlocked
           message: by Lisa
           data:
             ttl: 0
             priority: high
-      - service: notify.mobile_app_lisa_s_pixel_5
+      - service: notify.mobile_app_lisa_z_flip_sm_f731b
         data:
           message: by Lisa
           title: Front Door Unlocked
@@ -1995,14 +2075,14 @@
       - condition: template
         value_template: '{{ slot == 5 }}'
       sequence:
-      - service: notify.mobile_app_pixel_7_pro
+      - service: notify.mobile_app_pixel_8_pro
         data:
           message: by Cleaners
           title: Front Door Unlocked
           data:
             ttl: 0
             priority: high
-      - service: notify.mobile_app_lisa_s_pixel_5
+      - service: notify.mobile_app_lisa_z_flip_sm_f731b
         data:
           message: by Cleaners
           title: Front Door Unlocked
@@ -2013,14 +2093,14 @@
       - condition: template
         value_template: '{{ slot == 6 }}'
       sequence:
-      - service: notify.mobile_app_pixel_7_pro
+      - service: notify.mobile_app_pixel_8_pro
         data:
           message: by Sidney
           title: Front Door Unlocked
           data:
             ttl: 0
             priority: high
-      - service: notify.mobile_app_lisa_s_pixel_5
+      - service: notify.mobile_app_lisa_z_flip_sm_f731b
         data:
           message: by Sidney
           title: Front Door Unlocked
@@ -2031,26 +2111,26 @@
       - condition: template
         value_template: '{{ slot == 65536 }}'
       sequence:
-      - service: notify.mobile_app_pixel_7_pro
+      - service: notify.mobile_app_pixel_8_pro
         data:
           message: by automation
           title: Front Door Unlocked
           data:
             ttl: 0
             priority: high
-      - service: notify.mobile_app_lisa_s_pixel_5
+      - service: notify.mobile_app_lisa_z_flip_sm_f731b
         data:
           title: Front Door Unlocked
           message: by automation
     default:
-    - service: notify.mobile_app_pixel_7_pro
+    - service: notify.mobile_app_pixel_8_pro
       data:
         message: by Unkown
         title: Front Door Unlocked
         data:
           ttl: 0
           priority: high
-    - service: notify.mobile_app_lisa_s_pixel_5
+    - service: notify.mobile_app_lisa_z_flip_sm_f731b
       data:
         title: Front Door Unlocked
         message: by Unknown
@@ -2078,14 +2158,14 @@
       - condition: template
         value_template: '{{ slot == 2 }}'
       sequence:
-      - service: notify.mobile_app_pixel_7_pro
+      - service: notify.mobile_app_pixel_8_pro
         data:
           message: by Ken
           title: Garage Entry Unlocked
           data:
             ttl: 0
             priority: high
-      - service: notify.mobile_app_lisa_s_pixel_5
+      - service: notify.mobile_app_lisa_z_flip_sm_f731b
         data:
           title: Garage Entry Unlocked
           message: by Ken
@@ -2096,14 +2176,14 @@
       - condition: template
         value_template: '{{ slot == 3 }}'
       sequence:
-      - service: notify.mobile_app_lisa_s_pixel_5
+      - service: notify.mobile_app_lisa_z_flip_sm_f731b
         data:
           message: by Lisa
           title: Garage Entry Unlocked
           data:
             ttl: 0
             priority: high
-      - service: notify.mobile_app_pixel_7_pro
+      - service: notify.mobile_app_pixel_8_pro
         data:
           message: by Lisa
           title: Garage Entry Unlocked
@@ -2111,14 +2191,14 @@
       - condition: template
         value_template: '{{ slot == 4 }}'
       sequence:
-      - service: notify.mobile_app_pixel_7_pro
+      - service: notify.mobile_app_pixel_8_pro
         data:
           message: by Lisa
           title: Garage Entry Unlocked
           data:
             ttl: 0
             priority: high
-      - service: notify.mobile_app_lisa_s_pixel_5
+      - service: notify.mobile_app_lisa_z_flip_sm_f731b
         data:
           message: by Lisa
           title: Garage Entry Unlocked
@@ -2129,14 +2209,14 @@
       - condition: template
         value_template: '{{ slot == 5 }}'
       sequence:
-      - service: notify.mobile_app_pixel_7_pro
+      - service: notify.mobile_app_pixel_8_pro
         data:
           message: by Cleaners
           title: Garage Entry Unlocked
           data:
             ttl: 0
             priority: high
-      - service: notify.mobile_app_lisa_s_pixel_5
+      - service: notify.mobile_app_lisa_z_flip_sm_f731b
         data:
           message: by Cleaners
           title: Garage Entry Unlocked
@@ -2147,14 +2227,14 @@
       - condition: template
         value_template: '{{ slot == 6 }}'
       sequence:
-      - service: notify.mobile_app_pixel_7_pro
+      - service: notify.mobile_app_pixel_8_pro
         data:
           message: by Sidney
           title: Garage Entry Unlocked
           data:
             ttl: 0
             priority: high
-      - service: notify.mobile_app_lisa_s_pixel_5
+      - service: notify.mobile_app_lisa_z_flip_sm_f731b
         data:
           message: by Sidney
           title: Garage Entry Unlocked
@@ -2165,26 +2245,26 @@
       - condition: template
         value_template: '{{ slot == 65536 }}'
       sequence:
-      - service: notify.mobile_app_pixel_7_pro
+      - service: notify.mobile_app_pixel_8_pro
         data:
           message: by automation
           title: Garage Entry Unlocked
           data:
             ttl: 0
             priority: high
-      - service: notify.mobile_app_lisa_s_pixel_5
+      - service: notify.mobile_app_lisa_z_flip_sm_f731b
         data:
           title: Garage Entry Unlocked
           message: by automation
     default:
-    - service: notify.mobile_app_pixel_7_pro
+    - service: notify.mobile_app_pixel_8_pro
       data:
         message: by Unknown
         title: Garage Entry Unlocked
         data:
           ttl: 0
           priority: high
-    - service: notify.mobile_app_lisa_s_pixel_5
+    - service: notify.mobile_app_lisa_z_flip_sm_f731b
       data:
         title: Garage Entry Unlocked
         message: by Unknown
@@ -2196,88 +2276,107 @@
 - id: '1636744990954'
   alias: Device On - Coffee Machine
   description: ''
-  trigger:
+  triggers:
   - type: opened
-    platform: device
     device_id: 22c46f3939305dd9f5ff01e4f0964741
     entity_id: binary_sensor.mutli_master_contact
     domain: binary_sensor
-  - platform: state
-    entity_id: group.kitchen_motion_detection
+    trigger: device
+  - entity_id: group.kitchen_motion_detection
     for:
       hours: 0
       minutes: 5
       seconds: 0
-      milliseconds: 0
     to: 'on'
-  - platform: state
-    entity_id: binary_sensor.motion_butlers_motion
+    trigger: state
+  - entity_id: binary_sensor.motion_butlers_motion
     to: 'on'
-  condition:
+    trigger: state
+  - entity_id:
+    - group.ensuite_motion_detection
+    to: 'on'
+    trigger: state
+  conditions:
   - condition: time
     after: 05:00
     before: '10:00'
   - condition: state
-    entity_id: binary_sensor.anyone_home
-    state: 'on'
-  action:
-  - type: turn_on
-    device_id: abff0ae07e2cbc168c0ec0b0485c2ca2
-    entity_id: switch.linea_mini_main
-    domain: switch
+    entity_id: group.persons
+    state: home
+  actions:
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      device_id:
+      - 428f982d533def9406af997ec3bdad6a
+  - action: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.linea_mini_steam_boiler
   mode: single
 - id: '1636944805816'
   alias: Coffee Machine at Temp
   description: ''
-  trigger:
-  - platform: state
-    entity_id: switch.linea_mini_main
+  triggers:
+  - entity_id:
+    - switch.linea_mini_mini
     to: 'on'
     from: 'off'
-  condition:
+    trigger: state
+  conditions:
   - condition: time
     after: 07:00
-  action:
-  - wait_template: '{{ states("water_heater.linea_mini_coffee")|float >= state_attr("water_heater.linea_mini_coffee",
-      "temperature")|float }}'
+  - type: is_open
+    condition: device
+    device_id: 22c46f3939305dd9f5ff01e4f0964741
+    entity_id: 0b1841bcdb3c4c98994d0b4999922391
+    domain: binary_sensor
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+  actions:
+  - wait_template: '{{ (state_attr("water_heater.linea_mini_coffee_boiler", "current_temperature")
+      | float(0)) >= (state_attr("water_heater.linea_mini_coffee_boiler", "temperature")
+      | float(0)) }}'
     timeout: 00:10:00
     continue_on_timeout: true
-  - service: notify.mobile_app_pixel_7_pro
-    data:
+  - data:
       title: Espresso Ready
       message: Coffee machine at temp
       data:
         ttl: 0
         priority: high
-  - service: tts.google_translate_say
-    data:
+    action: notify.mobile_app_pixel_8_pro
+  - data:
       entity_id: media_player.kitchen_hub
       message: Espresso ready
+    action: tts.google_translate_say
   mode: parallel
   max: 10
 - id: '1637035577253'
   alias: Device Off - Coffee Machine - 10am or no movement
   description: ''
-  trigger:
-  - platform: time
-    at: '10:00'
-  - platform: state
-    entity_id: group.kitchen_motion_detection
+  triggers:
+  - at: '10:00'
+    trigger: time
+  - entity_id: group.kitchen_motion_detection
     to: 'off'
     for:
       hours: 0
       minutes: 15
       seconds: 0
-      milliseconds: 0
-  - platform: state
-    entity_id: switch.linea_mini_main
+    trigger: state
+  - entity_id: switch.linea_mini_main
     to: 'on'
     for:
       hours: 0
       minutes: 30
       seconds: 0
-      milliseconds: 0
-  condition:
+    trigger: state
+  conditions:
   - condition: time
     after: '10:00'
     before: 06:00
@@ -2291,8 +2390,9 @@
       minutes: 1
       seconds: 0
       milliseconds: 0
-  action:
-  - service: switch.turn_off
+  actions:
+  - action: switch.turn_off
+    data: {}
     target:
       entity_id: switch.linea_mini_main
   mode: single
@@ -2305,7 +2405,7 @@
     to: 'off'
   condition: []
   action:
-  - service: notify.mobile_app_ken_s_pixel_5
+  - service: notify.mobile_app_pixel_8_pro
     data:
       title: Linea Mini Disconnected
       message: IP Connection Lost
@@ -2335,7 +2435,7 @@
       "temperature")|float }}'
   condition: []
   action:
-  - service: notify.mobile_app_ken_s_pixel_5
+  - service: notify.mobile_app_pixel_8_pro
     data:
       title: Espresso Ready
       message: Boiler has reached 93
@@ -2364,17 +2464,18 @@
 - id: '1642461665337'
   alias: Patio - Festoons Off after 30 Mins
   description: ''
-  trigger:
-  - platform: state
-    entity_id: light.festoon_lights
+  triggers:
+  - entity_id:
+    - light.patio
     to: 'on'
     for:
       hours: 0
       minutes: 30
       seconds: 0
-  - platform: time
-    at: 00:00:00
-  condition:
+    trigger: state
+  - at: 00:00:00
+    trigger: time
+  conditions:
   - condition: sun
     before: sunset
     after: sunrise
@@ -2389,11 +2490,11 @@
     - sat
     - sun
     - fri
-  action:
-  - service: light.turn_off
-    data: {}
+  actions:
+  - data: {}
+    action: light.turn_off
     target:
-      entity_id: light.festoon_lights
+      device_id: a76b4d5a304bb474f5027f88d158a0a2
   mode: single
 - id: '1643676154036'
   alias: Notify Phone on Person Detected
@@ -2422,53 +2523,58 @@
 - id: '1643679107344'
   alias: Coffee Counter Increment
   description: ''
-  trigger:
-  - platform: state
-    entity_id: sensor.linea_mini_total_drinks
+  triggers:
+  - entity_id:
+    - sensor.linea_mini_total_coffees_made
     attribute: drinks_k1
-  condition: []
-  action:
-  - service: input_number.increment
-    target:
+    trigger: state
+  conditions: []
+  actions:
+  - target:
       entity_id: input_number.coffee_counter
+    action: input_number.increment
+    data: {}
   mode: single
 - id: '1643679385144'
   alias: Coffee Water Refill Required
   description: ''
-  trigger:
-  - platform: numeric_state
-    entity_id: input_number.coffee_counter
+  triggers:
+  - entity_id: input_number.coffee_counter
     above: '13'
-  - platform: state
+    trigger: numeric_state
+  - trigger: state
     entity_id:
-    - binary_sensor.linea_mini_water_reservoir
-    to: 'off'
-    enabled: false
-  condition: []
-  action:
-  - service: notify.mobile_app_pixel_7_pro
-    data:
+    - binary_sensor.linea_mini_water_tank_empty
+    to: 'on'
+    for:
+      hours: 0
+      minutes: 2
+      seconds: 0
+  conditions: []
+  actions:
+  - data:
       message: Refill resevoir
       title: Espresso Machine
       data:
         ttl: 0
         priority: high
-  - service: notify.mobile_app_lisa_s_pixel_5
-    data:
+    action: notify.mobile_app_pixel_10_pro_xl
+  - data:
       message: Refill resevoir
       title: Espresso Machine
       data:
         ttl: 0
         priority: high
-  - service: input_number.set_value
-    data:
+    action: notify.mobile_app_lisa_z_flip_sm_f731b
+  - data:
       value: 0
     target:
       entity_id: input_number.coffee_counter
-  - service: tts.google_translate_say
-    data:
+    action: input_number.set_value
+  - data:
       entity_id: media_player.kitchen_hub
       message: Please refill water reservoir in coffee machine
+    action: tts.google_translate_say
   mode: single
 - id: '1644697237427'
   alias: front yard person
@@ -2566,38 +2672,6 @@
       device_id:
       - 7608996f3041d2d954ed875a0003dc6e
       - 5489146044a0cfaec1e32b762308aee6
-  mode: parallel
-  max: 10
-- id: '1645351857797'
-  alias: Living - Air Con On - Heater Off
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: climate.living_cooling
-    from: 'off'
-  condition: []
-  action:
-  - device_id: 93f4b208732c08edfa56165bcbfb4fde
-    domain: climate
-    entity_id: climate.living
-    type: set_hvac_mode
-    hvac_mode: 'off'
-  mode: parallel
-  max: 10
-- id: '1645351897981'
-  alias: Living - Air Con Off - Heater Auto
-  description: ''
-  trigger:
-  - platform: state
-    entity_id: climate.living_cooling
-    to: 'off'
-  condition: []
-  action:
-  - device_id: 93f4b208732c08edfa56165bcbfb4fde
-    domain: climate
-    entity_id: climate.living
-    type: set_hvac_mode
-    hvac_mode: auto
   mode: parallel
   max: 10
 - id: '1645570361866'
@@ -2739,7 +2813,7 @@
       minutes: 0
       seconds: 20
       milliseconds: 0
-  - service: notify.mobile_app_pixel_7_pro
+  - service: notify.mobile_app_pixel_8_pro
     data:
       title: WAN Failover Event
       message: WAN interface is now 4G Failover
@@ -2787,44 +2861,42 @@
 - id: '1650751468381'
   alias: Bed Time - Auto Off & Lock Up
   description: ''
-  trigger:
-  - platform: time
-    at: '23:00:00'
-  condition: []
-  action:
+  triggers:
+  - at: '23:00:00'
+    trigger: time
+  - trigger: time
+    at: 02:00:00
+  conditions: []
+  actions:
   - wait_for_trigger:
-    - platform: state
-      entity_id: binary_sensor.motion_inside_all
+    - entity_id:
+      - binary_sensor.motion_inside_all
       to: 'Off'
       for:
         hours: 0
-        minutes: 25
+        minutes: 10
         seconds: 0
+      trigger: state
     timeout: 02:00:00
-  - service: script.bed_time
-    data: {}
+  - data: {}
+    action: script.bed_time
   mode: parallel
 - id: '1652432860191'
   alias: Simrig - Office Cooling - Turbo
   description: ''
-  trigger:
-  - platform: event
-    event_type: zha_event
+  triggers:
+  - event_type: zha_event
     event_data:
       device_id: e9273a89b1505228992b646c2d621c77
       command: button_hold
-  condition: []
-  action:
-  - service: light.toggle
-    data: {}
-    target:
-      entity_id: light.office_lights
-    enabled: false
-  - service: climate.set_fan_mode
-    data:
+    trigger: event
+  conditions: []
+  actions:
+  - data:
       fan_mode: turbo
+    action: climate.set_fan_mode
     target:
-      entity_id: climate.office_cooling
+      device_id: c2102378afe86fdcc9eb7e442ec40896
   mode: parallel
 - id: '1653437644581'
   alias: Blinds - Open Kids at 9am
@@ -2888,24 +2960,24 @@
 - id: '1669151010818'
   alias: Coffee Machine - Water Empty Notification
   description: ''
-  trigger:
-  - platform: state
-    entity_id:
-    - binary_sensor.linea_mini_water_reservoir
+  triggers:
+  - entity_id:
+    - binary_sensor.linea_mini_water_tank_empty
     to: 'on'
     for:
       hours: 0
       minutes: 2
       seconds: 0
-  condition: []
-  action:
-  - service: notify.mobile_app_pixel_7_pro
-    data:
+    trigger: state
+  conditions: []
+  actions:
+  - data:
       message: Linea Mini Water Empty
-  - service: tts.google_translate_say
-    data:
+    action: notify.mobile_app_pixel_10_pro_xl
+  - data:
       entity_id: media_player.kitchen_hub
       message: Please refill the water reservoir in the coffee machine
+    action: tts.google_translate_say
   mode: parallel
   max: 10
 - id: '1683681413658'
@@ -2936,7 +3008,7 @@
       minutes: 0
       seconds: 20
       milliseconds: 0
-  - service: notify.mobile_app_pixel_7_pro
+  - service: notify.mobile_app_pixel_8_pro
     data:
       title: WAN Failover Event
       message: WAN interface is now NBN
@@ -2973,20 +3045,23 @@
 - id: '1698221223707'
   alias: Motion On - Kitchen (Cooking for 1.5mins)
   description: Turn on Kitchen lights when motion detected
-  trigger:
-  - platform: state
-    entity_id:
+  triggers:
+  - entity_id:
     - group.kitchen_motion_detection
     to: 'on'
     for:
       hours: 0
       minutes: 1
       seconds: 30
-  condition: []
-  action:
-  - service: light.turn_on
-    data: {}
+    trigger: state
+  conditions:
+  - condition: time
+    after: 07:00:00
+    before: 00:00:00
+  actions:
+  - data: {}
     entity_id: light.kitchen_lights
+    action: light.turn_on
   mode: single
 - id: '1698808818734'
   alias: Sleep Mode - Kids - 11.30
@@ -3000,3 +3075,506 @@
     data: {}
   mode: parallel
   max: 10
+- id: '1708927917630'
+  alias: Turn Off Master Cooling LED
+  description: ''
+  triggers:
+  - entity_id:
+    - switch.master_cooling_led
+    to: 'on'
+    trigger: state
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 2
+  conditions: []
+  actions:
+  - metadata: {}
+    data: {}
+    action: switch.turn_off
+    target:
+      entity_id: switch.master_cooling_led
+  mode: single
+- id: '1709334212123'
+  alias: Restart Wifi APs at 4am
+  description: ''
+  trigger:
+  - platform: time
+    at: 01:00:00
+  condition: []
+  action:
+  - service: script.restart_wifi
+    data: {}
+  mode: single
+- id: '1709705515047'
+  alias: Sidney Desk Light Button
+  description: ''
+  trigger:
+  - platform: event
+    event_type: zha_event
+    event_data:
+      device_id: e8e809664db98c204b0e301381823c9a
+      command: move_to_level
+  condition: []
+  action:
+  - service: light.toggle
+    metadata: {}
+    data: {}
+    target:
+      device_id: c571eb516a605a6a01ff6d0add00a0f4
+  mode: single
+- id: '1711650644308'
+  alias: Turn off Deck Lights
+  description: If sliding doors closed for 45 min, turn off deck lights.
+  trigger:
+  - platform: state
+    entity_id:
+    - group.deck_doors
+    to: Closed
+    for:
+      hours: 0
+      minutes: 45
+      seconds: 0
+  condition: []
+  action:
+  - service: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: light.deck_lights
+  mode: single
+- id: '1713267054196'
+  alias: Adaptive Lighting - Sleep Mode On - Sids Lamps
+  description: ''
+  trigger:
+  - platform: time
+    at: '10:30:00'
+  condition:
+  - condition: state
+    entity_id: input_boolean.guest_mode
+    state: 'off'
+  action:
+  - service: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.adaptive_lighting_sleep_mode_sid_s_lamps
+  - service: switch.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: switch.adaptive_lighting_sleep_mode_kids_bedside_lamps
+  mode: parallel
+  max: 10
+- id: '1713267120017'
+  alias: Adaptive Lighting - Sleep Mode Off - Sid's Lamps
+  description: ''
+  trigger:
+  - platform: time
+    at: 08:00:00
+  condition: []
+  action:
+  - service: switch.turn_off
+    target:
+      entity_id:
+      - switch.adaptive_lighting_sleep_mode_sid_s_lamps
+    data: {}
+  mode: parallel
+  max: 10
+- id: '1714185034789'
+  alias: Living Room 23 Fireplace Off
+  description: ''
+  trigger:
+  - platform: state
+    entity_id:
+    - sensor.living_temperature
+    to: '23'
+  condition: []
+  action:
+  - service: fan.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: fan.fireplace
+  mode: single
+- id: '1714185106967'
+  alias: Fireplace Auto Off
+  description: Turn off after 2 hours
+  trigger:
+  - platform: state
+    entity_id:
+    - fan.fireplace
+    to: 'on'
+    for:
+      hours: 2
+      minutes: 0
+      seconds: 0
+  condition: []
+  action:
+  - service: fan.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id: fan.fireplace
+  mode: single
+- id: '1714855138211'
+  alias: Master Bath Lights - Manual 100% Brightness
+  description: ''
+  triggers:
+  - event_type: zha_event
+    event_data:
+      device_id: d84bec485bde088f0059584395dab1ac
+      command: button_single
+    trigger: event
+  conditions: []
+  actions:
+  - data:
+      manual_control: true
+      entity_id: switch.adaptive_lighting_adapt_brightness_bathroom_default
+    action: adaptive_lighting.set_manual_control
+  - metadata: {}
+    data:
+      kelvin: 6500
+      brightness_pct: 100
+    target:
+      entity_id: light.master_bath_lights
+    action: light.turn_on
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 0
+      milliseconds: 60
+  - metadata: {}
+    data:
+      kelvin: 6500
+      brightness_pct: 100
+    target:
+      entity_id: light.master_bath_lights
+    action: light.turn_on
+  - delay:
+      hours: 1
+      minutes: 0
+      seconds: 0
+      milliseconds: 0
+  - data:
+      manual_control: false
+      entity_id: switch.adaptive_lighting_bathroom_default
+    action: adaptive_lighting.set_manual_control
+  mode: restart
+- id: '1716105574985'
+  alias: Reset heating 4am
+  description: '
+
+
+    '
+  triggers:
+  - at: 04:15:00
+    enabled: false
+    trigger: time
+  - at: '16:00:00'
+    trigger: time
+  conditions:
+  - condition: or
+    conditions:
+    - condition: state
+      entity_id: person.ken
+      state: home
+    - condition: state
+      entity_id: person.lisa
+      state: home
+  - condition: numeric_state
+    entity_id: sensor.ground_floor_temperature
+    below: 22
+  actions:
+  - metadata: {}
+    data: {}
+    action: script.reset_heating
+  mode: single
+- id: '1730498210277'
+  alias: Rest Spa Heating Nightly
+  description: ''
+  triggers:
+  - trigger: time
+    at: 01:00:00
+  conditions: []
+  actions:
+  - action: climate.set_temperature
+    metadata: {}
+    data:
+      temperature: 12
+    target:
+      device_id: c39d8afca26a0000c4c732ccf5cb037b
+  mode: single
+- id: turn_off_group_lights
+  alias: Turn off any group of lights after 4 hours
+  description: Automatically turns off any group of lights (i.e. groups containing
+    only lights) if they remain on for more than 4 hours.
+  trigger:
+  - platform: state
+    entity_id: group.*
+    to: 'on'
+    for: 04:00:00
+  condition:
+  - condition: template
+    value_template: '{% set members = state_attr(trigger.entity_id, ''entity_id'')
+      | default([]) %} {% set non_lights = members | reject(''match'', ''^light\\.'')
+      | list %} {{ non_lights | count == 0 }}
+
+      '
+  action:
+  - service: homeassistant.turn_off
+    data:
+      entity_id: '{{ trigger.entity_id }}'
+  mode: single
+- id: '1742380340592'
+  alias: Notification - Charge Sidney's Phone
+  description: ''
+  triggers:
+  - entity_id:
+    - sensor.sidney_s_phone_battery_level
+    trigger: state
+    to: '30'
+  - entity_id:
+    - sensor.sidney_s_phone_battery_level
+    trigger: state
+    to: '15'
+  - entity_id:
+    - sensor.sidney_s_phone_battery_level
+    trigger: state
+    to: '5'
+  conditions: []
+  actions:
+  - data:
+      message: Low Battery | Charge Phone
+      title: Sidney's Phone
+      data: {}
+    action: notify.mobile_app_lisa_z_flip_sm_f731b
+  - data:
+      message: Low Battery | Charge Phone
+      title: Sidney's Phone
+      data: {}
+    action: notify.mobile_app_pixel_8_pro
+  mode: parallel
+  max: 10
+- id: '1751428826510'
+  alias: 5pm Heating back to Auto
+  description: ''
+  triggers:
+  - trigger: time
+    at: '17:00:00'
+  conditions: []
+  actions:
+  - action: climate.set_hvac_mode
+    metadata: {}
+    data:
+      hvac_mode: auto
+    target:
+      entity_id: climate.all_heating
+  mode: single
+- id: '1753007372492'
+  alias: New automation
+  description: ''
+  triggers:
+  - device_id: 0c3c69d4e70f214568c4694018caf4bb
+    domain: nest
+    type: camera_motion
+    metadata: {}
+    trigger: device
+  - device_id: 09e3b14eed2a522975148b2afa1d1319
+    domain: nest
+    type: camera_motion
+    trigger: device
+  - device_id: 0bd7cff9916c12b774075d69f67cdef6
+    domain: nest
+    type: camera_motion
+    trigger: device
+  conditions: []
+  actions:
+  - action: light.turn_on
+    metadata: {}
+    data: {}
+    target:
+      area_id: e7570113d7cbfdfa6251c6ef81bd2e75
+  - delay:
+      hours: 0
+      minutes: 15
+      seconds: 0
+      milliseconds: 0
+  - action: light.turn_off
+    metadata: {}
+    data: {}
+    target:
+      area_id: e7570113d7cbfdfa6251c6ef81bd2e75
+  mode: single
+- id: '1754787175142'
+  alias: TV to Art on Power Off
+  description: ''
+  triggers:
+  - device_id: 374e1cc67b944d1750374b308091b45f
+    domain: media_player
+    entity_id: d0f09d2fa5f8e3f317ebd96c4ae9d207
+    type: turned_off
+    trigger: device
+    for:
+      hours: 0
+      minutes: 0
+      seconds: 15
+  conditions:
+  - condition: time
+    after: 06:00:00
+    before: '23:59:59'
+    enabled: false
+  actions:
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 30
+      milliseconds: 0
+    enabled: true
+  - type: turn_on
+    device_id: c567b4ad2c60b00b7e9177658867ced3
+    entity_id: 7e45b0be9d8ffa2319a65205b5156504
+    domain: remote
+  - action: media_player.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - media_player.75_the_frame
+  - action: samsungtv_smart.set_art_mode
+    metadata: {}
+    data:
+      entity_id: media_player.samsungframe75_wake_on_lan
+  - action: samsungtv_smart.set_art_mode
+    metadata: {}
+    data:
+      entity_id: media_player.samsungframe75_wake_on_lan
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 1
+      milliseconds: 0
+    enabled: true
+  - action: samsungtv_smart.set_art_mode
+    metadata: {}
+    data:
+      entity_id: media_player.samsungframe75_wake_on_lan
+  - action: samsungtv_smart.set_art_mode
+    metadata: {}
+    data:
+      entity_id: media_player.samsungframe75_wake_on_lan
+  - delay:
+      hours: 0
+      minutes: 0
+      seconds: 3
+      milliseconds: 0
+    enabled: true
+  - action: samsungtv_smart.set_art_mode
+    metadata: {}
+    data:
+      entity_id: media_player.samsungframe75_wake_on_lan
+  - delay:
+      hours: 1
+      minutes: 30
+      seconds: 0
+      milliseconds: 0
+  - action: media_player.turn_off
+    metadata: {}
+    data: {}
+    target:
+      device_id: 448480e50fae7d30c17d71113850876b
+  mode: single
+- id: '1760947865339'
+  alias: Sidney Alarm
+  description: ''
+  triggers:
+  - trigger: time
+    at: 07:25:00
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    enabled: true
+  - trigger: time
+    at: 07:30:00
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+    enabled: true
+  - trigger: time
+    at: 07:45:00
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  - trigger: time
+    at: 08:00:00
+    weekday:
+    - mon
+    - tue
+    - wed
+    - thu
+    - fri
+  conditions: []
+  actions:
+  - action: media_player.volume_set
+    metadata: {}
+    data:
+      volume_level: 0.45
+    target:
+      device_id: 97b052567b4156b6354131e2fe1817d1
+  - action: media_player.play_media
+    metadata: {}
+    data:
+      media:
+        media_content_id: FV:2/21
+        media_content_type: favorite_item_id
+        metadata:
+          title: Hooked On A Feeling
+          thumbnail: https://i.scdn.co/image/ab67616d0000b273b2439940aedd2801c9ae2e5b
+          media_class: track
+          children_media_class:
+          navigateIds:
+          - {}
+          - media_content_type: favorites
+            media_content_id: ''
+          - media_content_type: favorites_folder
+            media_content_id: object.item.audioItem.musicTrack
+          browse_entity_id: media_player.sonos_roam
+    target:
+      device_id: 97b052567b4156b6354131e2fe1817d1
+  - delay:
+      hours: 0
+      minutes: 2
+      seconds: 46
+      milliseconds: 0
+  - action: media_player.media_stop
+    metadata: {}
+    data: {}
+  mode: single
+- id: '1765275382961'
+  alias: New automation
+  description: ''
+  triggers: []
+  conditions: []
+  actions:
+  - action: tts.cloud_say
+    metadata: {}
+    data:
+      cache: false
+      entity_id: media_player.rumpus_room_2
+      message: Sidney bed time
+  - action: tts.speak
+    metadata: {}
+    data:
+      cache: true
+      media_player_entity_id: media_player.rumpus_room_2
+      message: Bed time
+  mode: single

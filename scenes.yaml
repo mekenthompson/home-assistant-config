@@ -404,6 +404,8 @@
   name: Halloween
   entities:
     light.balcony_1:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
       min_mireds: 111
       max_mireds: 666
       effect_list:
@@ -413,8 +415,11 @@
       supported_color_modes:
       - color_temp
       - hs
+      effect:
       color_mode: hs
       brightness: 255
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 269.999
       - 100
@@ -429,6 +434,8 @@
       supported_features: 36
       state: 'on'
     light.balcony_2:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
       min_mireds: 111
       max_mireds: 666
       effect_list:
@@ -438,8 +445,11 @@
       supported_color_modes:
       - color_temp
       - hs
+      effect:
       color_mode: hs
       brightness: 255
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 29.999
       - 100
@@ -454,6 +464,8 @@
       supported_features: 36
       state: 'on'
     light.front_1:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
       min_mireds: 111
       max_mireds: 666
       effect_list:
@@ -463,10 +475,11 @@
       supported_color_modes:
       - color_temp
       - hs
-      friendly_name: Front 1
-      supported_features: 36
+      effect:
       color_mode: hs
       brightness: 255
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 269.999
       - 100
@@ -477,8 +490,12 @@
       xy_color:
       - 0.217
       - 0.077
+      friendly_name: Front 1
+      supported_features: 36
       state: 'on'
     light.front_2:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
       min_mireds: 111
       max_mireds: 666
       effect_list:
@@ -488,10 +505,11 @@
       supported_color_modes:
       - color_temp
       - hs
-      friendly_name: Front 2
-      supported_features: 36
+      effect:
       color_mode: hs
       brightness: 255
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 29.999
       - 100
@@ -502,281 +520,19 @@
       xy_color:
       - 0.612
       - 0.374
-      state: 'on'
-    switch.wled_nightlight:
-      duration: 60
-      fade: true
-      target_brightness: 0
-      icon: mdi:weather-night
-      friendly_name: WLED - Fence Nightlight
-      state: 'off'
-    switch.wled_sync_send:
-      udp_port: 21324
-      icon: mdi:upload-network-outline
-      friendly_name: WLED - Fence Sync Send
-      state: 'off'
-    switch.wled_sync_receive:
-      udp_port: 21324
-      icon: mdi:download-network-outline
-      friendly_name: WLED - Fence Sync Receive
-      state: 'on'
-    select.wled_playlist:
-      options: []
-      icon: mdi:play-speed
-      friendly_name: WLED - Fence Playlist
-      state: unavailable
-    select.wled_preset:
-      options: []
-      icon: mdi:playlist-play
-      friendly_name: WLED - Fence Preset
-      state: unavailable
-    light.wled_segment_0:
-      effect_list:
-      - Android
-      - Aurora
-      - Blends
-      - Blink
-      - Blink Rainbow
-      - Bouncing Balls
-      - Bpm
-      - Breathe
-      - Candle
-      - Candle Multi
-      - Candy Cane
-      - Chase
-      - Chase 2
-      - Chase 3
-      - Chase Flash
-      - Chase Flash Rnd
-      - Chase Rainbow
-      - Chase Random
-      - Chunchun
-      - Colorful
-      - Colorloop
-      - Colortwinkles
-      - Colorwaves
-      - Dancing Shadows
-      - Dissolve
-      - Dissolve Rnd
-      - Drip
-      - Dynamic
-      - Dynamic Smooth
-      - Fade
-      - Fairy
-      - Fairytwinkle
-      - Fill Noise
-      - Fire 2012
-      - Fire Flicker
-      - Fireworks
-      - Fireworks 1D
-      - Fireworks Starburst
-      - Flow
-      - Glitter
-      - Gradient
-      - Halloween
-      - Halloween Eyes
-      - Heartbeat
-      - ICU
-      - Juggle
-      - Lake
-      - Lighthouse
-      - Lightning
-      - Loading
-      - Meteor
-      - Meteor Smooth
-      - Multi Comet
-      - Noise 1
-      - Noise 2
-      - Noise 3
-      - Noise 4
-      - Noise Pal
-      - Oscillate
-      - Pacifica
-      - Palette
-      - Percent
-      - Phased
-      - Phased Noise
-      - Plasma
-      - Police
-      - Popcorn
-      - Pride 2015
-      - Railway
-      - Rain
-      - Rainbow
-      - Rainbow Runner
-      - Random Colors
-      - Ripple
-      - Ripple Rainbow
-      - Running
-      - Running Dual
-      - Saw
-      - Scan
-      - Scan Dual
-      - Scanner
-      - Scanner Dual
-      - Sine
-      - Sinelon
-      - Sinelon Dual
-      - Sinelon Rainbow
-      - Solid
-      - Solid Glitter
-      - Solid Pattern
-      - Solid Pattern Tri
-      - Sparkle
-      - Sparkle Dark
-      - Sparkle+
-      - Spots
-      - Spots Fade
-      - Stream
-      - Stream 2
-      - Strobe
-      - Strobe Mega
-      - Strobe Rainbow
-      - Sunrise
-      - Sweep
-      - Sweep Random
-      - TV Simulator
-      - Tetrix
-      - Theater
-      - Theater Rainbow
-      - Traffic Light
-      - Tri Fade
-      - Tri Wipe
-      - Twinkle
-      - Twinklecat
-      - Twinklefox
-      - Twinkleup
-      - Two Dots
-      - Washing Machine
-      - Wipe
-      - Wipe Random
-      supported_color_modes:
-      - rgb
-      color_mode: rgb
-      brightness: 255
-      hs_color:
-      - 37.647
-      - 100
-      rgb_color:
-      - 255
-      - 160
-      - 0
-      xy_color:
-      - 0.569
-      - 0.411
-      effect: Halloween
-      icon: mdi:led-strip-variant
-      friendly_name: WLED - Fence
+      friendly_name: Front 2
       supported_features: 36
       state: 'on'
-    light.festoon_1:
-      effect_list:
-      - blue_fade
-      - blue_strobe
-      - colorjump
-      - colorloop
-      - colorstrobe
-      - cyan_fade
-      - cyan_strobe
-      - gb_cross_fade
-      - green_fade
-      - green_strobe
-      - purple_fade
-      - purple_strobe
-      - rb_cross_fade
-      - red_fade
-      - red_strobe
-      - rg_cross_fade
-      - white_fade
-      - white_strobe
-      - yellow_fade
-      - yellow_strobe
-      - random
-      supported_color_modes:
-      - rgb
-      color_mode: rgb
-      brightness: 255
-      hs_color:
-      - 270.118
-      - 100
-      rgb_color:
-      - 128
-      - 0
-      - 255
-      xy_color:
-      - 0.218
-      - 0.078
-      ip_address: 192.168.2.150
-      friendly_name: Festoon 1
-      supported_features: 36
-      state: 'on'
-    number.festoon_1_effect_speed:
-      min: 1
-      max: 100
-      step: 1
-      mode: slider
-      ip_address: 192.168.2.150
-      icon: mdi:speedometer
-      friendly_name: Festoon 1 Effect Speed
-      state: '50'
-    light.festoon_2:
-      effect_list:
-      - blue_fade
-      - blue_strobe
-      - colorjump
-      - colorloop
-      - colorstrobe
-      - cyan_fade
-      - cyan_strobe
-      - gb_cross_fade
-      - green_fade
-      - green_strobe
-      - purple_fade
-      - purple_strobe
-      - rb_cross_fade
-      - red_fade
-      - red_strobe
-      - rg_cross_fade
-      - white_fade
-      - white_strobe
-      - yellow_fade
-      - yellow_strobe
-      - random
-      supported_color_modes:
-      - rgb
-      color_mode: rgb
-      brightness: 255
-      hs_color:
-      - 15.059
-      - 100
-      rgb_color:
-      - 255
-      - 64
-      - 0
-      xy_color:
-      - 0.676
-      - 0.32
-      ip_address: 192.168.3.240
-      friendly_name: Festoon 2
-      supported_features: 36
-      state: 'on'
-    number.festoon_2_effect_speed:
-      min: 1
-      max: 100
-      step: 1
-      mode: slider
-      ip_address: 192.168.3.240
-      icon: mdi:speedometer
-      friendly_name: Festoon 2 Effect Speed
-      state: '50'
     light.festoon_lights:
+      restored: true
       supported_color_modes:
       - onoff
-      color_mode: onoff
       friendly_name: Festoon Lights
       supported_features: 0
-      state: 'on'
+      state: unavailable
     light.deck_1:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
       min_mireds: 111
       max_mireds: 666
       effect_list:
@@ -786,12 +542,13 @@
       supported_color_modes:
       - color_temp
       - hs
-      friendly_name: Deck 1
-      supported_features: 36
+      effect:
       color_mode: hs
       brightness: 255
+      color_temp_kelvin:
+      color_temp:
       hs_color:
-      - 270.01
+      - 270.015
       - 100
       rgb_color:
       - 127
@@ -800,8 +557,12 @@
       xy_color:
       - 0.217
       - 0.077
+      friendly_name: Deck 1
+      supported_features: 36
       state: 'on'
     light.deck_2:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
       min_mireds: 111
       max_mireds: 666
       effect_list:
@@ -811,10 +572,11 @@
       supported_color_modes:
       - color_temp
       - hs
-      friendly_name: Deck 2
-      supported_features: 36
+      effect:
       color_mode: hs
       brightness: 255
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 14.997
       - 100
@@ -825,8 +587,12 @@
       xy_color:
       - 0.677
       - 0.319
+      friendly_name: Deck 2
+      supported_features: 36
       state: 'on'
     light.deck_3:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
       min_mireds: 111
       max_mireds: 666
       effect_list:
@@ -836,10 +602,11 @@
       supported_color_modes:
       - color_temp
       - hs
-      friendly_name: Deck 3
-      supported_features: 36
+      effect:
       color_mode: hs
       brightness: 255
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 269.999
       - 100
@@ -850,8 +617,12 @@
       xy_color:
       - 0.217
       - 0.077
+      friendly_name: Deck 3
+      supported_features: 36
       state: 'on'
     light.deck_4:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
       min_mireds: 111
       max_mireds: 666
       effect_list:
@@ -861,10 +632,11 @@
       supported_color_modes:
       - color_temp
       - hs
-      friendly_name: Deck 4
-      supported_features: 36
+      effect:
       color_mode: hs
       brightness: 252
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 14.997
       - 100
@@ -875,12 +647,70 @@
       xy_color:
       - 0.677
       - 0.319
+      friendly_name: Deck 4
+      supported_features: 36
+      state: 'on'
+    light.patio:
+      min_color_temp_kelvin: 1500
+      max_color_temp_kelvin: 9000
+      min_mireds: 111
+      max_mireds: 666
+      effect_list:
+      - effect_colorloop
+      - effect_pulse
+      - effect_move
+      - effect_stop
+      supported_color_modes:
+      - color_temp
+      - hs
+      effect:
+      color_mode: hs
+      brightness: 141
+      color_temp_kelvin:
+      color_temp:
+      hs_color:
+      - 303.991
+      - 49.998
+      rgb_color:
+      - 255
+      - 127
+      - 246
+      xy_color:
+      - 0.378
+      - 0.21
+      friendly_name: Patio
+      supported_features: 36
+      state: 'on'
+    light.front_gutter:
+      effect_list:
+      - 0 Snake
+      - 1 Bliss
+      - 2 Paradise
+      - 3 EvilStrobe
+      - 4 Halloween
+      supported_color_modes:
+      - rgb
+      effect: 4 Halloween
+      color_mode: rgb
+      brightness: 255
+      hs_color:
+      - 0
+      - 0
+      rgb_color:
+      - 255
+      - 255
+      - 255
+      xy_color:
+      - 0.323
+      - 0.329
+      friendly_name: Front Gutter
+      supported_features: 4
       state: 'on'
   metadata:
     light.festoon_lights:
       entity_only: true
 - id: '1670051619363'
-  name: Xmas
+  name: Xmas Christmas
   entities:
     light.balcony_1:
       min_color_temp_kelvin: 1500
@@ -894,8 +724,11 @@
       supported_color_modes:
       - color_temp
       - hs
+      effect:
       color_mode: hs
       brightness: 255
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 120
       - 100
@@ -921,8 +754,11 @@
       supported_color_modes:
       - color_temp
       - hs
+      effect:
       color_mode: hs
       brightness: 255
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 360
       - 100
@@ -948,8 +784,11 @@
       supported_color_modes:
       - color_temp
       - hs
+      effect:
       color_mode: hs
       brightness: 255
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 134.997
       - 100
@@ -975,8 +814,11 @@
       supported_color_modes:
       - color_temp
       - hs
+      effect:
       color_mode: hs
       brightness: 255
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 360
       - 100
@@ -990,279 +832,6 @@
       friendly_name: Front 2
       supported_features: 36
       state: 'on'
-    switch.wled_nightlight:
-      duration: 60
-      fade: true
-      target_brightness: 0
-      icon: mdi:weather-night
-      friendly_name: WLED - Fence Nightlight
-      state: 'off'
-    switch.wled_sync_send:
-      udp_port: 21324
-      icon: mdi:upload-network-outline
-      friendly_name: WLED - Fence Sync Send
-      state: 'off'
-    switch.wled_sync_receive:
-      udp_port: 21324
-      icon: mdi:download-network-outline
-      friendly_name: WLED - Fence Sync Receive
-      state: 'on'
-    select.wled_playlist:
-      options: []
-      icon: mdi:play-speed
-      friendly_name: WLED - Fence Playlist
-      state: unavailable
-    select.wled_preset:
-      options: []
-      icon: mdi:playlist-play
-      friendly_name: WLED - Fence Preset
-      state: unavailable
-    light.wled_segment_0:
-      effect_list:
-      - Android
-      - Aurora
-      - Blends
-      - Blink
-      - Blink Rainbow
-      - Bouncing Balls
-      - Bpm
-      - Breathe
-      - Candle
-      - Candle Multi
-      - Candy Cane
-      - Chase
-      - Chase 2
-      - Chase 3
-      - Chase Flash
-      - Chase Flash Rnd
-      - Chase Rainbow
-      - Chase Random
-      - Chunchun
-      - Colorful
-      - Colorloop
-      - Colortwinkles
-      - Colorwaves
-      - Dancing Shadows
-      - Dissolve
-      - Dissolve Rnd
-      - Drip
-      - Dynamic
-      - Dynamic Smooth
-      - Fade
-      - Fairy
-      - Fairytwinkle
-      - Fill Noise
-      - Fire 2012
-      - Fire Flicker
-      - Fireworks
-      - Fireworks 1D
-      - Fireworks Starburst
-      - Flow
-      - Glitter
-      - Gradient
-      - Halloween
-      - Halloween Eyes
-      - Heartbeat
-      - ICU
-      - Juggle
-      - Lake
-      - Lighthouse
-      - Lightning
-      - Loading
-      - Meteor
-      - Meteor Smooth
-      - Multi Comet
-      - Noise 1
-      - Noise 2
-      - Noise 3
-      - Noise 4
-      - Noise Pal
-      - Oscillate
-      - Pacifica
-      - Palette
-      - Percent
-      - Phased
-      - Phased Noise
-      - Plasma
-      - Police
-      - Popcorn
-      - Pride 2015
-      - Railway
-      - Rain
-      - Rainbow
-      - Rainbow Runner
-      - Random Colors
-      - Ripple
-      - Ripple Rainbow
-      - Running
-      - Running Dual
-      - Saw
-      - Scan
-      - Scan Dual
-      - Scanner
-      - Scanner Dual
-      - Sine
-      - Sinelon
-      - Sinelon Dual
-      - Sinelon Rainbow
-      - Solid
-      - Solid Glitter
-      - Solid Pattern
-      - Solid Pattern Tri
-      - Sparkle
-      - Sparkle Dark
-      - Sparkle+
-      - Spots
-      - Spots Fade
-      - Stream
-      - Stream 2
-      - Strobe
-      - Strobe Mega
-      - Strobe Rainbow
-      - Sunrise
-      - Sweep
-      - Sweep Random
-      - TV Simulator
-      - Tetrix
-      - Theater
-      - Theater Rainbow
-      - Traffic Light
-      - Tri Fade
-      - Tri Wipe
-      - Twinkle
-      - Twinklecat
-      - Twinklefox
-      - Twinkleup
-      - Two Dots
-      - Washing Machine
-      - Wipe
-      - Wipe Random
-      supported_color_modes:
-      - rgb
-      color_mode: rgb
-      brightness: 255
-      hs_color:
-      - 37.647
-      - 100
-      rgb_color:
-      - 255
-      - 160
-      - 0
-      xy_color:
-      - 0.569
-      - 0.411
-      effect: Colortwinkles
-      icon: mdi:led-strip-variant
-      friendly_name: WLED - Fence
-      supported_features: 36
-      state: 'on'
-    light.festoon_1:
-      effect_list:
-      - blue_fade
-      - blue_strobe
-      - colorjump
-      - colorloop
-      - colorstrobe
-      - cyan_fade
-      - cyan_strobe
-      - gb_cross_fade
-      - green_fade
-      - green_strobe
-      - purple_fade
-      - purple_strobe
-      - rb_cross_fade
-      - red_fade
-      - red_strobe
-      - rg_cross_fade
-      - white_fade
-      - white_strobe
-      - yellow_fade
-      - yellow_strobe
-      - random
-      supported_color_modes:
-      - rgb
-      color_mode: rgb
-      brightness: 255
-      hs_color:
-      - 135.059
-      - 100
-      rgb_color:
-      - 0
-      - 255
-      - 64
-      xy_color:
-      - 0.17
-      - 0.701
-      ip_address: 192.168.2.150
-      friendly_name: Festoon 1
-      supported_features: 36
-      state: 'on'
-    number.festoon_1_effect_speed:
-      min: 1
-      max: 100
-      step: 1
-      mode: slider
-      ip_address: 192.168.2.150
-      icon: mdi:speedometer
-      friendly_name: Festoon 1 Effect Speed
-      state: '50'
-    light.festoon_2:
-      effect_list:
-      - blue_fade
-      - blue_strobe
-      - colorjump
-      - colorloop
-      - colorstrobe
-      - cyan_fade
-      - cyan_strobe
-      - gb_cross_fade
-      - green_fade
-      - green_strobe
-      - purple_fade
-      - purple_strobe
-      - rb_cross_fade
-      - red_fade
-      - red_strobe
-      - rg_cross_fade
-      - white_fade
-      - white_strobe
-      - yellow_fade
-      - yellow_strobe
-      - random
-      supported_color_modes:
-      - rgb
-      color_mode: rgb
-      brightness: 255
-      hs_color:
-      - 0
-      - 100
-      rgb_color:
-      - 255
-      - 0
-      - 0
-      xy_color:
-      - 0.701
-      - 0.299
-      ip_address: 192.168.3.240
-      friendly_name: Festoon 2
-      supported_features: 36
-      state: 'on'
-    number.festoon_2_effect_speed:
-      min: 1
-      max: 100
-      step: 1
-      mode: slider
-      ip_address: 192.168.3.240
-      icon: mdi:speedometer
-      friendly_name: Festoon 2 Effect Speed
-      state: '50'
-    light.festoon_lights:
-      supported_color_modes:
-      - onoff
-      color_mode: onoff
-      friendly_name: Festoon Lights
-      supported_features: 0
-      state: 'on'
     light.deck_1:
       min_color_temp_kelvin: 1500
       max_color_temp_kelvin: 9000
@@ -1275,8 +844,11 @@
       supported_color_modes:
       - color_temp
       - hs
+      effect:
       color_mode: hs
       brightness: 255
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 134.997
       - 100
@@ -1302,8 +874,11 @@
       supported_color_modes:
       - color_temp
       - hs
+      effect:
       color_mode: hs
       brightness: 255
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 0
       - 100
@@ -1329,8 +904,11 @@
       supported_color_modes:
       - color_temp
       - hs
+      effect:
       color_mode: hs
       brightness: 255
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 134.997
       - 100
@@ -1356,8 +934,11 @@
       supported_color_modes:
       - color_temp
       - hs
+      effect:
       color_mode: hs
       brightness: 252
+      color_temp_kelvin:
+      color_temp:
       hs_color:
       - 360
       - 100
@@ -1371,7 +952,32 @@
       friendly_name: Deck 4
       supported_features: 36
       state: 'on'
-  metadata:
-    light.festoon_lights:
-      entity_only: true
+    light.front_gutter:
+      effect_list:
+      - 0 Snake
+      - 1 Bliss
+      - 2 Paradise
+      - 3 EvilStrobe
+      - 4 Halloween
+      - 5 Glow
+      - 6 Christmas Spiri
+      supported_color_modes:
+      - rgb
+      effect: 6 Christmas Spiri
+      color_mode: rgb
+      brightness: 255
+      hs_color:
+      - 0
+      - 0
+      rgb_color:
+      - 255
+      - 255
+      - 255
+      xy_color:
+      - 0.323
+      - 0.329
+      friendly_name: Front Gutter
+      supported_features: 4
+      state: 'on'
+  metadata: {}
   icon: mdi:pine-tree

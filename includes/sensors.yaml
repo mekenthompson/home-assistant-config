@@ -1,22 +1,22 @@
 - platform: average
   name: "Average Cooling Temperature"
   entities:
-    - sensor.living_cooling_temperature
-    - sensor.office_cooling_temperature
-    - sensor.master_cooling_temperature
+    - sensor.living_temperature
+    - sensor.office_temperature
+    - sensor.master_bed_temperature
 - platform: average
   name: "Average House Temperature"
   entities:
     # Tado Cooling Sensors
-    - sensor.living_cooling_temperature
-    - sensor.office_cooling_temperature
-    - sensor.master_cooling_temperature
+    - sensor.living_temperature
+    - sensor.office_temperature
+    - sensor.master_bed_temperature
     # Tado Heating Sensors
     - sensor.guest_bath_temperature
     - sensor.guest_room_temperature
     - sensor.living_temperature
     - sensor.mabel_temperature
-    - sensor.master_temperature
+    - sensor.master_bed_temperature
     - sensor.office_temperature
     - sensor.rumpus_temperature
     - sensor.sidney_temperature
@@ -40,7 +40,7 @@
   name: "Ground Floor Temperature"
   entities:
     # Tado Cooling Sensors
-    - sensor.living_cooling_temperature
+    # - sensor.living_cooling_temperature
     # Tado Heating Sensors
     - sensor.guest_bath_temperature
     - sensor.guest_room_temperature
@@ -54,10 +54,10 @@
   name: "First Floor Temperature"
   entities:
     # Tado Cooling Sensors
-    - sensor.office_cooling_temperature
-    - sensor.master_cooling_temperature
+    # - sensor.office_cooling_temperature
+    # - sensor.master_cooling_temperature
     # Tado Heating Sensors
-    - sensor.master_temperature
+    - sensor.master_bed_temperature
     - sensor.office_temperature
     # SmartThings Sensors
     - sensor.button_simrig_temperature
@@ -92,30 +92,21 @@
 # - name: 'LIFX Lights Unavailable'
 #   unique_id: lifx_lights_unavailable
 #   state: "{{ states.light | selectattr('state', 'equalto', 'playing') | list | length }}"
-- platform: template
-  sensors:
-    wan_status:
-      friendly_name: "NBN Status"
-      value_template: "{{ states('input_text.wan_status') | capitalize }}"
-      icon_template: >-
-        {% if is_state("input_text.wan_status", "active") %}
-          mdi:lan-connect
-        {% elif is_state("input_text.wan_status", "inactive") %}
-          mdi:lan-disconnect
-        {% else %}
-          mdi:lan-pending
-        {% endif %}
-    4g_status:
-      friendly_name: "4G Status"
-      value_template: "{{ states('input_text.4g_status') | capitalize }}"
-      icon_template: >-
-        {% if is_state("input_text.4g_status", "active") %}
-          mdi:lan-connect
-        {% elif is_state("input_text.4g_status", "inactive") %}
-          mdi:lan-disconnect
-        {% else %}
-          mdi:lan-pending
-        {% endif %}
+# - sensor:
+#   - default_entity_id: sensor.wan_status
+#     icon: "{% if is_state(\"input_text.wan_status\", \"active\") %}\n  mdi:lan-connect\n{%
+#       elif is_state(\"input_text.wan_status\", \"inactive\") %}\n  mdi:lan-disconnect\n{%
+#       else %}\n  mdi:lan-pending\n{% endif %}"
+#     name: NBN Status
+#     state: '{{ states(''input_text.wan_status'') | capitalize }}'
+#         {% endif %}
+# - sensor:
+#   - default_entity_id: sensor.4g_status
+#     icon: "{% if is_state(\"input_text.4g_status\", \"active\") %}\n  mdi:lan-connect\n{%
+#       elif is_state(\"input_text.4g_status\", \"inactive\") %}\n  mdi:lan-disconnect\n{%
+#       else %}\n  mdi:lan-pending\n{% endif %}"
+#     name: 4G Status
+#     state: '{{ states(''input_text.4g_status'') | capitalize }}'
 - platform: unifigateway
   host: 192.168.2.2
   username: !secret unifi_user
@@ -127,3 +118,24 @@
   #   - wlan
   #   - alerts
   #   - firmware
+
+# Linea Mini – live boiler temps via cloud gateway
+# - platform: rest
+#   name: "Linea Coffee Temp"
+#   resource: "https://gw.lamarzocco.io/v1/home/machines/LM032180/status"
+#   method: GET
+#   headers:
+#     Authorization: "Bearer !secret lm_api_token"
+#   value_template: "{{ value_json.data.TEMP_COFFEE }}"
+#   unit_of_measurement: "°C"
+#   scan_interval: 30 # seconds
+
+# - platform: rest
+#   name: "Linea Steam Temp"
+#   resource: "https://gw.lamarzocco.io/v1/home/machines/LM032180/status"
+#   method: GET
+#   headers:
+#     Authorization: "Bearer !secret lm_api_token"
+#   value_template: "{{ value_json.data.TEMP_STEAM }}"
+#   unit_of_measurement: "°C"
+#   scan_interval: 30

@@ -2,8 +2,7 @@ turn_off_everything:
   alias: Turn off everything
   mode: parallel
   sequence:
-  - service: light.turn_off
-    data: {}
+  - data: {}
     target:
       entity_id:
       - light.ground_floor_lights
@@ -11,21 +10,20 @@ turn_off_everything:
       - light.first_floor_lights
       - light.deck_lights
       - light.festoon_lights
-  - service: switch.turn_off
-    entity_id:
+    action: light.turn_off
+  - entity_id:
     - switch.fireplace
     - switch.kids_power
     - switch.linea_mini_main
-  - service: fan.turn_off
-    data: {}
+    action: switch.turn_off
+  - data: {}
     target:
       entity_id:
       - fan.living_room_fan
       - fan.fireplace
-  - service: media_player.media_stop
-    entity_id: all
-  - service: media_player.turn_off
-    entity_id: all
+    action: fan.turn_off
+  - entity_id: all
+    action: media_player.turn_off
   max: 10
 lock_up:
   alias: Lock Up
@@ -36,7 +34,13 @@ lock_up:
     - lock.lock_front_door_lock
     - lock.lock_garage_entry_door_lock
   - service: cover.close_cover
-    entity_id: cover.garage_door
+    data: {}
+    target:
+      device_id: 1f7015e38229b97cde55bfee2ae95de7
+  - service: cover.close_cover
+    data: {}
+    target:
+      device_id: 1f7015e38229b97cde55bfee2ae95de7
   max: 10
 leaving:
   alias: Leaving Home
@@ -74,7 +78,9 @@ unlock_and_open_garage:
   mode: parallel
   sequence:
   - service: cover.open_cover
-    entity_id: cover.garage_door
+    data: {}
+    target:
+      entity_id: cover.garage_door
   - service: lock.unlock
     data: {}
     target:
@@ -166,18 +172,6 @@ sonos_butlers_leave_living:
       device_id: 4c2ef064526b65e8087e7a24c8039b30
   mode: single
   alias: Sonos - Butlers leave Living
-start_roomba:
-  alias: Start Vacuums
-  sequence:
-  - device_id: 3a0dfbf698624b031558783731e98aca
-    domain: vacuum
-    entity_id: vacuum.roomba
-    type: clean
-  - device_id: f257a4bc4553fcde46a0d927c83ff4fa
-    domain: vacuum
-    entity_id: vacuum.deebot
-    type: clean
-  mode: single
 wled_random_lights:
   alias: WLED Random Lights
   sequence:
@@ -211,73 +205,72 @@ wled_random_lights:
       area_id: cf1c5d5f922c4438f00bf876b2d88ef8
       device_id: 21b6d3f877cfe25c930ea325f02b7550
   mode: single
-stop_vacuums:
-  alias: Stop Vacuums
-  sequence:
-  - device_id: 3a0dfbf698624b031558783731e98aca
-    domain: vacuum
-    entity_id: vacuum.roomba
-    type: dock
-  - device_id: f257a4bc4553fcde46a0d927c83ff4fa
-    domain: vacuum
-    entity_id: vacuum.deebot
-    type: dock
-  mode: single
 master_robe_start_projector_on_usb:
   sequence:
-  - service: remote.send_command
-    target:
+  - target:
       device_id: 212574ed6249894a050e80d8874e0000
     data:
       device: robe_projector
       command: power
+    action: remote.send_command
   - delay:
       hours: 0
       minutes: 0
       seconds: 55
       milliseconds: 0
-  - service: remote.send_command
-    target:
+  - target:
       device_id: 212574ed6249894a050e80d8874e0000
     data:
       device: robe_projector
       command: menu
+    action: remote.send_command
   - delay:
       hours: 0
       minutes: 0
       seconds: 2
       milliseconds: 0
     enabled: true
-  - service: remote.send_command
-    data:
+  - data:
       device: robe_projector
       command: ok
     target:
       device_id: 212574ed6249894a050e80d8874e0000
+    action: remote.send_command
   - delay:
       hours: 0
       minutes: 0
       seconds: 2
       milliseconds: 0
-  - service: remote.send_command
-    data:
+  - data:
       device: robe_projector
       command: ok
     target:
       device_id: 212574ed6249894a050e80d8874e0000
+    action: remote.send_command
+  - action: automation.turn_off
+    metadata: {}
+    data:
+      stop_actions: true
+    target:
+      entity_id: automation.master_robe_lights
   mode: single
   alias: Robe Projector - Start Projector on HDMI
 robe_projector_power_off:
   alias: Robe Projector - Power Off
   sequence:
-  - service: remote.send_command
-    target:
+  - target:
       device_id: 212574ed6249894a050e80d8874e0000
     data:
       device: robe_projector
       command: power
       delay_secs: 2
       num_repeats: 2
+    action: remote.send_command
+  - action: automation.turn_on
+    metadata: {}
+    data: {}
+    target:
+      entity_id: automation.master_robe_lights
   mode: single
 projector_on_usb:
   sequence:
@@ -557,18 +550,18 @@ single_use_code:
 open_garage:
   alias: Open Garage
   sequence:
-  - device_id: 8c8da50538a89c6ba8065484d32caf0e
+  - device_id: 1f7015e38229b97cde55bfee2ae95de7
     domain: cover
-    entity_id: cover.garage_door
+    entity_id: 10700cdade0cc1920f81a18bbfabb393
     type: open
   mode: single
   icon: mdi:garage-open
 close_garage:
   alias: Close Garage
   sequence:
-  - device_id: 8c8da50538a89c6ba8065484d32caf0e
+  - device_id: 1f7015e38229b97cde55bfee2ae95de7
     domain: cover
-    entity_id: cover.garage_door
+    entity_id: 10700cdade0cc1920f81a18bbfabb393
     type: close
   mode: single
   icon: mdi:garage-lock
@@ -659,6 +652,18 @@ reset_lights:
 reset_heating:
   alias: Reset Heating
   sequence:
+  - if:
+    - condition: or
+      conditions:
+      - condition: state
+        entity_id: person.ken
+        state: home
+      - condition: state
+        entity_id: person.lisa
+        state: home
+    then: []
+    else:
+    - stop: No one home
   - service: climate.set_temperature
     data:
       temperature: 25
@@ -668,7 +673,7 @@ reset_heating:
       - climate.all_heating
   - delay:
       hours: 0
-      minutes: 1
+      minutes: 4
       seconds: 0
       milliseconds: 0
   - service: climate.set_hvac_mode
@@ -794,3 +799,169 @@ office_cooling_on:
     target:
       entity_id: climate.office_cooling
   mode: single
+heating_auto_doors_closed:
+  alias: Heating Auto (Doors Closed)
+  sequence:
+  - condition: state
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    entity_id: group.ground_doors
+    state: 'on'
+  - condition: state
+    for:
+      hours: 0
+      minutes: 1
+      seconds: 0
+    entity_id: binary_sensor.multi_rumpus_slider_contact
+    state: 'off'
+  - service: climate.set_hvac_mode
+    data:
+      hvac_mode: auto
+    target:
+      entity_id: climate.all_heating
+  mode: single
+restart_wifi:
+  alias: Restart Wifi
+  sequence:
+  - device_id: da7ddfa49c53b3a9f3ac564d9e433ede
+    domain: button
+    entity_id: 0d4ab9242a785e91987e81e00e56aa5c
+    type: press
+  - delay:
+      hours: 0
+      minutes: 2
+      seconds: 30
+      milliseconds: 0
+  - device_id: a2b29acddd75878242ef3845de6db09f
+    domain: button
+    entity_id: b7aa007e0bf5bde5d6f8ba160a639be9
+    type: press
+  - delay:
+      hours: 0
+      minutes: 2
+      seconds: 30
+      milliseconds: 30
+  - device_id: e843fe1d6d73f5f95633587a9ffec46a
+    domain: button
+    entity_id: cb4c74b60728186517ce881f5d3a2c2d
+    type: press
+  - delay:
+      hours: 0
+      minutes: 2
+      seconds: 30
+      milliseconds: 0
+  - device_id: 11f087fb246f5dacbcbe2400ecfb71c2
+    domain: button
+    entity_id: c51ac04550bdb16aedfbfbae5a6d9843
+    type: press
+  - delay:
+      hours: 0
+      minutes: 2
+      seconds: 30
+      milliseconds: 0
+  - device_id: 716340b680849d4f147f64e26c525af3
+    domain: button
+    entity_id: 023d712a34a1b6715182c9db6b9cdf07
+    type: press
+  - delay:
+      hours: 0
+      minutes: 2
+      seconds: 30
+      milliseconds: 0
+  - device_id: 290c11b3f11c48a18d29cbe86f016247
+    domain: button
+    entity_id: f0b1c123fa31ab4ac60df14e2a60803d
+    type: press
+  mode: single
+  icon: mdi:wifi-star
+wake_up:
+  alias: Wake Up
+  sequence:
+  - service: cover.open_cover
+    metadata: {}
+    data: {}
+    target:
+      entity_id: cover.master_curtains
+  - service: switch.turn_off
+    metadata: {}
+    data: {}
+    target:
+      entity_id:
+      - switch.adaptive_lighting_sleep_mode_bathroom_cabinets
+      - switch.adaptive_lighting_sleep_mode_default
+      - switch.adaptive_lighting_sleep_mode_bathroom_default
+      - switch.adaptive_lighting_sleep_mode_fireplace_lights_tv
+      - switch.adaptive_lighting_sleep_mode_kids
+      - switch.adaptive_lighting_sleep_mode_kids_bathroom_cabinet
+      - switch.adaptive_lighting_sleep_mode_kids_bedside_lamps
+      - switch.adaptive_lighting_sleep_mode_master
+      - switch.adaptive_lighting_sleep_mode_stairs_down
+      - switch.adaptive_lighting_sleep_mode_walk_in_robe
+  - service: script.reset_adaptive_lighting
+    metadata: {}
+    data: {}
+  mode: single
+spa_heating_on:
+  alias: Spa Heating On
+  sequence:
+  - action: climate.set_temperature
+    metadata: {}
+    data:
+      temperature: 36.6
+    target:
+      device_id: c39d8afca26a0000c4c732ccf5cb037b
+  - action: select.select_option
+    metadata: {}
+    data:
+      option: Normal
+    target:
+      entity_id: select.spa_operationmode
+  - action: select.select_option
+    metadata: {}
+    data:
+      option: 'Off'
+    target:
+      entity_id: select.spa_powersave
+  description: ''
+  icon: mdi:pool-thermometer
+spa_heating_off:
+  alias: Spa Heating Off
+  sequence:
+  - action: climate.set_temperature
+    metadata: {}
+    data:
+      temperature: 12.6
+    target:
+      device_id: c39d8afca26a0000c4c732ccf5cb037b
+  - action: select.select_option
+    metadata: {}
+    data:
+      option: Economy
+    target:
+      entity_id: select.spa_operationmode
+  - action: select.select_option
+    metadata: {}
+    data:
+      option: Low
+    target:
+      entity_id: select.spa_powersave
+  description: ''
+  icon: mdi:pool
+tv_wol_wake_on_lan:
+  sequence:
+  - action: wake_on_lan.send_magic_packet
+    data:
+      broadcast_port: 9
+      mac: E8:AA:CB:46:B5:88
+  alias: TV WoL Wake On Lan
+  description: ''
+'1765275121722':
+  sequence:
+  - action: tts.speak
+    metadata: {}
+    data:
+      cache: true
+  alias: New script
+  description: ''

@@ -1,4 +1,4 @@
-- platform: broadlink
-  host: 192.168.2.156
-  mac: 24:df:a7:f9:1c:cd
-  name: Broadlink RM4 Pro
+# - platform: broadlink
+#   host: 192.168.2.156
+#   mac: 24:df:a7:f9:1c:cd
+#   name: Broadlink RM4 Pro

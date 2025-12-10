@@ -5,47 +5,15 @@
     #--------------------------------------#
     - type: horizontal-stack
       cards: !include ui-header-menu.yaml
-    #--------------------------------------#
-    # Tab : Cards                          #
-    #--------------------------------------#
-    - type: "custom:button-card"
-      template: card_title
-      name: Automation
-      label: Vacuums
-    - type: horizontal-stack
-      cards:
-        - type: "custom:button-card"
-          template: "card_vacuum"
-          entity: vacuum.deebot
-    #--------------------------------------#
-    # Tab : Dog Food                          #
-    #--------------------------------------#
-    - type: "custom:button-card"
-      template: card_title
-      name:
-      label: Dog Food Feeder
-    - type: horizontal-stack
-      cards:
-        - type: "custom:button-card"
-          template: custom_chip_mekenthompson_mdi_icon_state
-          entity: number.pet_food_feed_amount
-          label: Pet Food
-          variables:
-            ulm_chip_mdi_icon_state_entity: group.kids_tv_control
-            ulm_chip_mdi_icon_state_icon: mdi:paw
-          tap_action:
-            action: call-service
-            service: number.set_value
-            service_data:
-              entity_id: number.pet_food_feed_amount
-              value: 6
+
     #--------------------------------------#
     # Section : Sprinklers                 #
     #--------------------------------------#
     - type: "custom:button-card"
       template: card_title
-      name:
+      name: 
       label: Sprinklers
+
     - type: custom:fold-entity-row
       head:
         type: "custom:button-card"
@@ -62,13 +30,15 @@
           variables:
             ulm_card_input_number_name: "Sprinkler Minutes"
             ulm_card_input_number_entity: input_number.back_yard_all_stations_minutes
+
     #--------------------------------------#
     # Section : Helper Scripts             #
     #--------------------------------------#
     - type: "custom:button-card"
       template: card_title
-      name:
+      name: 
       label: Helper Scripts
+
     - type: "custom:mod-card"
       style:
         .: |
@@ -96,6 +66,7 @@
               service: switch.toggle
               service_data:
                 entity_id: group.kids_tv_control
+
           - type: "custom:button-card"
             template: custom_chip_mekenthompson_mdi_icon_state
             entity: switch.sonos_group
@@ -109,6 +80,7 @@
               service: switch.toggle
               service_data:
                 entity_id: switch.sonos_group
+
           - type: "custom:button-card"
             template: custom_chip_mekenthompson_mdi_icon_state
             entity: script.kids_night_mode
@@ -121,6 +93,7 @@
               service: script.turn_on
               service_data:
                 entity_id: script.kids_night_mode
+
     - type: "custom:mod-card"
       style:
         .: |
@@ -150,28 +123,40 @@
                 entity_id: script.reset_adaptive_lighting
           - type: "custom:button-card"
             template: custom_chip_mekenthompson_mdi_icon_state
-            label: Switches
-            entity: script.unifi_reset_switches
+            label: Wifi AP Reset
+            entity: script.restart_wifi
             variables:
               ulm_chip_mdi_icon_state_icon: mdi:restart
-              ulm_chip_mdi_icon_state_entity: script.unifi_reset_switches
+              ulm_chip_mdi_icon_state_entity: script.restart_wifi
             tap_action:
               action: call-service
               service: script.turn_on
               service_data:
-                entity_id: script.unifi_reset_switches
-          - type: "custom:button-card"
-            template: custom_chip_mekenthompson_mdi_icon_state
-            label: Lights
-            entity: script.unifi_reset_lights
-            variables:
-              ulm_chip_mdi_icon_state_icon: mdi:restart
-              ulm_chip_mdi_icon_state_entity: script.unifi_reset_lights
-            tap_action:
-              action: call-service
-              service: script.turn_on
-              service_data:
-                entity_id: script.unifi_reset_lights
+                entity_id: script.restart_wifi
+          # - type: "custom:button-card"
+          #   template: custom_chip_mekenthompson_mdi_icon_state
+          #   label: Switches
+          #   entity: script.unifi_reset_switches
+          #   variables:
+          #     ulm_chip_mdi_icon_state_icon: mdi:restart
+          #     ulm_chip_mdi_icon_state_entity: script.unifi_reset_switches
+          #   tap_action:
+          #     action: call-service
+          #     service: script.turn_on
+          #     service_data:
+          #       entity_id: script.unifi_reset_switches
+          # - type: "custom:button-card"
+          #   template: custom_chip_mekenthompson_mdi_icon_state
+          #   label: Lights
+          #   entity: script.unifi_reset_lights
+          #   variables:
+          #     ulm_chip_mdi_icon_state_icon: mdi:restart
+          #     ulm_chip_mdi_icon_state_entity: script.unifi_reset_lights
+          #   tap_action:
+          #     action: call-service
+          #     service: script.turn_on
+          #     service_data:
+          #       entity_id: script.unifi_reset_lights
           - type: "custom:button-card"
             template: custom_chip_mekenthompson_mdi_icon_state
             label: Bed Time
@@ -235,6 +220,7 @@
               service: script.turn_on
               service_data:
                 entity_id: script.reset_heating
+
     #--------------------------------------#
     # Section : Navigation                 #
     #--------------------------------------#
@@ -284,6 +270,112 @@
             tap_action:
               action: "navigate"
               navigation_path: ../lovelace/dashboard
+    #--------------------------------------#
+    # Section : Scene & Party Scripts             #
+    #--------------------------------------#
+    - type: "custom:button-card"
+      template: card_title
+      name:
+      label: Scenes & Party
+    - type: "custom:mod-card"
+      style:
+        .: |
+          ha-card {
+            # background-color: var(--card-background-color);
+            # border-radius: var(--border-radius);
+            # padding: 5px 10px;
+          }
+        hui-horizontal-stack-card$: |
+          #root {
+            justify-content: space-between;
+          }
+      card:
+        type: horizontal-stack
+        cards:
+          - type: "custom:button-card"
+            template: custom_chip_mekenthompson_mdi_icon_state
+            entity: switch.adaptive_lights_master_switch
+            label: Adaptive Lights
+            variables:
+              ulm_chip_mdi_icon_state_entity: switch.adaptive_lights_master_switch
+              ulm_chip_mdi_icon_state_icon: mdi:light-switch
+            tap_action:
+              action: call-service
+              service: switch.toggle
+              service_data:
+                entity_id: switch.adaptive_lights_master_switch
+          - type: "custom:button-card"
+            template: custom_chip_mekenthompson_mdi_icon_state
+            entity: scene.halloween
+            label: Halloween
+            variables:
+              ulm_chip_mdi_icon_state_entity: scene.halloween
+              ulm_chip_mdi_icon_state_icon: mdi:pumpkin
+            tap_action:
+              action: call-service
+              service: scene.turn_on
+              service_data:
+                entity_id: scene.halloween
+          - type: "custom:button-card"
+            template: custom_chip_mekenthompson_mdi_icon_state
+            entity: scene.xmas
+            label: Halloween
+            variables:
+              ulm_chip_mdi_icon_state_entity: scene.xmas
+              ulm_chip_mdi_icon_state_icon: mdi:string-lights
+            tap_action:
+              action: call-service
+              service: scene.turn_on
+              service_data:
+                entity_id: scene.xmas
+    #--------------------------------------#
+    # Section : Spa             #
+    #--------------------------------------#
+    - type: "custom:button-card"
+      template: card_title
+      name:
+      label: Spa Heating
+    - type: vertical-stack
+      cards:
+        # - type: 'custom:button-card'
+        #   template: card_graph
+        #   tap_action:
+        #     entity: weather.ascot_vale_hourly
+        #     action: more-info
+        #   entity: sensor.livingroom_temperature
+        #   variables:
+        #     ulm_card_graph_color: "var(--google-blue)"
+        #     ulm_card_graph_name: Temperature Livingroom
+        #     ulm_card_graph_entity: sensor.livingroom_temperature
+        #     ulm_card_graph_color2: "var(--google-green)"
+        #     ulm_card_graph_entity2: sensor.bedgroom_temperature
+        #     ulm_card_graph_type: fill
+        #     ulm_card_graph_hours: 24
+        - type: "custom:button-card"
+          template: card_graph
+          tap_action:
+            entity: climate.spa_climate
+            action: toggle
+          entity: sensor.spa_watertemperature
+          variables:
+            ulm_card_graph_color: "var(--google-green)"
+            ulm_card_graph_name: "Set Temp (Green) | Water Temp (Blue)"
+            ulm_card_graph_entity: sensor.spa_settemperature
+            ulm_card_graph_color2: "var(--google-blue)"
+            ulm_card_graph_entity2: sensor.spa_watertemperature
+            ulm_card_graph_type: fill
+            ulm_card_graph_hours: 24
+    - type: horizontal-stack
+      cards:
+        - type: "custom:button-card"
+          template: card_thermostat
+          entity: climate.spa_climate
+          variables:
+            ulm_card_thermostat_enable_popup: true
+            ulm_card_thermostat_preset_mode: false
+            ulm_card_thermostat_enable_collapse: false
+            ulm_card_thermostat_enable_controls: true
+            ulm_card_thermostat_enable_hvac_modes: false
     #--------------------------------------#
     # Section : Curtains                   #
     #--------------------------------------#

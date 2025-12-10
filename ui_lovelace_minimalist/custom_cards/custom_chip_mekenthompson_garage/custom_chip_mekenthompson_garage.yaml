@@ -12,6 +12,8 @@ custom_chip_mekenthompson_garage:
         var garage_label = variables.custom_chip_mekenthompson_garage_closed;
       } else if(entity.state == "open"){
         var garage_label = variables.custom_chip_mekenthompson_garage_open;
+      } else if(entity.state == "opening"){
+        var garage_label = variables.custom_chip_mekenthompson_garage_open;
       }
       return garage_label;
     ]]]
@@ -21,6 +23,8 @@ custom_chip_mekenthompson_garage:
       if (entity.state == "closed"){
         var garage_icon = "mdi:garage-lock";
       } else if(entity.state == "open"){
+        var garage_icon = "mdi:garage-alert";
+      } else if(entity.state == "opening"){
         var garage_icon = "mdi:garage-alert";
       } 
       return garage_icon;
@@ -33,6 +37,8 @@ custom_chip_mekenthompson_garage:
             if (entity.state == "closed"){
               var garage_color = "var(--google-black)";
             } else if(entity.state == "open"){
+              var garage_color = "var(--google-yellow)";
+            } else if(entity.state == "opening"){
               var garage_color = "var(--google-yellow)";
             }
             return garage_color;

@@ -29,9 +29,9 @@
     #   template: card_generic
     #   entity: sensor.unifi_gateway_wan
     #   attribute: wan_ip
-    - type: entity
-      entity: sensor.unifi_gateway_wan
-      attribute: wan_ip
+    # - type: entity
+    #   entity: sensor.unifi_gateway_wan
+    #   attribute: wan_ip
     #--------------------------------------#
     # Tab : Cards                          #
     #--------------------------------------#
@@ -40,22 +40,27 @@
       name: "Linea Mini"
       label: "Boiler Temperature"
     - type: "grid"
-      columns: 2
+      columns: 1
       square: false
       cards:
-        - type: "custom:button-card"
-          template: card_generic
-          entity: water_heater.linea_mini_coffee
+        # - type: "custom:button-card"
+        #   template: card_generic
+        #   entity: sensor.linea_mini_mini_current_coffee_temperature
+        #   hold_action:
+        #     entity: sensor.linea_mini_mini_current_coffee_temperature
+        #     action: more-info
+        #   tap_action:
+        #     entity: sensor.linea_mini_mini_current_coffee_temperature
+        #     action: more-info
         - type: "custom:button-card"
           template: card_power_outlet
           entity: switch.linea_mini_main
           name: Linea Mini
-    # - type: "custom:button-card"
     #   template: card_graph
     #   variables:
     #     ulm_card_graph_color: "var(--google-blue)"
     #     ulm_card_graph_name: Coffee Temp
-    #     ulm_card_graph_entity: water_heater.linea_mini_coffee
+    #     ulm_card_graph_entity: water_heater.linea_mini_coffee_boiler
     #     # ulm_card_graph_color2: "var(--google-green)"
     #     # ulm_card_graph_entity2: sensor.bedroom_temperature
     #     ulm_card_graph_type: fill

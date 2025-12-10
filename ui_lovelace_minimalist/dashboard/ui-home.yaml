@@ -74,7 +74,8 @@
     #       card_notification_version_sensor: "update.home_assistant_supervisor_update"
     #       card_notification_navigate_path: "/config/dashboard"
     #       card_notification_icon: "mdi:party-popper"
-    ##### Auto Entities for Update #####
+
+    # all update.* entities (HACS 2.x + integrations + core + OS…)
     - type: "custom:auto-entities"
       card:
         type: "grid"
@@ -96,19 +97,9 @@
                 ulm_card_neekster_update_collapsible: true
                 ulm_card_neekster_update_horizontal: true
                 ulm_card_neekster_update_narrow_buttons: true
-    # HACS Updates
-    - type: conditional
-      conditions:
-        - entity: sensor.hacs
-          state_not: "0"
-      card:
-        type: "custom:button-card"
-        template: "card_notification_count"
-        variables:
-          card_notification_sensor: "sensor.hacs"
-          card_notification_app: "HACS"
-          card_notification_navigate_path: "/hacs"
-          card_notification_icon: "hacs:hacs"
+
+# shortcuts
+
     - type: "custom:mod-card"
       style:
         .: |
@@ -124,18 +115,6 @@
       card:
         type: horizontal-stack
         cards:
-          # - type: custom:button-card
-          #   entity: switch.linea_mini_main
-          #   label: Espresso
-          #   template: chip_mdi_icon_state
-          #   variables:
-          #     ulm_chip_mdi_icon_state_entity: switch.linea_mini_main
-          #     ulm_chip_mdi_icon_state_icon: mdi:coffee
-          #   action:
-          #   tap_action:
-          #     action: toggle
-          # - type: "custom:button-card"
-          #   color_type: blank-card
           - type: custom:button-card
             entity: lock.lock_front_door_lock
             label: Front
@@ -150,6 +129,10 @@
               service: lock.unlock
               service_data:
                 entity_id: lock.lock_front_door_lock
+            style: |
+              ha-card {
+                flex: 1;
+              }
           - type: custom:button-card
             entity: lock.lock_garage_entry_door_lock
             label: Garage
@@ -164,8 +147,12 @@
               service: lock.unlock
               service_data:
                 entity_id: lock.lock_garage_entry_door_lock
+            style: |
+              ha-card {
+                flex: 1;
+              }
           - type: custom:button-card
-            label:
+            label: 
             template: custom_chip_mekenthompson_garage
             entity: cover.garage_door
             tap_action:
@@ -178,10 +165,14 @@
               service: cover.open_cover
               service_data:
                 entity_id: cover.garage_door
+            style: |
+              ha-card {
+                flex: 1;
+              }
           - type: "custom:button-card"
             template: custom_chip_mekenthompson_mdi_icon_state
             entity: fan.fireplace
-            label:
+            label: 
             variables:
               ulm_chip_mdi_icon_state_entity: fan.fireplace
               ulm_chip_mdi_icon_state_icon: mdi:fireplace
@@ -192,10 +183,14 @@
                 entity_id: fan.fireplace
             hold_action:
               action: more-info
+            style: |
+              ha-card {
+                flex: 1;
+              }
           - type: "custom:button-card"
             template: custom_chip_mekenthompson_mdi_icon_state
             entity: fan.living_room_fan
-            label:
+            label: 
             variables:
               ulm_chip_mdi_icon_state_entity: fan.living_room_fan
               ulm_chip_mdi_icon_state_icon: mdi:fan
@@ -206,10 +201,14 @@
                 entity_id: fan.living_room_fan
             hold_action:
               action: more-info
+            style: |
+              ha-card {
+                flex: 1;
+              }
           - type: "custom:button-card"
             template: custom_chip_mekenthompson_mdi_icon_state
             entity: switch.linea_mini_main
-            label:
+            label: 
             tap_action:
               action: call-service
               service: switch.toggle
@@ -220,6 +219,10 @@
             variables:
               ulm_chip_mdi_icon_state_entity: switch.linea_mini_main
               ulm_chip_mdi_icon_state_icon: mdi:coffee
+            style: |
+              ha-card {
+                flex: 1;
+              }
     ### PEOPLE ####
     - type: horizontal-stack
       cards:
@@ -593,7 +596,7 @@
                 ulm_card_light_enable_horizontal: true
             - type: "custom:button-card"
               template: card_light
-              entity: light.festoon_lights
+              entity: light.patio
               variables:
                 ulm_card_light_enable_slider: true
                 ulm_card_light_enable_collapse: true
@@ -601,16 +604,16 @@
                 ulm_card_light_enable_popup: false
                 ulm_card_light_force_background_color: false
                 ulm_card_light_enable_horizontal: true
-            - type: "custom:button-card"
-              template: card_light
-              entity: light.festoon_control
-              variables:
-                ulm_card_light_enable_slider: true
-                ulm_card_light_enable_collapse: true
-                ulm_card_light_enable_color: false
-                ulm_card_light_enable_popup: false
-                ulm_card_light_force_background_color: false
-                ulm_card_light_enable_horizontal: true
+            # - type: "custom:button-card"
+            #   template: card_light
+            #   entity: light.festoon_control
+            #   variables:
+            #     ulm_card_light_enable_slider: true
+            #     ulm_card_light_enable_collapse: true
+            #     ulm_card_light_enable_color: false
+            #     ulm_card_light_enable_popup: false
+            #     ulm_card_light_force_background_color: false
+            #     ulm_card_light_enable_horizontal: true
             - type: "custom:button-card"
               template: card_light
               entity: light.balcony_lights

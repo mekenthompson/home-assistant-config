@@ -1,28 +1,32 @@
----
 #--------------------------------------#
-# Tab : Header Menu                    #
+# Tab : Header Menu                     #
 #--------------------------------------#
 - type: "custom:mod-card"
   style:
-    .: |
-      ha-card {
-        # background-color: var(--card-background-color);
-        # border-radius: var(--border-radius);
-        # padding: 5px 10px;
-      }
     hui-horizontal-stack-card$: |
       #root {
+        display: flex;
         justify-content: space-between;
+        align-items: center;
+      }
+      .card-content {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 8px; /* Optional spacing between buttons */
       }
   card:
     type: horizontal-stack
     cards:
-      # - type: "custom:button-card"
-      #   color_type: blank-card
       - type: "custom:button-card"
         template: chip_icon_only
         variables:
           ulm_chip_icon_only: "🏠"
+        styles:
+          card:
+            - flex-grow: 1
+            - flex-basis: 0
+            - aspect-ratio: 1
         tap_action:
           action: "navigate"
           navigation_path: home
@@ -30,6 +34,11 @@
         template: chip_icon_only
         variables:
           ulm_chip_icon_only: "💡"
+        styles:
+          card:
+            - flex-grow: 1
+            - flex-basis: 0
+            - aspect-ratio: 1
         tap_action:
           action: "navigate"
           navigation_path: lights
@@ -37,6 +46,11 @@
         template: chip_icon_only
         variables:
           ulm_chip_icon_only: "🔥"
+        styles:
+          card:
+            - flex-grow: 1
+            - flex-basis: 0
+            - aspect-ratio: 1
         tap_action:
           action: "navigate"
           navigation_path: heating
@@ -44,6 +58,11 @@
         template: chip_icon_only
         variables:
           ulm_chip_icon_only: "❄️"
+        styles:
+          card:
+            - flex-grow: 1
+            - flex-basis: 0
+            - aspect-ratio: 1
         tap_action:
           action: "navigate"
           navigation_path: cooling
@@ -51,6 +70,11 @@
         template: chip_icon_only
         variables:
           ulm_chip_icon_only: "📺"
+        styles:
+          card:
+            - flex-grow: 1
+            - flex-basis: 0
+            - aspect-ratio: 1
         tap_action:
           action: "navigate"
           navigation_path: media
@@ -58,6 +82,11 @@
         template: chip_icon_only
         variables:
           ulm_chip_icon_only: "📷"
+        styles:
+          card:
+            - flex-grow: 1
+            - flex-basis: 0
+            - aspect-ratio: 1
         tap_action:
           action: "navigate"
           navigation_path: cameras
@@ -65,6 +94,11 @@
         template: chip_icon_only
         variables:
           ulm_chip_icon_only: "🔋"
+        styles:
+          card:
+            - flex-grow: 1
+            - flex-basis: 0
+            - aspect-ratio: 1
         tap_action:
           action: "navigate"
           navigation_path: sensors
@@ -72,8 +106,11 @@
         template: chip_icon_only
         variables:
           ulm_chip_icon_only: "🚀"
+        styles:
+          card:
+            - flex-grow: 1
+            - flex-basis: 0
+            - aspect-ratio: 1
         tap_action:
           action: "navigate"
           navigation_path: automation
-    # - type: "custom:button-card"
-    #   color_type: blank-card

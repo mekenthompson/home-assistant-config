@@ -11,5 +11,5 @@
 - platform: group
   name: all_phones
   services:
-    - service: mobile_app_ken_s_pixel_5
-    - service: mobile_app_lisa_s_pixel_5
+    - service: mobile_app_pixel_8_pro
+    - service: mobile_app_lisa_z_flip_sm_f731b

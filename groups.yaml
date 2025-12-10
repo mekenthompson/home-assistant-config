@@ -12,7 +12,7 @@ entry_motion_detection:
   name: Front Yard Motion
   icon: mdi:motion-sensor
   entities:
-    - binary_sensor.multi_front_gate_contact
+    - binary_sensor.multi_sensor_front_gate
     - binary_sensor.front_yard_motion
     - binary_sensor.front_door_motion
     - binary_sensor.multi_front_door_contact
@@ -95,3 +95,8 @@ ground_doors:
     - binary_sensor.multi_living_slider_right_contact
     - binary_sensor.multi_garage_entry_contact
     - binary_sensor.multi_patio_contact
+deck_doors:
+  name: Deck Sliding Doors
+  entities:
+    - binary_sensor.multi_living_slider_left_contact
+    - binary_sensor.multi_living_slider_right_contact

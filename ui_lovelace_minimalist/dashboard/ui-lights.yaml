@@ -123,6 +123,18 @@
             ulm_card_light_enable_popup: false
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
+    - type: horizontal-stack
+      cards:
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.server_room
+          variables:
+            ulm_card_light_enable_slider: true
+            ulm_card_light_enable_collapse: true
+            ulm_card_light_enable_color: false
+            ulm_card_light_enable_popup: false
+            ulm_card_light_force_background_color: false
+            ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
           template: card_light
           entity: light.garage_on_off
@@ -300,7 +312,15 @@
             ulm_card_light_force_background_color: false
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
-          color_type: blank-card
+          template: card_light
+          entity: light.sidney_desk
+          variables:
+            ulm_card_light_enable_slider: true
+            ulm_card_light_enable_collapse: true
+            ulm_card_light_enable_color: false
+            ulm_card_light_enable_popup: false
+            ulm_card_light_force_background_color: false
+            ulm_card_light_enable_horizontal: true
     - type: "custom:button-card"
       template: card_title
       name:
@@ -342,7 +362,7 @@
       cards:
         - type: "custom:button-card"
           template: card_light
-          entity: light.festoon_lights
+          entity: light.patio
           variables:
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
@@ -352,7 +372,7 @@
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
           template: card_light
-          entity: light.festoon_control
+          entity: light.twinkly_lights
           variables:
             ulm_card_light_enable_slider: true
             ulm_card_light_enable_collapse: true
@@ -374,3 +394,42 @@
             ulm_card_light_enable_horizontal: true
         - type: "custom:button-card"
           color_type: blank-card
+    - type: "custom:button-card"
+      template: card_title
+      name:
+      label: Reading Lights
+    - type: vertical-stack
+      cards:
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.reading_lights
+          variables:
+            ulm_card_light_enable_slider: true
+            ulm_card_light_enable_collapse: true
+            ulm_card_light_enable_color: false
+            ulm_card_light_enable_popup: false
+            ulm_card_light_force_background_color: false
+    - type: horizontal-stack
+      cards:
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.master_2
+          variables:
+            ulm_card_light_name: Ken
+            ulm_card_light_enable_slider: true
+            ulm_card_light_enable_collapse: true
+            ulm_card_light_enable_color: false
+            ulm_card_light_enable_popup: false
+            ulm_card_light_force_background_color: false
+            ulm_card_light_enable_horizontal: true
+        - type: "custom:button-card"
+          template: card_light
+          entity: light.master_4
+          variables:
+            ulm_card_light_name: Lisa
+            ulm_card_light_enable_slider: true
+            ulm_card_light_enable_collapse: true
+            ulm_card_light_enable_color: false
+            ulm_card_light_enable_popup: false
+            ulm_card_light_force_background_color: false
+            ulm_card_light_enable_horizontal: true

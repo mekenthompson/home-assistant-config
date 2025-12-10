@@ -4,3 +4,7 @@ sonos_group:
 guest_mode:
   name: "Guest Mode"
   initial: off
+spa_heating:
+  name: "Spa Heating"
+  initial: off
+
