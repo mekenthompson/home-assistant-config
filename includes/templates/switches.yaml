@@ -1,0 +1,91 @@
+# Template Switches - Modern Format
+- switch:
+    - name: Sprinkler Front
+      unique_id: sprinkler_front
+      state: "{{ is_state('binary_sensor.back_yard_front_station_running', 'on') }}"
+      turn_on:
+        - action: opensprinkler.run
+          data:
+            entity_id: binary_sensor.back_yard_front_station_running
+            run_seconds: "{{ ((states('input_number.back_yard_all_stations_minutes') | float) * 60) | int }}"
+        - action: switch.turn_on
+          target:
+            entity_id:
+              - switch.ff424023004b1200_water_switch
+      turn_off:
+        - action: opensprinkler.stop
+          data:
+            entity_id: binary_sensor.back_yard_front_station_running
+        - action: switch.turn_off
+          target:
+            entity_id:
+              - switch.ff424023004b1200_water_switch
+
+    - name: Back Yard Rear
+      unique_id: back_yard_rear
+      state: "{{ is_state('binary_sensor.back_yard_rear_station_running', 'on') }}"
+      turn_on:
+        - action: opensprinkler.run
+          data:
+            entity_id: binary_sensor.back_yard_rear_station_running
+            run_seconds: "{{ ((states('input_number.back_yard_all_stations_minutes') | float) * 60) | int }}"
+        - action: switch.turn_on
+          target:
+            entity_id:
+              - switch.ff424023004b1200_water_switch
+      turn_off:
+        - action: opensprinkler.stop
+          data:
+            entity_id: binary_sensor.back_yard_rear_station_running
+        - action: switch.turn_off
+          target:
+            entity_id:
+              - switch.ff424023004b1200_water_switch
+
+    - name: Sonos Group
+      unique_id: sonos_group
+      state: "{{ is_state('input_boolean.sonos_group', 'on') }}"
+      turn_on:
+        - action: script.turn_on
+          target:
+            entity_id: script.sonos_butlers_join_living
+        - action: input_boolean.turn_on
+          target:
+            entity_id: input_boolean.sonos_group
+      turn_off:
+        - action: script.turn_on
+          target:
+            entity_id: script.sonos_butlers_leave_living
+        - action: input_boolean.turn_off
+          target:
+            entity_id: input_boolean.sonos_group
+
+    - name: Spa Heating
+      unique_id: spa_heating
+      state: "{{ is_state('input_boolean.spa_heating', 'on') }}"
+      turn_on:
+        - action: script.turn_on
+          target:
+            entity_id: script.spa_heating_on
+        - action: input_boolean.turn_on
+          target:
+            entity_id: input_boolean.spa_heating
+      turn_off:
+        - action: script.turn_on
+          target:
+            entity_id: script.spa_heating_off
+        - action: input_boolean.turn_off
+          target:
+            entity_id: input_boolean.spa_heating
+
+    - name: Guest Mode
+      unique_id: guest_mode
+      state: "{{ is_state('input_boolean.guest_mode', 'on') }}"
+      turn_on:
+        - action: input_boolean.turn_on
+          target:
+            entity_id: input_boolean.guest_mode
+      turn_off:
+        - action: input_boolean.turn_off
+          target:
+            entity_id: input_boolean.guest_mode

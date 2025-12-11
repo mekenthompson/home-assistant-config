@@ -7,6 +7,8 @@
 !*.md
 !includes
 !includes/*.yaml
+!includes/templates
+!includes/templates/*.yaml
 
 # Ignore folders.
 .storage

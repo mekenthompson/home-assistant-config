@@ -9,9 +9,16 @@ yamllint .                          # Lint YAML files
 ## Architecture
 - `configuration.yaml` - Main entry point, imports all other configs via `!include`
 - `includes/` - Modular configs: sensors, lights, switches, climate, fans, etc.
-- `includes/templates/` - Template sensors (merged via `!include_dir_merge_list`)
+- `includes/templates/` - Template entities (covers, switches) merged via `!include_dir_merge_list`
 - `ui_lovelace_minimalist/` - Custom dashboard cards and views
 - `automations.yaml`, `scripts.yaml`, `scenes.yaml` - Root-level HA primitives
+
+## Template Entities
+Virtual devices created via templates in `includes/templates/`:
+- `covers.yaml` - RF-controlled covers (e.g., `cover.master_curtains` via Broadlink)
+- `switches.yaml` - Wrapper switches for input_booleans and scripts (e.g., `switch.guest_mode`)
+
+When adding new template entities, ensure `.gitignore` includes the path (uses whitelist pattern).
 
 ## Code Style
 - Use 2-space indentation for YAML
