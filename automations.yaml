@@ -795,10 +795,21 @@
   conditions:
   - condition: state
     entity_id: media_player.the_tv
-    state: playing
+    state:
+    - playing
   - condition: state
     entity_id: media_player.the_tv
-    state: idle
+    state:
+    - idle
+  - condition: device
+    device_id: b73f8eaf6c981e1cfef3c6cef47f5503
+    domain: media_player
+    entity_id: 18503dd32e2967a84e210d6d6f32a174
+    type: is_playing
+  - condition: state
+    entity_id: media_player.the_tv_2
+    state:
+    - idle
   actions:
   - data: {}
     entity_id: light.fireplace_lights
@@ -2308,13 +2319,7 @@
     metadata: {}
     data: {}
     target:
-      device_id:
-      - 428f982d533def9406af997ec3bdad6a
-  - action: switch.turn_on
-    metadata: {}
-    data: {}
-    target:
-      entity_id: switch.linea_mini_steam_boiler
+      device_id: 428f982d533def9406af997ec3bdad6a
   mode: single
 - id: '1636944805816'
   alias: Coffee Machine at Temp
