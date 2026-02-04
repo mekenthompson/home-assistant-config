@@ -9,6 +9,8 @@
 !includes/*.yaml
 !includes/templates
 !includes/templates/*.yaml
+!custom_components
+!custom_components/**
 
 # Ignore folders.
 .storage

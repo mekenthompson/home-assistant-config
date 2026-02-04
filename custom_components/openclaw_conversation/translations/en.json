@@ -1,0 +1,24 @@
+{
+  "config": {
+    "step": {
+      "user": {
+        "title": "Connect to OpenClaw",
+        "description": "Configure the OpenClaw conversation agent (KenGPT).",
+        "data": {
+          "api_url": "OpenClaw API URL",
+          "api_token": "Gateway Auth Token",
+          "model": "Model (openclaw:main)",
+          "timeout": "Request timeout (seconds)"
+        }
+      }
+    },
+    "error": {
+      "cannot_connect": "Failed to connect to OpenClaw. Check the URL.",
+      "invalid_auth": "Invalid authentication token.",
+      "unknown": "Unexpected error."
+    },
+    "abort": {
+      "already_configured": "OpenClaw Conversation is already configured."
+    }
+  }
+}
