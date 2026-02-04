@@ -10,7 +10,8 @@
 !includes/templates
 !includes/templates/*.yaml
 !custom_components
-!custom_components/**
+!custom_components/openclaw_conversation
+!custom_components/openclaw_conversation/**
 
 # Ignore folders.
 .storage
