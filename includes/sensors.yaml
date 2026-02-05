@@ -1,24 +1,24 @@
 - platform: average
   name: "Average Cooling Temperature"
   entities:
-    - sensor.living_temperature
+    - sensor.living_front_temperature
     - sensor.office_temperature
     - sensor.master_bed_temperature
 - platform: average
   name: "Average House Temperature"
   entities:
     # Tado Cooling Sensors
-    - sensor.living_temperature
+    - sensor.living_front_temperature
     - sensor.office_temperature
     - sensor.master_bed_temperature
     # Tado Heating Sensors
-    - sensor.guest_bath_temperature
+    - sensor.motion_guest_bathroom_temperature
     - sensor.guest_room_temperature
-    - sensor.living_temperature
+    - sensor.living_front_temperature
     - sensor.mabel_temperature
     - sensor.master_bed_temperature
     - sensor.office_temperature
-    - sensor.rumpus_temperature
+    - sensor.rumpus_temperature_2
     - sensor.sidney_temperature
     # SmartThings Sensors
     - sensor.motion_butlers_2_temperature
@@ -42,9 +42,9 @@
     # Tado Cooling Sensors
     # - sensor.living_cooling_temperature
     # Tado Heating Sensors
-    - sensor.guest_bath_temperature
+    - sensor.motion_guest_bathroom_temperature
     - sensor.guest_room_temperature
-    - sensor.living_temperature
+    - sensor.living_front_temperature
     # SmartThings Sensors
     - sensor.motion_butlers_2_temperature
     - sensor.motion_butlers_temp
@@ -73,7 +73,7 @@
     # Tado Cooling Sensors
     # Tado Heating Sensors
     - sensor.mabel_temperature
-    - sensor.rumpus_temperature
+    - sensor.rumpus_temperature_2
     - sensor.sidney_temperature
     # SmartThings Sensors
     - sensor.motion_kids_bathroom_temperature
