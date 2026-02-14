@@ -80,7 +80,7 @@ unlock_and_open_garage:
   - service: cover.open_cover
     data: {}
     target:
-      entity_id: cover.garage_door
+      entity_id: cover.garage_door_door
   - service: lock.unlock
     data: {}
     target:

@@ -133,7 +133,7 @@
   action:
   - service: cover.close_cover
     target:
-      entity_id: cover.garage_door
+      entity_id: cover.garage_door_door
     data: {}
   mode: single
 - id: '1609012948827'
@@ -599,7 +599,7 @@
     action: lock.lock
   - data: {}
     target:
-      entity_id: cover.garage_door
+      entity_id: cover.garage_door_door
     action: cover.close_cover
   - data: {}
     action: script.leaving
@@ -615,7 +615,7 @@
       seconds: 0
       milliseconds: 0
   - target:
-      entity_id: cover.garage_door
+      entity_id: cover.garage_door_door
     data: {}
     action: cover.close_cover
   - delay:
@@ -624,7 +624,7 @@
       seconds: 0
       milliseconds: 0
   - target:
-      entity_id: cover.garage_door
+      entity_id: cover.garage_door_door
     data: {}
     action: cover.close_cover
   mode: parallel
@@ -1505,7 +1505,7 @@
   action:
   - service: cover.close_cover
     target:
-      entity_id: cover.garage_door
+      entity_id: cover.garage_door_door
     data: {}
   mode: single
 - id: '1629099970920'
