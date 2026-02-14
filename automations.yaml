@@ -1497,11 +1497,9 @@
       minutes: 15
       seconds: 0
   condition:
-  - condition: device
-    device_id: 1f7015e38229b97cde55bfee2ae95de7
-    domain: cover
-    entity_id: 10700cdade0cc1920f81a18bbfabb393
-    type: is_open
+  - condition: state
+    entity_id: cover.garage_door_door
+    state: 'open'
   action:
   - service: cover.close_cover
     target:

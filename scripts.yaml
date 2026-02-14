@@ -36,11 +36,11 @@ lock_up:
   - service: cover.close_cover
     data: {}
     target:
-      device_id: 1f7015e38229b97cde55bfee2ae95de7
+      entity_id: cover.garage_door_door
   - service: cover.close_cover
     data: {}
     target:
-      device_id: 1f7015e38229b97cde55bfee2ae95de7
+      entity_id: cover.garage_door_door
   max: 10
 leaving:
   alias: Leaving Home
@@ -550,19 +550,19 @@ single_use_code:
 open_garage:
   alias: Open Garage
   sequence:
-  - device_id: 1f7015e38229b97cde55bfee2ae95de7
-    domain: cover
-    entity_id: 10700cdade0cc1920f81a18bbfabb393
-    type: open
+  - action: cover.open_cover
+    target:
+      entity_id: cover.garage_door_door
+    data: {}
   mode: single
   icon: mdi:garage-open
 close_garage:
   alias: Close Garage
   sequence:
-  - device_id: 1f7015e38229b97cde55bfee2ae95de7
-    domain: cover
-    entity_id: 10700cdade0cc1920f81a18bbfabb393
-    type: close
+  - action: cover.close_cover
+    target:
+      entity_id: cover.garage_door_door
+    data: {}
   mode: single
   icon: mdi:garage-lock
 reset_lights_to_neutral:
