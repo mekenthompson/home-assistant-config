@@ -1,10 +1,11 @@
 default: info
 logs:
+  {}
   # homeassistant.components.broadlink: debug
-  homeassistant.components.mqtt: debug
-  custom_components.lifx: debug
+  # homeassistant.components.mqtt: debug
+  # custom_components.lifx: debug
   # homeassistant.core: debug
   # custom_components.example: debug
   # custom_components.aiokef: debug
-  custom_components.lamarzocco: debug
-  pylamarzocco.clients._cloud: debug
+  # custom_components.lamarzocco: debug
+  # pylamarzocco.clients._cloud: debug

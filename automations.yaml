@@ -3583,3 +3583,137 @@
       media_player_entity_id: media_player.rumpus_room_2
       message: Bed time
   mode: single
+- id: addon_health_check_on_startup
+  alias: Addon Health Check on Startup
+  description: Check and restart failed addons 5 minutes after Home Assistant starts
+  triggers:
+  - platform: homeassistant
+    event: start
+  actions:
+  - delay:
+      minutes: 5
+  - action: shell_command.addon_health_check
+  mode: single
+- id: addon_recovery_after_boot
+  alias: Addon Recovery - Restart Failed Addons After Boot
+  description: Automatically restarts addons that failed during startup due to NFS
+    dependencies on Synology NAS
+  triggers:
+  - platform: homeassistant
+    event: start
+  actions:
+  - delay: 00:03:00
+  - action: shell_command.check_and_restart_addons
+  - data:
+      title: Addon Recovery - First Check
+      message: Checked and restarted any failed auto-boot addons (3min after boot)
+      notification_id: addon_recovery_check1
+    action: persistent_notification.create
+  - delay: 00:05:00
+  - action: shell_command.check_and_restart_addons
+  - data:
+      title: Addon Recovery - Second Check
+      message: Completed second check for failed addons (8min after boot)
+      notification_id: addon_recovery_check2
+    action: persistent_notification.create
+  mode: single
+- id: tablet_outage_start
+  alias: Tablet Outage Detected
+  description: Logs when kitchen tablet loses connection for >5 minutes
+  triggers:
+  - platform: state
+    entity_id: sensor.kitchen_tablet_foreground_app
+    to: unknown
+    for: 00:05:00
+  actions:
+  - data:
+      title: "\U0001F534 Kitchen Tablet Offline"
+      message: Kitchen tablet offline since {{ now().strftime('%Y-%m-%d %H:%M:%S')
+        }}
+      notification_id: tablet_outage_active
+    action: persistent_notification.create
+  - data:
+      message: Kitchen tablet outage detected at {{ now().strftime('%Y-%m-%d %H:%M:%S')
+        }}
+      level: warning
+      logger: custom.tablet_monitor
+    action: system_log.write
+  mode: single
+- id: tablet_outage_recovery
+  alias: Tablet Outage Recovered
+  description: Logs when kitchen tablet recovers from an outage
+  triggers:
+  - platform: state
+    entity_id: sensor.kitchen_tablet_foreground_app
+    from: unknown
+    to: de.ozerov.fully
+  conditions:
+  - condition: template
+    value_template: '{{ trigger.from_state.state == ''unknown'' and (now() - trigger.from_state.last_changed).total_seconds()
+      > 300 }}'
+  actions:
+  - data:
+      title: "\U0001F7E2 Kitchen Tablet Recovered"
+      message: 'Kitchen tablet recovered at {{ now().strftime(''%Y-%m-%d %H:%M:%S'')
+        }}. Outage duration: {{ ((now() - trigger.from_state.last_changed).total_seconds()
+        / 60) | round(1) }} minutes'
+    action: persistent_notification.create
+  - data:
+      message: 'Kitchen tablet recovered at {{ now().strftime(''%Y-%m-%d %H:%M:%S'')
+        }}. Outage duration: {{ ((now() - trigger.from_state.last_changed).total_seconds()
+        / 60) | round(1) }} minutes'
+      level: info
+      logger: custom.tablet_monitor
+    action: system_log.write
+  - data:
+      notification_id: tablet_outage_active
+    action: persistent_notification.dismiss
+  mode: single
+- id: sprinkler_linktap_auto_off
+  alias: Sprinklers - Turn Off LinkTap When Stations Stop
+  description: When OpenSprinkler stations finish their timed run, turn off LinkTap
+    which has no built-in timer
+  triggers:
+  - trigger: state
+    entity_id:
+    - binary_sensor.back_yard_front_station_running
+    - binary_sensor.back_yard_rear_station_running
+    from: 'on'
+    to: 'off'
+  conditions:
+  - condition: state
+    entity_id: binary_sensor.back_yard_front_station_running
+    state: 'off'
+  - condition: state
+    entity_id: binary_sensor.back_yard_rear_station_running
+    state: 'off'
+  actions:
+  - action: switch.turn_off
+    target:
+      entity_id: switch.ff424023004b1200_water_switch
+  mode: single
+- id: sprinkler_linktap_safety_timer
+  alias: Sprinklers - LinkTap Safety Shutoff (90 min)
+  description: If LinkTap has been on for 90 minutes, force it off and notify
+  triggers:
+  - trigger: state
+    entity_id: switch.ff424023004b1200_water_switch
+    to: 'on'
+    for:
+      minutes: 90
+  conditions: []
+  actions:
+  - action: switch.turn_off
+    target:
+      entity_id: switch.ff424023004b1200_water_switch
+  - action: opensprinkler.stop
+    data:
+      entity_id: binary_sensor.back_yard_front_station_running
+  - action: opensprinkler.stop
+    data:
+      entity_id: binary_sensor.back_yard_rear_station_running
+  - action: persistent_notification.create
+    data:
+      title: "\U0001F6A8 Sprinkler Safety Shutoff"
+      message: LinkTap was on for 90+ minutes. All sprinklers force-stopped.
+  mode: single

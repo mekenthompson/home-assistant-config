@@ -45,3 +45,8 @@ rest_command:
     url: "http://192.168.3.208/index.shtml?flag=0"
 # Requirements for UI Lovelace Minimalist
 # browser_mod:
+
+# Shell commands
+shell_command:
+  addon_health_check: "/data/openclaw-home/bin/addon-health-check"
+  check_and_restart_addons: "/data/openclaw-home/bin/addon-health-check"
