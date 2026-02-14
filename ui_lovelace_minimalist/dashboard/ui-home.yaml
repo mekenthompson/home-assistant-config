@@ -154,17 +154,17 @@
           - type: custom:button-card
             label: 
             template: custom_chip_mekenthompson_garage
-            entity: cover.garage_door
+            entity: cover.garage_door_door
             tap_action:
               action: call-service
               service: cover.close_cover
               service_data:
-                entity_id: cover.garage_door
+                entity_id: cover.garage_door_door
             hold_action:
               action: call-service
               service: cover.open_cover
               service_data:
-                entity_id: cover.garage_door
+                entity_id: cover.garage_door_door
             style: |
               ha-card {
                 flex: 1;
