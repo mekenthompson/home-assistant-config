@@ -12,16 +12,9 @@
       template: card_title
       name: Cooling
       label:
-        # - type: "custom:button-card"
-        #   template: card_weather
-        #   entity: weather.ascot_vale
-        #   variables:
-        #     ulm_card_weather_name: " "
-        #     ulm_card_weather_primary_info:
-        #       - wind_speed
-        #       - precipitation_probability
-        #     ulm_card_weather_backdrop:
-        #       fade: true
+    #--------------------------------------#
+    # All Cooling                          #
+    #--------------------------------------#
     - type: vertical-stack
       cards:
         - type: "custom:button-card"
@@ -41,6 +34,38 @@
             ulm_card_thermostat_enable_collapse: false
             ulm_card_thermostat_enable_controls: true
             ulm_card_thermostat_enable_hvac_modes: false
+        # Sleep Timer - All Cooling
+        - type: horizontal-stack
+          cards:
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_status
+              entity: timer.all_cooling_sleep
+              variables:
+                ulm_sleep_timer_name: "All"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_btn
+              entity: timer.all_cooling_sleep
+              variables:
+                ulm_sleep_timer_duration: "00:15:00"
+                ulm_sleep_timer_label: "15m"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_btn
+              entity: timer.all_cooling_sleep
+              variables:
+                ulm_sleep_timer_duration: "00:30:00"
+                ulm_sleep_timer_label: "30m"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_btn
+              entity: timer.all_cooling_sleep
+              variables:
+                ulm_sleep_timer_duration: "01:00:00"
+                ulm_sleep_timer_label: "60m"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_cancel
+              entity: timer.all_cooling_sleep
+        #--------------------------------------#
+        # Living Cooling                       #
+        #--------------------------------------#
         - type: horizontal-stack
           cards:
             - type: "custom:button-card"
@@ -60,6 +85,38 @@
                 ulm_card_thermostat_enable_collapse: false
                 ulm_card_thermostat_enable_controls: true
                 ulm_card_thermostat_enable_hvac_modes: false
+        # Sleep Timer - Living Cooling
+        - type: horizontal-stack
+          cards:
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_status
+              entity: timer.living_cooling_sleep
+              variables:
+                ulm_sleep_timer_name: "Living"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_btn
+              entity: timer.living_cooling_sleep
+              variables:
+                ulm_sleep_timer_duration: "00:15:00"
+                ulm_sleep_timer_label: "15m"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_btn
+              entity: timer.living_cooling_sleep
+              variables:
+                ulm_sleep_timer_duration: "00:30:00"
+                ulm_sleep_timer_label: "30m"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_btn
+              entity: timer.living_cooling_sleep
+              variables:
+                ulm_sleep_timer_duration: "01:00:00"
+                ulm_sleep_timer_label: "60m"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_cancel
+              entity: timer.living_cooling_sleep
+    #--------------------------------------#
+    # Office Cooling                       #
+    #--------------------------------------#
     - type: vertical-stack
       cards:
         - type: horizontal-stack
@@ -81,6 +138,38 @@
                 ulm_card_thermostat_enable_collapse: false
                 ulm_card_thermostat_enable_controls: true
                 ulm_card_thermostat_enable_hvac_modes: false
+        # Sleep Timer - Office Cooling
+        - type: horizontal-stack
+          cards:
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_status
+              entity: timer.office_cooling_sleep
+              variables:
+                ulm_sleep_timer_name: "Office"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_btn
+              entity: timer.office_cooling_sleep
+              variables:
+                ulm_sleep_timer_duration: "00:15:00"
+                ulm_sleep_timer_label: "15m"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_btn
+              entity: timer.office_cooling_sleep
+              variables:
+                ulm_sleep_timer_duration: "00:30:00"
+                ulm_sleep_timer_label: "30m"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_btn
+              entity: timer.office_cooling_sleep
+              variables:
+                ulm_sleep_timer_duration: "01:00:00"
+                ulm_sleep_timer_label: "60m"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_cancel
+              entity: timer.office_cooling_sleep
+    #--------------------------------------#
+    # Master Cooling                       #
+    #--------------------------------------#
     - type: vertical-stack
       cards:
         - type: horizontal-stack
@@ -102,3 +191,32 @@
                 ulm_card_thermostat_enable_collapse: false
                 ulm_card_thermostat_enable_controls: true
                 ulm_card_thermostat_enable_hvac_modes: false
+        # Sleep Timer - Master Cooling
+        - type: horizontal-stack
+          cards:
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_status
+              entity: timer.master_cooling_sleep
+              variables:
+                ulm_sleep_timer_name: "Master"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_btn
+              entity: timer.master_cooling_sleep
+              variables:
+                ulm_sleep_timer_duration: "00:15:00"
+                ulm_sleep_timer_label: "15m"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_btn
+              entity: timer.master_cooling_sleep
+              variables:
+                ulm_sleep_timer_duration: "00:30:00"
+                ulm_sleep_timer_label: "30m"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_btn
+              entity: timer.master_cooling_sleep
+              variables:
+                ulm_sleep_timer_duration: "01:00:00"
+                ulm_sleep_timer_label: "60m"
+            - type: "custom:button-card"
+              template: custom_card_mekenthompson_sleep_timer_cancel
+              entity: timer.master_cooling_sleep

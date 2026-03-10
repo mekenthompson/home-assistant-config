@@ -1,0 +1,154 @@
+---
+### Sleep Timer - Status Indicator ###
+# Shows timer icon + label when idle, animated countdown when active
+# Variables:
+#   ulm_sleep_timer_name: Display name (e.g. "Master")
+custom_card_mekenthompson_sleep_timer_status:
+  show_icon: true
+  show_name: true
+  show_label: false
+  show_state: false
+  icon: "mdi:timer-outline"
+  name: >
+    [[[
+      if (entity.state === 'active' && entity.attributes.remaining) {
+        let parts = entity.attributes.remaining.split(':');
+        let h = parseInt(parts[0]);
+        let m = parseInt(parts[1]);
+        let s = parseInt(parts[2]);
+        if (h > 0) return h + 'h ' + m + 'm';
+        if (m > 0) return m + 'm ' + s + 's';
+        return s + 's';
+      }
+      if (entity.state === 'paused') return 'Paused';
+      return variables.ulm_sleep_timer_name || 'Timer';
+    ]]]
+  extra_styles: |
+    @keyframes pulse-timer {
+      0%, 100% { opacity: 1; }
+      50% { opacity: 0.5; }
+    }
+  styles:
+    card:
+      - background-color: >
+          [[[
+            if (entity.state === 'active') return 'rgba(var(--color-blue), 0.1)';
+            return 'rgba(var(--color-theme), 0.05)';
+          ]]]
+      - border-radius: "var(--border-radius)"
+      - box-shadow: "none"
+      - padding: "8px"
+      - height: "auto"
+    icon:
+      - color: >
+          [[[
+            if (entity.state === 'active') return 'rgba(var(--color-blue), 1)';
+            if (entity.state === 'paused') return 'rgba(var(--color-yellow), 1)';
+            return 'rgba(var(--color-theme), 0.4)';
+          ]]]
+      - width: "18px"
+      - animation: >
+          [[[
+            if (entity.state === 'active') return 'pulse-timer 2s ease infinite';
+            return 'none';
+          ]]]
+    name:
+      - font-size: "11px"
+      - font-weight: "bold"
+      - color: >
+          [[[
+            if (entity.state === 'active') return 'rgba(var(--color-blue), 1)';
+            if (entity.state === 'paused') return 'rgba(var(--color-yellow), 1)';
+            return 'rgba(var(--color-theme), 0.4)';
+          ]]]
+    grid:
+      - grid-template-areas: "'i n'"
+      - grid-template-columns: "auto 1fr"
+      - gap: "4px"
+  state:
+    - value: "active"
+      icon: "mdi:timer-sand"
+    - value: "paused"
+      icon: "mdi:timer-pause"
+  size: "18px"
+
+### Sleep Timer - Preset Duration Button ###
+# Tap to start timer with a specific duration
+# Variables:
+#   ulm_sleep_timer_duration: Duration string (e.g. "00:15:00")
+#   ulm_sleep_timer_label: Display label (e.g. "15m")
+custom_card_mekenthompson_sleep_timer_btn:
+  show_icon: false
+  show_name: true
+  show_label: false
+  name: "[[[ return variables.ulm_sleep_timer_label || '30m' ]]]"
+  styles:
+    card:
+      - background-color: >
+          [[[
+            if (entity.state === 'active') return 'rgba(var(--color-blue), 0.1)';
+            return 'rgba(var(--color-theme), 0.05)';
+          ]]]
+      - border-radius: "var(--border-radius)"
+      - box-shadow: "none"
+      - padding: "8px 4px"
+      - cursor: "pointer"
+      - height: "auto"
+    name:
+      - font-size: "12px"
+      - font-weight: "bold"
+      - color: >
+          [[[
+            if (entity.state === 'active') return 'rgba(var(--color-blue), 1)';
+            return 'rgba(var(--color-theme), 0.6)';
+          ]]]
+  tap_action:
+    action: "call-service"
+    service: "timer.start"
+    service_data:
+      entity_id: "[[[ return entity.entity_id ]]]"
+      duration: "[[[ return variables.ulm_sleep_timer_duration || '00:30:00' ]]]"
+    haptic: "light"
+
+### Sleep Timer - Cancel Button ###
+# Tap to cancel the running timer. Greyed out when no timer active.
+custom_card_mekenthompson_sleep_timer_cancel:
+  show_icon: true
+  show_name: false
+  show_label: false
+  icon: "mdi:close-circle-outline"
+  styles:
+    card:
+      - background-color: >
+          [[[
+            if (entity.state === 'active' || entity.state === 'paused')
+              return 'rgba(var(--color-red), 0.1)';
+            return 'rgba(var(--color-theme), 0.03)';
+          ]]]
+      - border-radius: "var(--border-radius)"
+      - box-shadow: "none"
+      - padding: "8px 4px"
+      - cursor: >
+          [[[
+            return (entity.state === 'active' || entity.state === 'paused') ? 'pointer' : 'default';
+          ]]]
+      - height: "auto"
+      - opacity: >
+          [[[
+            return (entity.state === 'active' || entity.state === 'paused') ? '1' : '0.3';
+          ]]]
+    icon:
+      - color: >
+          [[[
+            if (entity.state === 'active' || entity.state === 'paused')
+              return 'rgba(var(--color-red), 0.8)';
+            return 'rgba(var(--color-theme), 0.2)';
+          ]]]
+      - width: "18px"
+  tap_action:
+    action: "call-service"
+    service: "timer.cancel"
+    service_data:
+      entity_id: "[[[ return entity.entity_id ]]]"
+    haptic: "warning"
+  size: "18px"
